@@ -16,6 +16,7 @@ build/
 # Local secrets and environment
 .env
 .env.*
+!.env.example
 
 # OS / editor
 .DS_Store
