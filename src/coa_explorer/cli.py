@@ -8,11 +8,10 @@ import sys
 from collections.abc import Sequence
 from pathlib import Path
 
-from coa_explorer.config import DEFAULT_INDEX, load_settings
+from coa_explorer.config import DEFAULT_INDEX, REPO_ROOT, load_settings
 from coa_explorer.index import build_index
 from coa_explorer.part2 import extract_year
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_REPORTS = REPO_ROOT / "coa-audit-reports"
 DEFAULT_OUT = REPO_ROOT / "data" / "extracted" / "part2"
 YEARS = (2020, 2021, 2022, 2023, 2024)

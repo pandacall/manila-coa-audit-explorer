@@ -180,7 +180,14 @@ class AnswerEngine:
                     yield Status(
                         message=f"Searching the reports for “{call.args.get('query', '')}”"
                     )
-                    results.append(ToolResult(call, self._run_search(call, seen)))
+                    try:
+                        results.append(ToolResult(call, self._run_search(call, seen)))
+                    except (TypeError, ValueError):
+                        # Tell the model what was wrong so it can retry, instead of failing.
+                        error = {
+                            "error": "years must be a list of integers; observation an integer"
+                        }
+                        results.append(ToolResult(call, error))
                 else:
                     results.append(ToolResult(call, {"error": f"unknown tool {call.name}"}))
             messages.append(Message(role="tool", tool_results=results))
@@ -210,13 +217,14 @@ class AnswerEngine:
 
 def finalise(args: dict, seen: dict[str, Piece]) -> Answer | NotCovered:
     """Validate the model's submitted answer against what it retrieved."""
-    if not args.get("covered"):
+    if args.get("covered") is not True:
         message = clip(str(args.get("not_covered_message") or ""), MAX_NOT_COVERED_CHARS)
         return NotCovered(message=message or NOT_COVERED_DEFAULT)
     key_points = []
     for raw in args.get("key_points") or []:
         citations: dict[str, Citation] = {}
-        for source in raw.get("sources") or []:
+        sources = raw.get("sources") or []
+        for source in [sources] if isinstance(sources, str) else sources:
             piece = seen.get(source)
             if piece:
                 citations.setdefault(

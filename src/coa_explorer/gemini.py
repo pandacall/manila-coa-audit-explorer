@@ -68,5 +68,5 @@ def to_content(message: Message) -> types.Content:
         )
     return types.Content(
         role="model" if message.role == "model" else "user",
-        parts=[types.Part(text=message.text or "")],
+        parts=[types.Part(text=message.text or "(no response)")],
     )

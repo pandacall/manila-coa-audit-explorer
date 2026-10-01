@@ -31,7 +31,9 @@ class Index:
     def open(cls, path: Path) -> Index:
         if not path.exists():
             raise FileNotFoundError(f"{path} not found; run `coa-explorer index` first")
-        return cls(sqlite3.connect(f"{path.as_uri()}?mode=ro", uri=True, check_same_thread=False))
+        return cls(
+            sqlite3.connect(f"{path.resolve().as_uri()}?mode=ro", uri=True, check_same_thread=False)
+        )
 
     def close(self) -> None:
         self._db.close()

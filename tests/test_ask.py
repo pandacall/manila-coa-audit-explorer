@@ -162,3 +162,31 @@ def test_the_web_page_is_served_by_the_same_app(index):
 
     assert page.status_code == 200
     assert 'id="root"' in page.text
+
+
+def test_malformed_search_arguments_are_reported_to_the_model_not_fatal(index):
+    adapter = ScriptedAdapter(
+        search("IPSAS 1", years=["not a year"]),
+        search("IPSAS 1", years=[2023]),
+        submit("Summary.", [point("Grounded point.", IPSAS_5)]),
+    )
+
+    events = ask(index, adapter)
+
+    assert final(events)["type"] == "answer"
+    _, messages, _ = adapter.requests[1]
+    assert "error" in messages[-1].tool_results[0].content
+
+
+def test_covered_must_be_a_real_boolean_and_sources_a_list(index):
+    string_false = ScriptedAdapter(
+        search("IPSAS 1"), submit("Summary.", [point("Point.", IPSAS_5)], covered="false")
+    )
+    assert final(ask(index, string_false))["type"] == "not_covered"
+
+    one_source = ScriptedAdapter(
+        search("IPSAS 1"),
+        submit("Summary.", [{"text": "Point.", "sources": IPSAS_5}]),
+    )
+    answer = Answer.model_validate(final(ask(index, one_source)))
+    assert [c.text for c in answer.key_points[0].citations] == [CITATION_5]

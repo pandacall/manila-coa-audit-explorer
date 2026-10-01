@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from pathlib import Path
 
 import pytest
 
@@ -98,3 +99,12 @@ def test_the_index_command_builds_the_sqlite_file_from_extracted_records(tmp_pat
     assert "indexed" in capsys.readouterr().out
     with Index.open(db) as built:
         assert built.search("IPSAS 1")[0].observation_number == 5
+
+
+def test_the_index_opens_from_a_relative_path(tmp_path, monkeypatch):
+    records = write_fixture_records(tmp_path / "records")
+    build_index(records, tmp_path / "coa.sqlite")
+    monkeypatch.chdir(tmp_path)
+
+    with Index.open(Path("coa.sqlite")) as opened:
+        assert opened.search("IPSAS 1")
