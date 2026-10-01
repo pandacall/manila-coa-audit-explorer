@@ -270,6 +270,7 @@ if [[ -z "$GITHUB_REPO" ]]; then
   ask GITHUB_REPO "GitHub repository (owner/name):"
 fi
 [[ "$GITHUB_REPO" == */* ]] || die "Repository must look like owner/name, got '$GITHUB_REPO'."
+export GH_REPO="$GITHUB_REPO"   # gh (and set_var) target this repo regardless of cwd
 say "✓ GitHub repository: $GITHUB_REPO"
 pause "Press Enter to continue."
 
@@ -284,7 +285,8 @@ ask GCP_PROJECT_ID "Project ID:"
 gcloud projects describe "$GCP_PROJECT_ID" >/dev/null 2>&1 \
   || die "Can't see project '$GCP_PROJECT_ID'. Check the ID and that you're signed in to the right account."
 gcloud config set project "$GCP_PROJECT_ID" >/dev/null 2>&1
-PROJECT_NUMBER=$(gcloud projects describe "$GCP_PROJECT_ID" --format='value(projectNumber)')
+PROJECT_NUMBER=$(gcloud projects describe "$GCP_PROJECT_ID" --format='value(projectNumber)') \
+  || die "Couldn't read the project number for $GCP_PROJECT_ID."
 
 billing_enabled() {
   [[ "$(gcloud billing projects describe "$GCP_PROJECT_ID" --format='value(billingEnabled)' 2>/dev/null)" == "True" ]]
@@ -376,7 +378,13 @@ fi
 
 if gcloud iam workload-identity-pools providers describe "$WIF_PROVIDER" \
      --workload-identity-pool="$WIF_POOL" --location=global --project "$GCP_PROJECT_ID" >/dev/null 2>&1; then
-  say "✓ provider '$WIF_PROVIDER' already exists"
+  # Keep the repository restriction in sync if the repo was typed differently on a re-run.
+  gcloud iam workload-identity-pools providers update-oidc "$WIF_PROVIDER" \
+    --workload-identity-pool="$WIF_POOL" --location=global \
+    --attribute-condition="assertion.repository=='$GITHUB_REPO'" \
+    --project "$GCP_PROJECT_ID" >/dev/null \
+    || die "Couldn't update provider '$WIF_PROVIDER'."
+  say "✓ provider '$WIF_PROVIDER' already exists (restricted to $GITHUB_REPO)"
 else
   retry 5 gcloud iam workload-identity-pools providers create-oidc "$WIF_PROVIDER" \
     --workload-identity-pool="$WIF_POOL" --location=global \
@@ -389,7 +397,8 @@ else
 fi
 
 WIF_PROVIDER_NAME=$(gcloud iam workload-identity-pools providers describe "$WIF_PROVIDER" \
-  --workload-identity-pool="$WIF_POOL" --location=global --project "$GCP_PROJECT_ID" --format='value(name)')
+  --workload-identity-pool="$WIF_POOL" --location=global --project "$GCP_PROJECT_ID" --format='value(name)') \
+  || die "Couldn't read the provider's resource name."
 WIF_PRINCIPAL="principalSet://iam.googleapis.com/projects/$PROJECT_NUMBER/locations/global/workloadIdentityPools/$WIF_POOL/attribute.repository/$GITHUB_REPO"
 
 retry 5 gcloud iam service-accounts add-iam-policy-binding "$DEPLOYER_SA" \
@@ -422,37 +431,45 @@ fi
 
 say "Enabling TTL: documents in '$LOG_COLLECTION' are deleted once their '$TTL_FIELD' timestamp passes."
 gcloud firestore fields ttls update "$TTL_FIELD" --collection-group="$LOG_COLLECTION" \
-  --enable-ttl --async --database='(default)' --project "$GCP_PROJECT_ID" >/dev/null \
-  || die "Couldn't enable the TTL policy."
-say "✓ TTL policy requested (Firestore finishes applying it in the background, up to ~30 min)"
+  --enable-ttl --async --database='(default)' --project "$GCP_PROJECT_ID" >/dev/null 2>&1 \
+  && say "✓ TTL policy requested (Firestore finishes applying it in the background, up to ~30 min)" \
+  || { warn "Couldn't (re)apply the TTL policy; it may already be enabled or still being created."
+       SKIPPED+=("Check the TTL policy: gcloud firestore fields ttls list --database='(default)'"); }
 note "The app must write '$TTL_FIELD' = question time + 30 days on every logged question."
 pause "Press Enter to continue."
 
 # ── 7. Budget alerts ──────────────────────────────────────────────────────
 stage "Budget alerts at \$5, \$10 and \$20"
 BUDGET_NAME="coa-audit-explorer-$GCP_PROJECT_ID"
-BILLING_ID=$(gcloud billing projects describe "$GCP_PROJECT_ID" --format='value(billingAccountName)' | sed 's|^billingAccounts/||')
+BILLING_ID=$(gcloud billing projects describe "$GCP_PROJECT_ID" --format='value(billingAccountName)') \
+  || die "Couldn't read the billing account for $GCP_PROJECT_ID."
+BILLING_ID="${BILLING_ID#billingAccounts/}"
 
-budget_exists() {
-  [[ -n "$(gcloud billing budgets list --billing-account="$BILLING_ID" \
-    --filter="displayName=$BUDGET_NAME" --format='value(name)' 2>/dev/null)" ]]
-}
+# Tell "no budget yet" apart from "couldn't list", so a failed check never creates a duplicate.
+LIST_FAILED=0
+EXISTING_BUDGETS=$(gcloud billing budgets list --billing-account="$BILLING_ID" \
+  --filter="displayName=\"$BUDGET_NAME\"" --format='value(name)' 2>&1) || LIST_FAILED=1
 
-if budget_exists; then
+if (( LIST_FAILED )); then
+  warn "Couldn't list budgets: $EXISTING_BUDGETS"
+  SKIPPED+=("Budget alerts: couldn't check for an existing budget; verify in the Billing console")
+elif [[ -n "$EXISTING_BUDGETS" ]]; then
   say "✓ budget '$BUDGET_NAME' already exists"
-elif gcloud billing budgets create --billing-account="$BILLING_ID" \
+elif BUDGET_ERR=$(gcloud billing budgets create --billing-account="$BILLING_ID" \
        --display-name="$BUDGET_NAME" \
        --filter-projects="projects/$GCP_PROJECT_ID" \
        --budget-amount=20USD \
+       --credit-types-treatment=exclude-all-credits \
        --threshold-rule=percent=0.25 \
        --threshold-rule=percent=0.5 \
-       --threshold-rule=percent=1.0 >/dev/null 2>&1; then
+       --threshold-rule=percent=1.0 2>&1 >/dev/null); then
   say "✓ created a \$20 budget that emails billing admins at \$5, \$10 and \$20"
+  note "Free Trial credit is excluded, so alerts track gross spend rather than what you pay."
 else
-  warn "Couldn't create the budget from the command line (needs Billing Account Administrator,"
-  warn "and a USD billing account). Create it by hand instead:"
+  warn "Couldn't create the budget: $BUDGET_ERR"
+  warn "It needs Billing Account Administrator and a USD billing account. Create it by hand:"
   open_url "https://console.cloud.google.com/billing/$BILLING_ID/budgets"
-  step "Create budget → scope: project $GCP_PROJECT_ID → amount: \$20 → alert thresholds 25%, 50%, 100%."
+  step "Create budget → scope: project $GCP_PROJECT_ID → amount: \$20 → exclude credits → alerts at 25%, 50%, 100%."
   SKIPPED+=("Budget alerts at \$5/\$10/\$20 (create in the Billing console)")
 fi
 note "Budget alerts only notify; they don't stop spending. Cloud Run max-instances and the app's"
