@@ -189,12 +189,12 @@ finish() {
 #   .env (git-ignored)  GCP_PROJECT_ID, GCP_REGION, GEMINI_LOCATION,
 #                       GEMINI_ANSWER_MODEL, GEMINI_JUDGE_MODEL,
 #                       GEMINI_EMBEDDING_MODEL, FIRESTORE_LOG_COLLECTION,
-#                       FIRESTORE_TTL_FIELD   (see .env.example)
+#                       FIRESTORE_TTL_FIELD, ARTIFACT_REPOSITORY (see .env.example)
 #   GitHub Actions variables (no secrets, no JSON keys):
 #                       GCP_PROJECT_ID, GCP_REGION,
 #                       GCP_WORKLOAD_IDENTITY_PROVIDER,
 #                       GCP_DEPLOYER_SERVICE_ACCOUNT,
-#                       GCP_RUNTIME_SERVICE_ACCOUNT
+#                       GCP_RUNTIME_SERVICE_ACCOUNT, GCP_ARTIFACT_REPOSITORY
 # ──────────────────────────────────────────────────────────────────────────
 
 # Git Bash on Windows rewrites arguments that look like POSIX paths
@@ -203,11 +203,12 @@ export MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL='*'
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
-TOTAL_STAGES=9
+TOTAL_STAGES=10
 
 REGION="us-central1"
 RUNTIME_SA_ID="coa-runtime"
 DEPLOYER_SA_ID="coa-deployer"
+AR_REPO="coa-explorer"
 WIF_POOL="github"
 WIF_PROVIDER="github-actions"
 LOG_COLLECTION="questions"
@@ -363,7 +364,25 @@ retry 5 gcloud iam service-accounts add-iam-policy-binding "$RUNTIME_SA" \
 say "✓ $DEPLOYER_SA → roles/iam.serviceAccountUser on $RUNTIME_SA"
 pause "Press Enter to continue."
 
-# ── 5. Workload Identity Federation ───────────────────────────────────────
+# ── 5. Artifact Registry ──────────────────────────────────────────────────
+stage "Create the container image repository"
+say "CI pushes the app's container image here before deploying it to Cloud Run."
+if gcloud artifacts repositories describe "$AR_REPO" --location="$REGION" --project "$GCP_PROJECT_ID" >/dev/null 2>&1; then
+  say "✓ repository '$AR_REPO' already exists in $REGION"
+else
+  gcloud artifacts repositories create "$AR_REPO" --repository-format=docker --location="$REGION" \
+    --description="COA Audit Explorer container images" --project "$GCP_PROJECT_ID" \
+    || die "Couldn't create the Artifact Registry repository."
+  say "✓ created Docker repository '$AR_REPO' in $REGION"
+fi
+AR_IMAGE_PREFIX="$REGION-docker.pkg.dev/$GCP_PROJECT_ID/$AR_REPO"
+say "Images go under: $AR_IMAGE_PREFIX/<image>:<tag>"
+note "The deployer account can already push here (Artifact Registry Writer, granted in stage 4)."
+note "Storage beyond 0.5 GB is billed (about \$0.10/GB-month); the image is small."
+set_var GCP_ARTIFACT_REPOSITORY "$AR_REPO"
+pause "Press Enter to continue."
+
+# ── 6. Workload Identity Federation ───────────────────────────────────────
 stage "Let GitHub Actions authenticate without keys"
 say "Workload Identity Federation: GitHub proves who it is with a short-lived token,"
 say "and only $GITHUB_REPO may impersonate the deployer account."
@@ -416,7 +435,7 @@ set_var GCP_DEPLOYER_SERVICE_ACCOUNT "$DEPLOYER_SA"
 set_var GCP_RUNTIME_SERVICE_ACCOUNT "$RUNTIME_SA"
 pause "Press Enter to continue."
 
-# ── 6. Firestore ──────────────────────────────────────────────────────────
+# ── 7. Firestore ──────────────────────────────────────────────────────────
 stage "Create Firestore and the 30-day log expiry"
 if gcloud firestore databases describe --database='(default)' --project "$GCP_PROJECT_ID" >/dev/null 2>&1; then
   existing_loc=$(gcloud firestore databases describe --database='(default)' --project "$GCP_PROJECT_ID" --format='value(locationId)')
@@ -438,7 +457,7 @@ gcloud firestore fields ttls update "$TTL_FIELD" --collection-group="$LOG_COLLEC
 note "The app must write '$TTL_FIELD' = question time + 30 days on every logged question."
 pause "Press Enter to continue."
 
-# ── 7. Budget alerts ──────────────────────────────────────────────────────
+# ── 8. Budget alerts ──────────────────────────────────────────────────────
 stage "Budget alerts at \$5, \$10 and \$20"
 BUDGET_NAME="coa-audit-explorer-$GCP_PROJECT_ID"
 BILLING_ID=$(gcloud billing projects describe "$GCP_PROJECT_ID" --format='value(billingAccountName)') \
@@ -476,13 +495,54 @@ note "Budget alerts only notify; they don't stop spending. Cloud Run max-instanc
 note "daily cap are the real limits."
 pause "Press Enter to continue."
 
-# ── 8. Local settings and Gemini check ────────────────────────────────────
+# ── 9. Local settings and Gemini check ────────────────────────────────────
 stage "Write local settings and test Gemini"
 say "Saving non-secret settings to .env (git-ignored; .env.example shows the shape)."
 note "Model names live in config so you can compare models without code changes."
-ask_default GEMINI_ANSWER_MODEL "Answer model (Gemini Flash):" "gemini-2.5-flash"
-ask_default GEMINI_JUDGE_MODEL "Evaluation judge model (Gemini Pro):" "gemini-2.5-pro"
 GEMINI_EMBEDDING_MODEL="gemini-embedding-001"
+
+# Google retires Gemini models often, so each model is called live before it's saved.
+ADC_TOKEN=$(gcloud auth application-default print-access-token 2>/dev/null || true)
+vertex_curl() {
+  curl -s -H "Authorization: Bearer $ADC_TOKEN" -H "x-goog-user-project: $GCP_PROJECT_ID" \
+    -H "Content-Type: application/json" "$@"
+}
+gemini_http_code() {
+  vertex_curl -o /dev/null -w '%{http_code}' -X POST \
+    "https://aiplatform.googleapis.com/v1/projects/$GCP_PROJECT_ID/locations/global/publishers/google/models/$1:generateContent" \
+    -d '{"contents":[{"role":"user","parts":[{"text":"Reply with the single word: ok"}]}]}' || true
+}
+list_gemini_models() {
+  vertex_curl "https://aiplatform.googleapis.com/v1beta1/publishers/google/models?pageSize=200" 2>/dev/null \
+    | grep -o 'publishers/google/models/gemini[A-Za-z0-9._-]*' | sed 's|.*/||' | sort -u | tr '\n' ' ' || true
+}
+# pick_model KEY "Prompt" DEFAULT asks for a model ID and keeps asking until Vertex serves it
+# (or you choose to keep it anyway).
+pick_model() {
+  local key="$1" prompt="$2" default="$3" code models input
+  ask_default "$key" "$prompt" "$default"
+  while :; do
+    code=$(gemini_http_code "${!key}")
+    if [[ "$code" == "200" ]]; then say "✓ ${!key} answered (HTTP 200)"; return; fi
+    warn "${!key} returned HTTP ${code:-none}."
+    if [[ "$code" == "404" ]]; then
+      models=$(list_gemini_models)
+      [[ -n "$models" ]] && note "Gemini models Vertex lists for your project: $models"
+      printf '  %sType another model ID to try, or press Enter to keep %s: %s' "$BOLD" "${!key}" "$RESET"
+      read -r input || true
+      if [[ -n "$input" ]]; then printf -v "$key" '%s' "$input"; continue; fi
+    else
+      warn "Not a missing model; if it's 403, wait a minute for the API enablement to propagate."
+    fi
+    SKIPPED+=("Confirm $key=${!key} works (re-run scripts/setup-gcp.sh)")
+    return
+  done
+}
+
+note "Answer model: Gemini 3.8 Flash is the current GA Flash. 2.5 models are being retired."
+pick_model GEMINI_ANSWER_MODEL "Answer model (Gemini Flash):" "gemini-3.8-flash"
+note "Judge model: the newest Pro is still a preview; there is no newer GA Pro than the retiring 2.5."
+pick_model GEMINI_JUDGE_MODEL "Evaluation judge model (Gemini Pro):" "gemini-3.1-pro-preview"
 
 write_env GCP_PROJECT_ID "$GCP_PROJECT_ID"
 write_env GCP_REGION "$REGION"
@@ -492,27 +552,11 @@ write_env GEMINI_JUDGE_MODEL "$GEMINI_JUDGE_MODEL"
 write_env GEMINI_EMBEDDING_MODEL "$GEMINI_EMBEDDING_MODEL"
 write_env FIRESTORE_LOG_COLLECTION "$LOG_COLLECTION"
 write_env FIRESTORE_TTL_FIELD "$TTL_FIELD"
+write_env ARTIFACT_REPOSITORY "$AR_REPO"
 
-printf '\n'
-say "Checking that your local credentials can call $GEMINI_ANSWER_MODEL on Vertex AI..."
-TOKEN=$(gcloud auth application-default print-access-token 2>/dev/null || true)
-HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' \
-  -X POST "https://aiplatform.googleapis.com/v1/projects/$GCP_PROJECT_ID/locations/global/publishers/google/models/$GEMINI_ANSWER_MODEL:generateContent" \
-  -H "Authorization: Bearer $TOKEN" \
-  -H "x-goog-user-project: $GCP_PROJECT_ID" \
-  -H "Content-Type: application/json" \
-  -d '{"contents":[{"role":"user","parts":[{"text":"Reply with the single word: ok"}]}]}' || true)
-if [[ "$HTTP_CODE" == "200" ]]; then
-  say "✓ Gemini answered (HTTP 200)"
-else
-  warn "Gemini call returned HTTP ${HTTP_CODE:-none}. If it's 404, the model name may be wrong for your"
-  warn "project: check Vertex AI → Model Garden and edit GEMINI_ANSWER_MODEL in .env. If it's 403,"
-  warn "wait a minute for the API enablement to propagate, then re-run this wizard."
-  SKIPPED+=("Confirm local Gemini access (re-run scripts/setup-gcp.sh, or check GEMINI_ANSWER_MODEL in .env)")
-fi
 pause "Press Enter to continue."
 
-# ── 9. Free Trial reminder ────────────────────────────────────────────────
+# ── 10. Free Trial reminder ────────────────────────────────────────────────
 stage "Before you finish: upgrade from the Free Trial"
 warn "Your Free Trial ends around $TRIAL_END. After that, resources are stopped and"
 warn "later deleted unless the account is upgraded to a paid account."
