@@ -26,3 +26,22 @@ current without writing anything (exit code 1 if they are stale):
 ```bash
 uv run coa-explorer extract --check
 ```
+
+## Asking questions locally
+
+Needs the settings from `scripts/setup-gcp.sh` in `.env` (`GCP_PROJECT_ID`, `GEMINI_LOCATION`,
+`GEMINI_ANSWER_MODEL`; see `.env.example`) and Application Default Credentials
+(`gcloud auth application-default login`). No API keys are used.
+
+```bash
+uv run coa-explorer index   # builds build/coa.sqlite from data/extracted/part2/ (git-ignored)
+uv run coa-explorer serve   # http://127.0.0.1:8000
+```
+
+`index` needs no GCP access; rebuild it whenever the extracted records change. Open
+http://127.0.0.1:8000, ask a question about Part II, and the page shows the summary and key points,
+each with Citation chips in COA's format. The page loads React from a CDN, so it needs internet.
+The answer model is `GEMINI_ANSWER_MODEL`; change it in `.env` to compare models.
+
+The page streams from `POST /api/ask` (`{"question": "..."}`), which returns newline-delimited
+JSON: `status` events while the model searches, then one `answer`, `not_covered` or `error` event.

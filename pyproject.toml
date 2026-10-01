@@ -4,13 +4,18 @@ version = "0.1.0"
 description = "Plain-language, cited answers to questions about COA's Annual Audit Reports on the City of Manila, 2020-2024."
 readme = "README.md"
 requires-python = ">=3.11,<3.12"
-dependencies = []
+dependencies = [
+    "fastapi>=0.142.2",
+    "google-genai>=1",
+    "uvicorn>=0.30",
+]
 
 [project.scripts]
 coa-explorer = "coa_explorer.cli:main"
 
 [dependency-groups]
 dev = [
+    "httpx>=0.28.1",
     "pytest>=8",
     "ruff>=0.6",
 ]
