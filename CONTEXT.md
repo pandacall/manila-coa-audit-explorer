@@ -1,0 +1,88 @@
+# COA Audit Explorer
+
+Plain-language, cited answers to questions about the Commission on Audit's (COA) Annual Audit Reports on the City of Manila, 2020–2024.
+
+## Language
+
+### The report
+
+**Annual Audit Report (AAR)**:
+COA's complete audit report on the City of Manila for one calendar year, delivered as a set of separate files.
+_Avoid_: Audit, report (unqualified)
+
+**Part**:
+One of the four numbered divisions of an AAR: I (Audited Financial Statements), II (Audit Observations and Recommendations), III (Status of Implementation of Prior Years' Recommendations), IV (Annexes).
+
+**Executive Summary**:
+COA's front-matter overview of an AAR, numbered in lowercase Roman pages.
+
+**Auditor's Report**:
+COA's formal opinion on whether the Financial Statements are fairly presented.
+_Avoid_: Audit opinion letter
+
+**Management**:
+The audited agency: the City Government of Manila, as COA addresses it. In plain-language answers, say "the City of Manila".
+_Avoid_: LGU, the city (in document-facing contexts)
+
+### Observations
+
+**Audit Observation**:
+One numbered item in Part II describing a deficiency, non-compliance or weakness COA found. It is not a finding of fraud or wrongdoing.
+_Avoid_: Finding, flag, issue, violation
+
+**Recommendation**:
+An action COA asks Management to take in response to an Audit Observation; one observation has one or more.
+
+**Management Comment**:
+Management's written response to an Audit Observation, as recorded in the AAR.
+_Avoid_: Reply, defense
+
+**Auditor's Rejoinder**:
+COA's answer to a Management Comment, when it has one.
+
+**Commendation**:
+A positive acknowledgement COA lists in Part II; numbered like observations but not an Audit Observation.
+
+### Follow-up across years
+
+**Prior Years' Recommendation**:
+A Recommendation from an earlier AAR whose follow-up is tracked in a later AAR's Part III.
+
+**Status of Implementation**:
+COA's assessment of a Prior Years' Recommendation: Implemented, Partially Implemented, or Not Implemented. This is the authoritative status; it comes from Part III or the APMT.
+_Avoid_: Using it for Management's own claim (that is the Reported Status)
+
+**Reported Status**:
+The status Management claims for its own Action Plan in the AAPSI. Always attributed to Management and never merged with the Status of Implementation.
+
+**Originating Observation**:
+The Audit Observation, in an earlier AAR, that a Prior Years' Recommendation was first raised under. It may predate 2020 and so lie outside the collection.
+
+**Action Plan**:
+Management's stated plan, owner and target date for addressing a Recommendation, as reported in the AAPSI.
+
+**AAPSI**:
+Agency Action Plan and Status of Implementation: Management's own report of its Action Plans and claimed progress.
+
+**APMT**:
+Action Plan Monitoring Tool: COA's validation of the AAPSI, adding COA's own Status of Implementation.
+
+### Financial statements
+
+**Financial Statements**:
+The five statements in Part I: Financial Position (SFPo), Financial Performance (SFPe), Changes in Net Assets/Equity (SCNAE), Cash Flows (SCF), and Comparison of Budget and Actual Amounts (SCBAA).
+
+**Notes to Financial Statements**:
+Management's explanatory disclosures supporting the Financial Statements, part of Part I.
+
+**Annex**:
+A supporting schedule in Part IV, typically a statement broken down by fund.
+
+**Fund**:
+A separately accounted pool of City money, chiefly the General Fund (GF) and the Special Education Fund (SEF).
+
+### Answers
+
+**Citation**:
+A pointer from an answer to its source, written the way COA cites itself: AAR year, Part, Audit Observation number where applicable, and page — e.g. "CY 2023 AAR, Part II, Observation No. 5, p. 71".
+_Avoid_: Reference, source link
