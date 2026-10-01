@@ -136,7 +136,6 @@ class _Level:
 
 @dataclass
 class _List:
-    levels: dict[int, _Level] = field(default_factory=dict)
     counters: dict[int, int] = field(default_factory=dict)
 
 
@@ -384,7 +383,7 @@ class _Reader:
             continuous = kind is not None and kind.get(W + "val") == "continuous"
             self._pages.new_section(self._section_start(self._section_index), not continuous)
 
-    def _consume(self, pieces: list[tuple[str, str | bool]]) -> tuple[str, bool, int, int]:
+    def _consume(self, pieces: list[tuple[str, object]]) -> tuple[str, bool, int, int]:
         """Walk a paragraph's text and breaks; return its text, boldness and first/last page."""
         chars: list[tuple[str, bool]] = []
         first_page: int | None = None
@@ -409,7 +408,7 @@ class _Reader:
         page = first_page if first_page is not None else self._pages.page
         return normalised, all_bold, page, last_page if last_page is not None else page
 
-    def _pieces(self, para: ET.Element, paragraph_bold: bool) -> list:
+    def _pieces(self, para: ET.Element, paragraph_bold: bool) -> list[tuple[str, object]]:
         pieces: list = []
         for el in _walk(para):
             if el.tag == W + "r":

@@ -20,4 +20,9 @@ uv run coa-explorer extract
 
 Reads each year's Part II (Audit Observations and Recommendations) Word file under
 `coa-audit-reports/` and writes one committed, human-readable JSON file per year to
-`data/extracted/part2/`. Re-running produces no diff.
+`data/extracted/part2/`. Re-running produces no diff. To check that the committed records are
+current without writing anything (exit code 1 if they are stale):
+
+```bash
+uv run coa-explorer extract --check
+```

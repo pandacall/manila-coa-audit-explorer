@@ -1,4 +1,4 @@
-"""Command line for COA Audit Explorer. Steps: extract (this ticket); index, eval, serve later."""
+"""Command line for COA Audit Explorer."""
 
 from __future__ import annotations
 

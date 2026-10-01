@@ -93,7 +93,7 @@ def find_part2_file(reports_dir: Path, year: int) -> Path:
 
 def extract_part2(path: Path, year: int) -> Part2:
     blocks = read_blocks(path)
-    result = Part2(aar_year=year, source_file=path.name)
+    result = Part2(aar_year=year, source_file=path.name)  # extract_year makes it repo-relative
     starts = _item_starts(blocks)
     if not starts:
         return result
@@ -122,7 +122,7 @@ def extract_part2(path: Path, year: int) -> Part2:
 
 
 # ---------------------------------------------------------------------------------------------
-# Finding items
+# Locating the numbered items
 
 
 def _item_starts(blocks: list[Block]) -> list[int]:
