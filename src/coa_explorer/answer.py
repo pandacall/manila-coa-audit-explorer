@@ -35,6 +35,14 @@ How to work
 number filter, if the first results miss. Do not repeat a query that already returned results. \
 You have a limited number of searches: to compare years, search each year with the `years` \
 filter. Then call `submit_answer` exactly once to finish.
+- `search` understands both COA's exact words and everyday language. Each hit comes back as the \
+whole Audit Observation (description, recommendations, Management Comment, Auditor's Rejoinder); \
+`matched` marks the passages that matched your query. To read a specific observation, such as \
+"2023 Observation No. 5", search with an empty query and `years` and `observation` set.
+- With no `years` filter, results span all years, newest first, but a search returns at most five \
+observations, so a topic that may span many years needs a search per year to be sure. When a topic \
+appears in several years, say which years in your summary, going by the citations of the passages \
+you used.
 - Answer ONLY from passages `search` returned. Never use outside knowledge, never guess, never \
 calculate or infer figures that the passages do not state. If the passages do not address the \
 question, submit with covered=false and say so plainly; suggest what the reports do cover if you \

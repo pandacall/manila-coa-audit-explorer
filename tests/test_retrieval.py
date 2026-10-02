@@ -285,3 +285,11 @@ def test_an_index_and_an_embedder_of_different_dimensions_are_rejected(tmp_path)
 
     with pytest.raises(ValueError, match="rebuild"):
         Index.open(tmp_path / "coa.sqlite", Wider())
+
+
+def test_part_names_are_matched_whatever_their_case(index):
+    assert index.search("IPSAS 1", parts=["ii"])
+
+
+def test_a_vector_match_that_is_not_close_is_dropped(index):
+    assert index.search("potholes") == []

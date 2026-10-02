@@ -245,3 +245,13 @@ def test_the_model_can_filter_by_year_part_and_observation_number(index):
     assert {p["citation"] for p in messages[-1].tool_results[0].content} == {CITATION_5}
     _, messages, _ = adapter.requests[2]
     assert messages[-1].tool_results[0].content == []
+
+
+def test_the_model_is_told_to_name_the_years_a_topic_appeared_in(index):
+    adapter = ScriptedAdapter(search("cash"), submit("Summary.", [point("P.", IPSAS_5)]))
+
+    ask(index, adapter)
+
+    system, _, _ = adapter.requests[0]
+    assert "newest first" in system
+    assert "say which years" in system
