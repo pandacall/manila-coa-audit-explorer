@@ -1,6 +1,6 @@
 """Does Gemini's extraction leave out anything Document AI saw on the page?
 
-    uv run --group prototype python -m prototypes.aapsi.completeness [model-suffix]
+    uv run --group prototype python -m prototypes.aapsi.completeness [baseline [other]]
 
 The spec checks Gemini's table rows against Document AI's OCR text. This measures how well that
 check works: per page, the words Document AI read that Gemini's cells lack (counted as a multiset,
@@ -68,14 +68,15 @@ def omissions(model: str, run: int = 4) -> dict[tuple[int, int], list[str]]:
 
 
 def main() -> None:
-    baseline, other = (sys.argv[1:] + ["gemini-3.8-flash", "gemini-3.8-flash_think-low"])[:2]
+    defaults = ["gemini-3.8-flash", "gemini-3.8-flash_think-low"]
+    baseline, other = [*sys.argv[1:3], *defaults[len(sys.argv[1:3]) :]]
     base, new = omissions(baseline), omissions(other)
     flagged, flagged_base = sum(map(len, new.values())), sum(map(len, base.values()))
     print(f"{other}: {flagged} stretches flagged; {baseline}: {flagged_base}")
     print(f"Flagged only for {other}:")
     for key, stretches in new.items():
         for stretch in stretches:
-            if stretch not in base[key]:
+            if stretch not in base.get(key, []):
                 print(f"  {key[0]} p{key[1]}: {stretch[:110]}")
 
 

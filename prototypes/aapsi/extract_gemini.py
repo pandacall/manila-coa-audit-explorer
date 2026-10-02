@@ -118,7 +118,7 @@ def extract_page(client, model: str, pdf: bytes, resolution: str, thinking: str 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("year", type=int)
-    parser.add_argument("doc", choices=["AAPSI", "APMT"])
+    parser.add_argument("doc", choices=["AAPSI"], help="APMT has a different column layout")
     parser.add_argument("pages", help="1-based: 2, 2-5, 2,4 or all")
     parser.add_argument("--model", default=None, help="default: GEMINI_ANSWER_MODEL")
     parser.add_argument("--resolution", default="MEDIA_RESOLUTION_HIGH")

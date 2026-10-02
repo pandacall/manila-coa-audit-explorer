@@ -10,9 +10,10 @@ fallback?
 
 On three scanned pages, Flash with low thinking made 6 character errors in 6,162 characters
 (0.10%; default thinking made 5); Document AI Enterprise OCR made 44 (0.71%) even after being
-handed a perfect table grid. Gemini returned every
-row of every page it was run on (32 pages, 2023 and 2024 AAPSI) with no omissions on the pages that
-could be checked. Cost is about $0.004 and 5 seconds a page.
+handed a perfect table grid. On the three pages checked against the scan, Gemini returned every
+row. On the other 29 pages the only checks are against Part II and Document AI's text: they found
+one phrase-level omission (point 5), and the observations Gemini did not return (2024 Obs 22, 27
+and 28) are ones the scan itself skips. Cost is about $0.004 and 5 seconds a page.
 
 Conditions that belong in the production ticket (#8), each backed by something observed below:
 
@@ -26,8 +27,10 @@ Conditions that belong in the production ticket (#8), each backed by something o
    `Section 14`, `Pparagraph, 3.1.1` lost its comma) and changed `CiB` to `CIB` in places. It kept
    the scan's real typo `Pparagraph`. This is harmless for search but means "exact source quote"
    from an AAPSI row is the scan as read, not verbatim; the human review step in the spec covers it.
-4. **Keep Document AI, but as a cross-check, not the primary reader** (reasons below). A plain-text
-   comparison is too noisy to use as a gate, so the check has to be column-aware (see "Cross-check").
+4. **Keep Document AI as an independent second reading, not the primary reader** (reasons below).
+   Whether it can *gate* Gemini's output is **not shown**: plain text comparison either missed the
+   one known omission or was too noisy to use. A column-aware check is needed and untested (see
+   "Cross-check").
 5. **The low-thinking run once dropped a phrase** (2024 p13, "unremitted taxes from prior years and
    SLs with", 9 words) that the default run kept. One omission in 32 pages, silent, found only by
    diffing two runs and Document AI's text. Omission is the failure the review must be designed to
@@ -90,7 +93,7 @@ Row counts matched the scan for every Gemini run on all three pages (5/5, 3/3, 4
 
 **Document AI Enterprise OCR**
 - Emits non-Latin lookalikes: `CTO` came out as `CТО` with Cyrillic Te and O. Across all 32 pages
-  (14,736 words) there are 33 Cyrillic and 3 Arabic characters, against none from Gemini. These
+  (14,736 OCR tokens) there are 33 Cyrillic and 3 Arabic characters, against none from Gemini. These
   break exact-term search ("CTO") invisibly.
 - Confuses `i`/`l`/`I` in this scan's font (`Reconcillation`, `Suppller`, `Implementing`), and
   spaces out punctuation (`CiB ) ,`). The spacing was forgiven in the scoring; the letter errors were not.
@@ -156,18 +159,22 @@ Found while cross-checking all 32 pages against the committed Part II records
 - **2023 AAPSI cites pages 7-9 higher than the page derived from the Word file** for its own
   observations (Obs 1: cites p.79, derived p.71), and the scan does print "Page 79". The 2024 AAPSI
   agrees within 1 page for 23 of 26 observations, but not for Obs 18 (-4), 21 (-3) and 29 (-9; cites
-  p.169, derived p.178), also as printed in the scan. Part III or the following year's citations are
+  p.169, derived p.178). I checked Obs 21 ("Page 150"), Obs 29 ("Page 169") and Obs 1 of 2023
+  ("Page 79") by eye on the scan; Obs 18's "Page 142" (the same as Obs 17's) is Gemini's reading
+  and unchecked. Part III or the following year's citations are
   the reference ADR-0001 used; the AAPSI is a weaker check on page numbers.
 - **The AAPSI is incomplete against Part II**: 2024 has no rows for Observations 22, 27 and 28 (the
   scan jumps 21 to 23, 26 to 29, confirmed by eye), and 2023 has none for Observation 7 (Part II
   gives it no Recommendation).
+- **The AAPSI's Status column is Management's Reported Status** (the schema field is just called
+  `status` here), never to be merged with COA's Status of Implementation.
 - **Reported Status is mostly blank for 2024**: 47 rows, no target dates, no Reason or Action Taken,
   and a status on only 3 rows (all carried-over, "Not Implemented"). The Action Plan text and
   Person Responsible are filled. 2023 has status on all 24 rows ("Ongoing" 16, "Fully Implemented"
   8) with dates on 18.
 - The 2023 AAPSI has an empty Action Plan column on every row.
 - Row counts: 24 rows for 2023 (Part II has 19 Recommendations; the rest are carried-over items)
-  and 47 for 2024 (Part II has 132 Recommendations). Many 2024 rows hold all of an observation's
+  and 47 (default run) or 48 (low-thinking run) for 2024 (Part II has 132 Recommendations). Many 2024 rows hold all of an observation's
   Recommendations in one cell, so rows do not map one to one to Recommendations.
 - The APMT was not run; it has COA's Status of Implementation columns and so a different schema.
 
@@ -178,10 +185,14 @@ Found while cross-checking all 32 pages against the committed Part II records
   already requires.
 - The truth is one reader's transcription of low-resolution scans; `i`/`l`/`I` are often
   indistinguishable in this font, so a few of the "errors" on both engines could be the scan's.
-- Gemini is not strictly deterministic even at temperature 0; two runs differed on 32 of 690 cells
-  (mostly row splits).
+- Gemini is not strictly deterministic even at temperature 0; the default and low-thinking runs
+  differed on 32 of 690 paired cells and on the row count of 2 pages (`compare_runs.py`).
 - The low-thinking whole-document run was only compared with the default run and Document AI, not
   with a transcription.
+- The decision against Layout Parser rests on trying it on three pages, and on Gemini's measured
+  fidelity making the fallback unnecessary, not on a like-for-like accuracy comparison with it.
+- The 2023 p2 truth was seeded from Gemini output, and Document AI was scored on the truth's grid;
+  both are disclosed above and both favour the engine named.
 
 ## Reproducing
 
@@ -192,6 +203,7 @@ uv run --group prototype python -m prototypes.aapsi.extract_docai 2023 AAPSI 6
 uv run --group prototype python -m prototypes.aapsi.report            # results/comparison.md
 uv run --group prototype python -m prototypes.aapsi.crosscheck gemini-3.8-flash_think-low
 uv run --group prototype python -m prototypes.aapsi.completeness
+uv run --group prototype python -m prototypes.aapsi.compare_runs
 uv run --group prototype pytest prototypes
 ```
 

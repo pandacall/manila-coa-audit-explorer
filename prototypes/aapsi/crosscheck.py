@@ -3,9 +3,9 @@
     uv run --group prototype python -m prototypes.aapsi.crosscheck [model]
 
 No transcription needed: each AAPSI reference ("AAR 2024 Observation No. 3 Page 87") names an
-Audit Observation, and each row's Recommendations text starts with its Recommendation number.
-Reports observations found vs the 7 (2023) and 29 (2024) in Part II, how the cited page compares to
-the page derived from the Word file, and how many Recommendation rows each observation got.
+Audit Observation. Reports which of the Part II observations are referenced, how each cited page
+compares with the page derived from the Word file (ADR-0001), and the carried-over references to
+earlier AARs.
 """
 
 from __future__ import annotations

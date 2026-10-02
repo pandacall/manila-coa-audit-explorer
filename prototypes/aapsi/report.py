@@ -100,10 +100,11 @@ def worst_cells(truth_rows, rows, score, limit=8) -> list[str]:
 
 
 def character_errors(truth_rows, rows, score) -> tuple[int, int]:
-    """(edit distance, characters in the scan) over the matched rows' cells."""
+    """(edit distance, characters in the scan); text in extra rows counts as errors."""
     wrong = total = 0
     for t, e in score.pairs:
-        if t is None:
+        if t is None:  # a row the scan doesn't have: all its text is invented
+            wrong += sum(len(normalise(rows[e][f])) for f in FIELDS)
             continue
         for f in FIELDS:
             want = normalise(truth_rows[t][f])
@@ -116,7 +117,11 @@ def character_errors(truth_rows, rows, score) -> tuple[int, int]:
 def lookalikes(rows) -> int:
     """Characters outside Latin-1 (Cyrillic homoglyphs and the like) in what was read."""
     return sum(
-        1 for row in rows for f in FIELDS for ch in row[f] if ord(ch) > 0xFF and ch not in "’‘“”–—•"
+        1
+        for row in rows
+        for f in FIELDS
+        for ch in row[f]
+        if ord(ch) > 0xFF and ch not in "’‘“”–—•₱"
     )
 
 
