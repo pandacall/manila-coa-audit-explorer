@@ -5,9 +5,11 @@ Citation): its description, its Recommendations, its Management Comment and, whe
 Auditor's Rejoinder. Long descriptions are split on paragraph boundaries so a piece stays small
 enough to read in full.
 
-The Executive Summary (part "ES") and the Auditor's Report (part "I", its place in the AAR) become
-one piece per section, split on paragraph boundaries when long; a heading with no text makes none.
-Each carries the section's Citation.
+The Executive Summary (part "ES"), the Auditor's Report (part "I", its place in the AAR), the
+transmittal letter (part "TL") and the Management Responsibility statement (part "MR") become one
+piece per section, split on paragraph boundaries when long; a heading with no text makes none. Each
+carries the section's Citation. The letter and the statement have one section each, the whole
+document. (The codes are document codes, not all of them COA Parts.)
 
 The Financial Statements and Annexes are not pieces: every amount goes to the `financial_lines`
 table, in centavos, for `financial_lookup`.
@@ -34,11 +36,24 @@ import sqlite_vec
 
 from coa_explorer.aapsi import DOCUMENTS
 from coa_explorer.embedder import Embedder
-from coa_explorer.front_matter import EXECUTIVE_SUMMARY
+from coa_explorer.front_matter import (
+    AUDITORS_REPORT,
+    EXECUTIVE_SUMMARY,
+    MANAGEMENT_RESPONSIBILITY,
+    TRANSMITTAL_LETTER,
+)
 from coa_explorer.links import build_links
 from coa_explorer.timeline import clip_title, disagreement
 
 MAX_PIECE_CHARS = 1800
+
+# Each document that is read in sections: its record folder (also its piece kind) and part code.
+FRONT_MATTER = {
+    EXECUTIVE_SUMMARY: ("executive_summary", "ES"),
+    AUDITORS_REPORT: ("auditors_report", "I"),
+    TRANSMITTAL_LETTER: ("transmittal_letter", "TL"),
+    MANAGEMENT_RESPONSIBILITY: ("management_responsibility", "MR"),
+}
 
 SCHEMA = """
 CREATE TABLE pieces (
@@ -179,8 +194,9 @@ def build_index(records_dir: Path, db_path: Path, embedder: Embedder) -> int:
     part2 = load_records(records_dir / "part2")
     part3 = load_records(records_dir / "part3")
     front_matter = [
-        *load_records(records_dir / "executive_summary").values(),
-        *load_records(records_dir / "auditors_report").values(),
+        record
+        for folder, _ in FRONT_MATTER.values()
+        for record in load_records(records_dir / folder).values()
     ]
     monitoring = load_monitoring(records_dir)
     financial = load_records(records_dir / "financial")
@@ -291,12 +307,19 @@ def add_financial_lines(db: sqlite3.Connection, record: dict) -> None:
 
 
 def front_matter_pieces(record: dict) -> Iterator[tuple]:
-    """The piece rows of one Executive Summary or Auditor's Report, a section at a time."""
+    """The piece rows of one Executive Summary, Auditor's Report, transmittal letter or Management
+    Responsibility statement, a section at a time."""
     year, document = record["aar_year"], record["document"]
-    summary = document == EXECUTIVE_SUMMARY
-    part, kind = ("ES", "executive_summary") if summary else ("I", "auditors_report")
+    kind, part = FRONT_MATTER[document]
     for number, section in enumerate(record["sections"], start=1):
-        anchor = section["label"] if summary else f"AR-{number}"
+        # The Executive Summary's sections are lettered, the Auditor's Report's are numbered "AR-n"
+        # (the key ids the model cites), and the one-section documents are just "n".
+        if document == EXECUTIVE_SUMMARY:
+            anchor = section["label"]
+        elif document == AUDITORS_REPORT:
+            anchor = f"AR-{number}"
+        else:
+            anchor = str(number)
         for seq, text in enumerate(split_text(section["text"]), start=1):
             yield (
                 f"{year}-{part}-{anchor}-{seq}",

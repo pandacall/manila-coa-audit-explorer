@@ -21,6 +21,9 @@ class Settings:
     gemini_extraction_model: str  # reads the scanned AAPSI and APMT tables
     gemini_embedding_model: str
     index_path: Path
+    # Document AI reads the scanned short documents (`coa-explorer ocr`). Multi-region: us or eu.
+    document_ai_location: str = "us"
+    document_ai_processor: str | None = None  # full resource name; default: the OCR_PROCESSOR
     # The public demo's guard rails. With no `firestore_database` the app runs without them.
     firestore_database: str | None = None
     firestore_log_collection: str = "questions"
@@ -37,21 +40,28 @@ class Settings:
     gemini_batch_location: str | None = None
 
 
-def load_settings(env_file: Path = REPO_ROOT / ".env") -> Settings:
+def load_settings(
+    env_file: Path = REPO_ROOT / ".env",
+    required: tuple[str, ...] = ("GCP_PROJECT_ID", "GEMINI_ANSWER_MODEL"),
+) -> Settings:
+    """`required` names the settings the caller needs; `ocr` needs only the project."""
     env = {**read_env_file(env_file), **os.environ}
-    missing = [k for k in ("GCP_PROJECT_ID", "GEMINI_ANSWER_MODEL") if not env.get(k)]
+    missing = [k for k in required if not env.get(k)]
     if missing:
         raise SystemExit(
             f"missing setting(s): {', '.join(missing)}. Run scripts/setup-gcp.sh or copy"
             " .env.example to .env and fill them in."
         )
     return Settings(
-        gcp_project_id=env["GCP_PROJECT_ID"],
+        gcp_project_id=env.get("GCP_PROJECT_ID", ""),
         gemini_location=env.get("GEMINI_LOCATION") or "global",
-        gemini_answer_model=env["GEMINI_ANSWER_MODEL"],
-        gemini_extraction_model=env.get("GEMINI_EXTRACTION_MODEL") or env["GEMINI_ANSWER_MODEL"],
+        gemini_answer_model=env.get("GEMINI_ANSWER_MODEL", ""),
+        gemini_extraction_model=env.get("GEMINI_EXTRACTION_MODEL")
+        or env.get("GEMINI_ANSWER_MODEL", ""),
         gemini_embedding_model=env.get("GEMINI_EMBEDDING_MODEL") or "gemini-embedding-001",
         index_path=Path(env.get("COA_INDEX_PATH") or DEFAULT_INDEX),
+        document_ai_location=env.get("DOCUMENT_AI_LOCATION") or "us",
+        document_ai_processor=env.get("DOCUMENT_AI_PROCESSOR") or None,
         firestore_database=env.get("FIRESTORE_DATABASE") or None,
         firestore_log_collection=env.get("FIRESTORE_LOG_COLLECTION") or "questions",
         firestore_limits_collection=env.get("FIRESTORE_LIMITS_COLLECTION") or "limits",

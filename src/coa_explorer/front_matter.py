@@ -11,6 +11,10 @@ sections on COA's headings:
   Opinion", "Emphasis of Matter" ...) and are matched against that list. Its pages are plain
   numbers.
 
+The transmittal letter and the Management Responsibility statement are short and have no sections:
+each is one section, cited by its pages. Most of them are scans, read from a reviewed transcription
+(see `ocr.py`); the one native-text letter is read from its PDF.
+
 Word pages are derived from the saved layout (ADR-0001), so they are best-effort; PDF pages are
 the PDF's real ones. Each section is one Citation: the Executive Summary's names the section
 letter, the exact anchor, the Auditor's Report's the page.
@@ -29,14 +33,28 @@ from coa_explorer.docx_reader import Block as DocxBlock
 from coa_explorer.docx_reader import (
     Paragraph,
     Table,
+    embedded_images,
     format_page_number,
     page_number_format,
     read_blocks,
 )
-from coa_explorer.pdf_reader import PdfPage, read_pages, reviewed_path
+from coa_explorer.pdf_reader import PdfPage, read_pages, read_transcription, reviewed_path
 
 EXECUTIVE_SUMMARY = "Executive Summary"
 AUDITORS_REPORT = "Auditor's Report"
+TRANSMITTAL_LETTER = "Transmittal Letter"
+MANAGEMENT_RESPONSIBILITY = "Management Responsibility for Financial Statements"
+# The file name of each short document, as a glob.
+SHORT_DOCUMENT_FILES = {
+    TRANSMITTAL_LETTER: "01-*Transmittal_Letter.*",
+    MANAGEMENT_RESPONSIBILITY: "06-*Mgmt_Responsibility*.*",
+}
+# The documents whose file is a picture of paper (or whose text layer is unreliable), by AAR year.
+# CY 2024's transmittal letter is the only one with a real text layer.
+SCANNED: dict[str, tuple[int, ...]] = {
+    TRANSMITTAL_LETTER: (2020, 2021, 2022, 2023),
+    MANAGEMENT_RESPONSIBILITY: (2020, 2021, 2022, 2023, 2024),
+}
 
 # Sentence-ending characters: a block that ends with anything else carries on over a page break.
 TERMINATORS = '.;:?!)"”’'
@@ -109,6 +127,18 @@ def extract_auditors_report(
     )
 
 
+def extract_transmittal_letter(
+    reports_dir: Path, year: int, reviewed_dir: Path | None = DEFAULT_REVIEWED
+) -> FrontMatter:
+    return _extract_short(reports_dir, year, TRANSMITTAL_LETTER, reviewed_dir)
+
+
+def extract_management_responsibility(
+    reports_dir: Path, year: int, reviewed_dir: Path | None = DEFAULT_REVIEWED
+) -> FrontMatter:
+    return _extract_short(reports_dir, year, MANAGEMENT_RESPONSIBILITY, reviewed_dir)
+
+
 def find_file(reports_dir: Path, year: int, pattern: str) -> Path:
     """The year's one file for this document, Word or PDF. The duplicate Executive Summary PDFs
     live outside the year folders, in `_duplicates/`, and are never found here."""
@@ -157,6 +187,77 @@ def _extract(
         page_format=page_format,
         sections=sections,
     )
+
+
+def _extract_short(
+    reports_dir: Path, year: int, document: str, reviewed_dir: Path | None
+) -> FrontMatter:
+    """A short document read as one section. A scan is read from its reviewed transcription and
+    never from its text layer: with no transcription there is nothing citable, so it is an error."""
+    path = find_file(reports_dir, year, SHORT_DOCUMENT_FILES[document])
+    transcription = reviewed_path(path, reviewed_dir)
+    if year in SCANNED[document] and transcription is None:
+        raise FileNotFoundError(
+            f"{path.name} is a scan and has no reviewed transcription in {reviewed_dir}; run"
+            " `coa-explorer ocr`, proofread the output against the scan, and commit it"
+        )
+    if path.suffix == ".docx":
+        blocks = _word_letter_blocks(path, transcription)
+        text_source = _text_source(transcription, "Word document")
+    else:
+        pages = read_pages(path, reviewed_dir)
+        _check_printed_pages(path, pages, "decimal")
+        blocks = _pdf_blocks(pages, _no_headings)
+        text_source = _text_source(transcription, "PDF text layer")
+    if not blocks:
+        raise ValueError(f"{path.name}: no text found")
+    start = min(b.page for b in blocks)
+    end = max(b.end_page for b in blocks)
+    section = Section(
+        label=None,
+        heading=document,
+        page_start=start,
+        page_end=end,
+        pages=_printed(start, end, "decimal"),
+        citation=_citation(year, document, None, start, end, "decimal"),
+        text="\n".join(b.text for b in blocks),
+    )
+    return FrontMatter(
+        aar_year=year,
+        document=document,
+        source_file=path.relative_to(reports_dir).as_posix(),
+        text_source=text_source,
+        page_format="decimal",
+        sections=[section],
+    )
+
+
+def _no_headings(text: str) -> bool:
+    return False
+
+
+def _text_source(transcription: Path | None, otherwise: str) -> str:
+    if transcription is None:
+        return otherwise
+    return f"reviewed transcription: data/reviewed/{transcription.name}"
+
+
+def _word_letter_blocks(path: Path, transcription: Path | None) -> list[Block]:
+    """A Word letter. When it is made of pictures (CY 2021's), each picture fills a page and is
+    read from the transcription; whatever text Word holds follows on the next page."""
+    pictures = len(embedded_images(path))
+    text_blocks = _word_blocks(read_blocks(path))
+    if not pictures:
+        return text_blocks
+    assert transcription is not None
+    pages = read_transcription(transcription)
+    if len(pages) != pictures:
+        raise ValueError(
+            f"{transcription.name} has {len(pages)} pages but {path.name} has {pictures} pictures"
+        )
+    scanned = _pdf_blocks(pages, _no_headings)
+    after = [Block(b.text, pictures + 1, pictures + 1, b.table) for b in text_blocks]
+    return [*scanned, *after]
 
 
 # ---------------------------------------------------------------------------------------------
@@ -256,6 +357,8 @@ def _citation(
     where = f"p. {pages}" if start == end else f"pp. {pages}"
     if document == EXECUTIVE_SUMMARY:
         return f"CY {year} AAR, {document}, Section {label}, {where}"
+    if document == TRANSMITTAL_LETTER:
+        return f"CY {year} AAR, {document}, {where}"
     return f"CY {year} AAR, Part I, {document}, {where}"
 
 

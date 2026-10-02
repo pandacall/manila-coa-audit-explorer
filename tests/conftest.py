@@ -32,3 +32,15 @@ def executive_summaries():
 def auditors_reports():
     """The Auditor's Report extracted from the real, committed AARs, keyed by AAR year."""
     return {year: front_matter.extract_auditors_report(REPORTS, year) for year in YEARS}
+
+
+@pytest.fixture(scope="session")
+def transmittal_letters():
+    """The transmittal letter extracted from the real, committed AARs, keyed by AAR year."""
+    return {year: front_matter.extract_transmittal_letter(REPORTS, year) for year in YEARS}
+
+
+@pytest.fixture(scope="session")
+def management_responsibilities():
+    """The Management Responsibility statement extracted from the real AARs, keyed by AAR year."""
+    return {year: front_matter.extract_management_responsibility(REPORTS, year) for year in YEARS}
