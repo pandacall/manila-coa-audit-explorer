@@ -41,10 +41,23 @@ class Message:
 
 
 @dataclass
+class Usage:
+    """Tokens a model reported using, summed over the turns of one question."""
+
+    input_tokens: int = 0
+    output_tokens: int = 0
+
+    def add(self, other: Usage) -> None:
+        self.input_tokens += other.input_tokens
+        self.output_tokens += other.output_tokens
+
+
+@dataclass
 class ModelTurn:
     text: str | None
     tool_calls: list[ToolCall]
     raw: Any = None
+    usage: Usage | None = None
 
 
 class ModelAdapter(Protocol):

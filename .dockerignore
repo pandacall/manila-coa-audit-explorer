@@ -1,0 +1,10 @@
+# Allow-list: the image needs only the app, the prebuilt index and the saved example answers.
+*
+!pyproject.toml
+!uv.lock
+!.python-version
+!README.md
+!src
+!build/coa.sqlite
+!data/saved-answers.json
+**/__pycache__

@@ -4,6 +4,9 @@ Plain-language, cited answers to questions about the Commission on Audit's Annua
 on the City of Manila, 2020-2024. See `CONTEXT.md` for the project vocabulary and `docs/adr/` for
 design decisions.
 
+**Live demo:** https://coa-explorer-417534361115.us-central1.run.app (on Cloud Run, so the first
+question after a quiet spell takes a few seconds longer).
+
 ## Development
 
 ```bash
@@ -90,6 +93,28 @@ disagree; an answer can carry a "What the City said" section. The page loads Rea
 internet.
 The answer model is `GEMINI_ANSWER_MODEL`; change it in `.env` to compare models.
 
+## Public-demo limits, logging and feedback
+
+`serve` guards the app for a public demo and needs `FIRESTORE_DATABASE` (see `.env.example`); it
+refuses to start without it rather than run unguarded. `serve --no-demo-limits` skips all of this,
+and needs no Firestore.
+
+- **Rate limit**: `HOURLY_LIMIT_PER_IP` questions an hour per visitor (default 10), keyed on a salted
+  hash of the IP (`IP_HASH_SALT`; set the same value on every instance). The IP is only used for
+  this counter and is never stored with a logged question.
+- **Daily cap**: `DAILY_QUESTION_CAP` questions a day across all visitors (default 300, UTC days),
+  counted in Firestore, so it is right across instances and restarts. Over either limit,
+  `POST /api/ask` answers 429 with one `rate_limited` or `demo_limit` event and never calls the
+  model. When capped, the page shows "Demo limit reached for today" with the example questions and
+  their saved answers (`data/saved-answers.json`, regenerated against the real model with
+  `uv run coa-explorer save-examples`). If Firestore can't be reached the demo fails closed (503).
+- **Question log**: each question is logged to Firestore with its outcome, Citations, latency and
+  token counts; no IP and no user ID. Records expire 30 days after the question
+  (`scripts/setup-gcp.sh` creates the TTL policies). The final streamed event carries the logged
+  `question_id`; a failed log write never costs the visitor their answer.
+- **Feedback**: 👍/👎 on an answer is sent to `POST /api/feedback`
+  (`{"question_id": "...", "rating": "up" | "down"}`) and stored on the logged question.
+
 The page streams from `POST /api/ask` (`{"question": "..."}`), which returns newline-delimited
 JSON: `status` events while the model searches, then one `answer` (with its `timelines`, if any),
 `not_covered` or `error` event.
@@ -105,3 +130,20 @@ money that employees borrowed and never paid back?" (everyday wording; cited ans
 cash-advance and GSIS-loan observations), "What does 2023 Observation No. 5 say?" (direct lookup),
 "What did COA say about Quezon City's budget?" (not covered), and "Which years did COA raise
 problems with the City's bank account balances?" (cited answer naming each year).
+
+## Deployment
+
+Pull requests run `ruff check`, `ruff format --check`, `pytest` and `coa-explorer extract --check`
+(`.github/workflows/ci.yml`). A merge to `main` then builds `build/coa.sqlite` from the committed
+records, bakes it into the container image (`Dockerfile`, ADR-0002), pushes the image to Artifact
+Registry and deploys it to Cloud Run in `us-central1`: runtime service account, scale to zero, at
+most 2 instances, public. It finishes by asking the deployed URL a real question
+(`coa-explorer smoke --url ...`), so a deploy that cannot answer fails the run.
+
+GitHub Actions authenticates with Workload Identity Federation: no service-account key exists, in
+the repository or in GitHub secrets. The workflow reads only the repository *variables* that
+`scripts/setup-gcp.sh` sets (project, region, provider, service accounts, Artifact Registry
+repository and the Gemini model names). Re-run the script after pulling this change: it is safe to
+repeat, grants the deployer account Vertex AI access for the index build, and sets the model
+variables. To switch the answer model without code changes, change the `GEMINI_ANSWER_MODEL`
+variable and re-run the workflow (Actions, "CI/CD", Run workflow, on `main`).

@@ -14,7 +14,7 @@ from google import genai
 from google.genai import types
 
 from coa_explorer.aapsi import PAGE_PROMPTS, row_schema
-from coa_explorer.models import Message, ModelTurn, ToolCall, ToolSpec
+from coa_explorer.models import Message, ModelTurn, ToolCall, ToolSpec, Usage
 
 MAX_OUTPUT_TOKENS = 8192
 PAGE_OUTPUT_TOKENS = 32768
@@ -57,7 +57,16 @@ class GeminiAdapter:
             if part.function_call
         ]
         text = "".join(part.text for part in parts if part.text and not part.thought) or None
-        return ModelTurn(text=text, tool_calls=calls, raw=content)
+        return ModelTurn(text=text, tool_calls=calls, raw=content, usage=usage_of(response))
+
+
+def usage_of(response: types.GenerateContentResponse) -> Usage | None:
+    metadata = response.usage_metadata
+    if metadata is None:
+        return None
+    # Thinking tokens are billed as output.
+    output = (metadata.candidates_token_count or 0) + (metadata.thoughts_token_count or 0)
+    return Usage(input_tokens=metadata.prompt_token_count or 0, output_tokens=output)
 
 
 def declaration(tool: ToolSpec) -> types.FunctionDeclaration:
