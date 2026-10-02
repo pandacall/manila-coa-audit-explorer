@@ -84,6 +84,13 @@ def piece_from(row: sqlite3.Row) -> Piece:
 
 
 def fts_query(text: str) -> str:
-    """Turn free text into an FTS5 query: every word quoted (so operators are inert), OR-ed."""
+    """Turn free text into an FTS5 query: every word quoted (so operators are inert), OR-ed.
+
+    With several words the whole phrase is added too, so an exact term such as "IPSAS 1" outranks
+    pieces that merely contain "IPSAS" and "1" somewhere.
+    """
     words = re.findall(r"\w+", text)
-    return " OR ".join(f'"{word}"' for word in words)
+    terms = [f'"{word}"' for word in words]
+    if len(words) > 1:
+        terms.insert(0, f'"{" ".join(words)}"')
+    return " OR ".join(terms)

@@ -32,7 +32,9 @@ City of Manila, 2020-2024, for ordinary residents, journalists and students. Tod
 
 How to work
 - Call `search` to find passages. Search again with different words, or a year or observation \
-number filter, if the first results miss. Then call `submit_answer` exactly once to finish.
+number filter, if the first results miss. Do not repeat a query that already returned results. \
+You have a limited number of searches: to compare years, search each year with the `years` \
+filter. Then call `submit_answer` exactly once to finish.
 - Answer ONLY from passages `search` returned. Never use outside knowledge, never guess, never \
 calculate or infer figures that the passages do not state. If the passages do not address the \
 question, submit with covered=false and say so plainly; suggest what the reports do cover if you \
@@ -148,7 +150,7 @@ Event = Status | Answer | NotCovered
 
 
 class AnswerEngine:
-    def __init__(self, adapter: ModelAdapter, index: Index, max_search_rounds: int = 4):
+    def __init__(self, adapter: ModelAdapter, index: Index, max_search_rounds: int = 6):
         self._adapter = adapter
         self._index = index
         self._max_search_rounds = max_search_rounds

@@ -26,6 +26,15 @@ class GeminiAdapter:
             config=types.GenerateContentConfig(
                 system_instruction=system,
                 tools=[types.Tool(function_declarations=[declaration(tool) for tool in tools])],
+                # When only one tool is offered (the engine's last round) the model must call it.
+                tool_config=types.ToolConfig(
+                    function_calling_config=types.FunctionCallingConfig(
+                        mode=types.FunctionCallingConfigMode.ANY,
+                        allowed_function_names=[tool.name for tool in tools],
+                    )
+                )
+                if len(tools) == 1
+                else None,
                 automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
                 max_output_tokens=MAX_OUTPUT_TOKENS,
             ),

@@ -135,7 +135,7 @@ def test_a_model_that_searches_forever_is_stopped(index):
     events = ask(index, adapter)
 
     assert final(events)["type"] == "not_covered"
-    assert len(adapter.requests) <= 6
+    assert len(adapter.requests) <= 8
 
 
 def test_a_model_failure_is_reported_without_leaking_details(index):

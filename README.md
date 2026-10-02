@@ -45,3 +45,9 @@ The answer model is `GEMINI_ANSWER_MODEL`; change it in `.env` to compare models
 
 The page streams from `POST /api/ask` (`{"question": "..."}`), which returns newline-delimited
 JSON: `status` events while the model searches, then one `answer`, `not_covered` or `error` event.
+
+Verified against real Gemini (2026-10-02) with: "What did COA observe about cash advances in
+Manila?" (cited answer), "Did Manila comply with IPSAS 1 in its financial statements? Which years?"
+(cited answer across 2022-2024), "What did COA say about Quezon City's budget?" (not covered), and a
+Filipino question about 2023 Observation No. 5 (cited answer, but in English; answering in the
+question's language is a later ticket).

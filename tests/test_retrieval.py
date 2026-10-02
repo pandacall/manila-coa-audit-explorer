@@ -10,7 +10,7 @@ import pytest
 from coa_explorer.cli import main
 from coa_explorer.index import build_index
 from coa_explorer.search import Index
-from tests.fixtures import write_fixture_records
+from tests.fixtures import observation, part2, write_fixture_records
 
 
 @pytest.fixture()
@@ -108,3 +108,17 @@ def test_the_index_opens_from_a_relative_path(tmp_path, monkeypatch):
 
     with Index.open(Path("coa.sqlite")) as opened:
         assert opened.search("IPSAS 1")
+
+
+def test_an_exact_phrase_outranks_pieces_that_only_share_its_words(tmp_path):
+    scattered = observation(
+        2024, 1, "Unrelated", "IPSAS 12 was applied. Paragraph 1 refers to Section 7 of IPSAS 3."
+    )
+    exact = observation(2020, 2, "Presentation", "The statements did not follow IPSAS 1 in 2020.")
+    records = write_fixture_records(
+        tmp_path / "records", {2020: part2(2020, [exact]), 2024: part2(2024, [scattered])}
+    )
+    build_index(records, tmp_path / "coa.sqlite")
+
+    with Index.open(tmp_path / "coa.sqlite") as built:
+        assert built.search("IPSAS 1")[0].aar_year == 2020
