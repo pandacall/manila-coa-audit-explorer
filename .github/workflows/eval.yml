@@ -39,7 +39,8 @@ jobs:
 
       - name: Count approved reference items
         id: approved
-        run: echo "count=$(grep -c '"approved": true' data/eval/reference.json || true)" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "count=$(grep -c '"approved": true' data/eval/reference.json || true)" >> "$GITHUB_OUTPUT"
 
       - uses: google-github-actions/auth@v2
         if: steps.approved.outputs.count != '0'
