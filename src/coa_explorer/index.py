@@ -43,16 +43,12 @@ from coa_explorer.timeline import clip_title, disagreement
 
 MAX_PIECE_CHARS = 1800
 
-# Each document that is read in sections: its record folder, its part code, and its piece kind.
+# Each document that is read in sections: its record folder (also its piece kind) and part code.
 FRONT_MATTER = {
-    EXECUTIVE_SUMMARY: ("executive_summary", "ES", "executive_summary"),
-    AUDITORS_REPORT: ("auditors_report", "I", "auditors_report"),
-    TRANSMITTAL_LETTER: ("transmittal_letter", "TL", "transmittal_letter"),
-    MANAGEMENT_RESPONSIBILITY: (
-        "management_responsibility",
-        "MR",
-        "management_responsibility",
-    ),
+    EXECUTIVE_SUMMARY: ("executive_summary", "ES"),
+    AUDITORS_REPORT: ("auditors_report", "I"),
+    TRANSMITTAL_LETTER: ("transmittal_letter", "TL"),
+    MANAGEMENT_RESPONSIBILITY: ("management_responsibility", "MR"),
 }
 
 SCHEMA = """
@@ -178,7 +174,7 @@ def build_index(records_dir: Path, db_path: Path, embedder: Embedder) -> int:
     part3 = load_records(records_dir / "part3")
     front_matter = [
         record
-        for folder, _, _ in FRONT_MATTER.values()
+        for folder, _ in FRONT_MATTER.values()
         for record in load_records(records_dir / folder).values()
     ]
     monitoring = load_monitoring(records_dir)
@@ -263,7 +259,7 @@ def front_matter_pieces(record: dict) -> Iterator[tuple]:
     """The piece rows of one Executive Summary, Auditor's Report, transmittal letter or Management
     Responsibility statement, a section at a time."""
     year, document = record["aar_year"], record["document"]
-    _, part, kind = FRONT_MATTER[document]
+    kind, part = FRONT_MATTER[document]
     for number, section in enumerate(record["sections"], start=1):
         # The Executive Summary's sections are lettered, the Auditor's Report's are numbered "AR-n"
         # (the key ids the model cites), and the one-section documents are just "n".

@@ -7,7 +7,7 @@ Printed page numbers are left out (the page headings carry them).
 
 | File | Replaces the text layer of | Why |
 | --- | --- | --- |
-| `01-ManilaCity2020_Transmittal_Letter.txt` | `.../2020/01-ManilaCity2020_Transmittal_Letter.pdf` | A scan; its text layer is junk ("DOMAGOS0", "Part 11", stamp noise). |
+| `01-ManilaCity2020_Transmittal_Letter.txt` | `.../2020/01-ManilaCity2020_Transmittal_Letter.pdf` | A scan; its text layer is unreliable ("DOMAGOS0", "Part 11", stamp noise). |
 | `01-ManilaCity2021_Transmittal_Letter.txt` | the picture inside `.../2021/01-ManilaCity2021_Transmittal_Letter.docx` | The "Word" letter is a 473 x 663 px PNG; only its "Copy furnished" list is text, and Word supplies that. |
 | `01-ManilaCity2022_Transmittal_Letter.txt` | `.../2022/01-ManilaCity2022_Transmittal_Letter.pdf` | A scan with no text layer. |
 | `01-ManilaCity2023_Transmittal_Letter.txt` | `.../2023/AAR/01-ManilaCity2023_Transmittal_Letter.pdf` | A scan with no text layer. |

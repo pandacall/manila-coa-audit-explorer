@@ -83,8 +83,8 @@ uv run coa-explorer ocr   # explicit only: Document AI, a few cents, needs GCP a
 These short documents are each one section, cited by their pages ("CY 2023 AAR, Transmittal Letter,
 pp. 1-3"; "CY 2022 AAR, Part I, Management Responsibility for Financial Statements, p. 1"). All of
 them but CY 2024's transmittal letter (a native-text PDF, read as it is) are pictures of paper: the
-2022 and 2023 letters and every year's statement are PDF scans, CY 2020's letter is a scan with a
-junk text layer, and CY 2021's letter is a picture inside a Word file. `ocr` reads them with
+2022 and 2023 letters and every year's statement are PDF scans, CY 2020's letter is a scan with an
+unreliable text layer, and CY 2021's letter is a picture inside a Word file. `ocr` reads them with
 Document AI Enterprise OCR (`DOCUMENT_AI_LOCATION`, and the project's `OCR_PROCESSOR`) into
 `data/reviewed/<file name>.txt`, one `=== page N ===` heading per page. The OCR is proofread against
 the scan (stamps, seals and signatures out, bodies word for word) and committed; `extract` and

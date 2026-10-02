@@ -2,9 +2,9 @@
 
 The transmittal letters of 2020-2023 and every year's Management Responsibility statement are
 pictures of paper: scans in PDF, or (CY 2021's letter) a PNG inside a Word file. Their text layers,
-where they have one, are junk. Document AI Enterprise OCR reads them once, on request, and writes
-`<reviewed_dir>/<file name>.txt`, one `=== page N ===` heading per page, which is the format
-`pdf_reader.read_pages` already loads. A person then proofreads the file against the scan and
+where they have one, are unreliable. Document AI Enterprise OCR reads them once, on request, and
+writes `<reviewed_dir>/<file name>.txt`, one `=== page N ===` heading per page, which is the
+format `pdf_reader.read_pages` already loads. A person then proofreads the file against the scan and
 commits it; `coa-explorer extract` and `index` read only the committed text, so they need no GCP
 access. Re-running this step is never part of a normal run, and it refuses to replace a
 transcription that may hold a reviewer's corrections unless told to.
@@ -21,21 +21,13 @@ from PIL import Image
 
 from coa_explorer.docx_reader import embedded_images
 from coa_explorer.front_matter import (
-    MANAGEMENT_RESPONSIBILITY,
-    MANAGEMENT_RESPONSIBILITY_FILE,
     SCANNED,
-    TRANSMITTAL_LETTER,
-    TRANSMITTAL_LETTER_FILE,
+    SHORT_DOCUMENT_FILES,
     find_file,
 )
 
 # Document AI's OCR reads small pictures poorly; CY 2021's letter is 473 x 663 px.
 MIN_PICTURE_WIDTH = 1600
-
-FILE_PATTERNS = {
-    TRANSMITTAL_LETTER: TRANSMITTAL_LETTER_FILE,
-    MANAGEMENT_RESPONSIBILITY: MANAGEMENT_RESPONSIBILITY_FILE,
-}
 
 
 class OcrReader(Protocol):
@@ -53,7 +45,7 @@ class Scan:
 
 def scans(reports_dir: Path, years: list[int], documents: list[str]) -> list[Scan]:
     return [
-        Scan(year, document, find_file(reports_dir, year, FILE_PATTERNS[document]))
+        Scan(year, document, find_file(reports_dir, year, SHORT_DOCUMENT_FILES[document]))
         for document in documents
         for year in sorted(set(years) & set(SCANNED[document]))
     ]
@@ -75,7 +67,7 @@ def read_scan(scan: Scan, reader: OcrReader) -> list[str]:
 
 def render(pages: list[str]) -> str:
     return "".join(
-        f"=== page {number} ===\n{text.strip(chr(10))}\n" for number, text in enumerate(pages, 1)
+        f"=== page {number} ===\n{_tidy(text)}\n" for number, text in enumerate(pages, 1)
     )
 
 

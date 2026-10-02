@@ -260,7 +260,7 @@ def ocr_step(args: argparse.Namespace, reader: ocr.OcrReader | None) -> int:
 
 
 def document_ai_ocr() -> ocr.DocumentAiOcr:
-    settings = load_settings()
+    settings = load_settings(required=("GCP_PROJECT_ID",))
     return ocr.DocumentAiOcr(
         project=settings.gcp_project_id,
         location=settings.document_ai_location,

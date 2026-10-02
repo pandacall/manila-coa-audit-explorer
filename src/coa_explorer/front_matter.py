@@ -44,10 +44,13 @@ EXECUTIVE_SUMMARY = "Executive Summary"
 AUDITORS_REPORT = "Auditor's Report"
 TRANSMITTAL_LETTER = "Transmittal Letter"
 MANAGEMENT_RESPONSIBILITY = "Management Responsibility for Financial Statements"
-TRANSMITTAL_LETTER_FILE = "01-*Transmittal_Letter.*"
-MANAGEMENT_RESPONSIBILITY_FILE = "06-*Mgmt_Responsibility*.*"
-# The documents whose file is a picture of paper (or whose text layer is junk), by AAR year. CY
-# 2024's transmittal letter is the only one with a real text layer.
+# The file name of each short document, as a glob.
+SHORT_DOCUMENT_FILES = {
+    TRANSMITTAL_LETTER: "01-*Transmittal_Letter.*",
+    MANAGEMENT_RESPONSIBILITY: "06-*Mgmt_Responsibility*.*",
+}
+# The documents whose file is a picture of paper (or whose text layer is unreliable), by AAR year.
+# CY 2024's transmittal letter is the only one with a real text layer.
 SCANNED: dict[str, tuple[int, ...]] = {
     TRANSMITTAL_LETTER: (2020, 2021, 2022, 2023),
     MANAGEMENT_RESPONSIBILITY: (2020, 2021, 2022, 2023, 2024),
@@ -191,23 +194,20 @@ def _extract_short(
 ) -> FrontMatter:
     """A short document read as one section. A scan is read from its reviewed transcription and
     never from its text layer: with no transcription there is nothing citable, so it is an error."""
-    letter = document == TRANSMITTAL_LETTER
-    pattern = TRANSMITTAL_LETTER_FILE if letter else MANAGEMENT_RESPONSIBILITY_FILE
-    path = find_file(reports_dir, year, pattern)
+    path = find_file(reports_dir, year, SHORT_DOCUMENT_FILES[document])
     transcription = reviewed_path(path, reviewed_dir)
     if year in SCANNED[document] and transcription is None:
         raise FileNotFoundError(
             f"{path.name} is a scan and has no reviewed transcription in {reviewed_dir}; run"
             " `coa-explorer ocr`, proofread the output against the scan, and commit it"
         )
-    starts_block = _no_headings
     if path.suffix == ".docx":
-        blocks = _word_letter_blocks(path, transcription, starts_block)
+        blocks = _word_letter_blocks(path, transcription)
         text_source = _text_source(transcription, "Word document")
     else:
         pages = read_pages(path, reviewed_dir)
         _check_printed_pages(path, pages, "decimal")
-        blocks = _pdf_blocks(pages, starts_block)
+        blocks = _pdf_blocks(pages, _no_headings)
         text_source = _text_source(transcription, "PDF text layer")
     if not blocks:
         raise ValueError(f"{path.name}: no text found")
@@ -242,9 +242,7 @@ def _text_source(transcription: Path | None, otherwise: str) -> str:
     return f"reviewed transcription: data/reviewed/{transcription.name}"
 
 
-def _word_letter_blocks(
-    path: Path, transcription: Path | None, starts_block: Callable[[str], bool]
-) -> list[Block]:
+def _word_letter_blocks(path: Path, transcription: Path | None) -> list[Block]:
     """A Word letter. When it is made of pictures (CY 2021's), each picture fills a page and is
     read from the transcription; whatever text Word holds follows on the next page."""
     pictures = len(embedded_images(path))
@@ -257,7 +255,7 @@ def _word_letter_blocks(
         raise ValueError(
             f"{transcription.name} has {len(pages)} pages but {path.name} has {pictures} pictures"
         )
-    scanned = _pdf_blocks(pages, starts_block)
+    scanned = _pdf_blocks(pages, _no_headings)
     after = [Block(b.text, pictures + 1, pictures + 1, b.table) for b in text_blocks]
     return [*scanned, *after]
 

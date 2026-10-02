@@ -115,3 +115,15 @@ def test_ocr_can_be_limited_to_some_years_and_documents(tmp_path):
     assert [p.stem for p in tmp_path.glob("*.txt")] == [
         "06-ManilaCity2022_Part1-Mgmt_Responsibility_for_FS"
     ]
+
+
+def test_ocr_needs_only_the_gcp_project_not_the_gemini_models(tmp_path, monkeypatch):
+    from coa_explorer.config import load_settings
+
+    for key in ("GCP_PROJECT_ID", "GEMINI_ANSWER_MODEL"):
+        monkeypatch.delenv(key, raising=False)
+    monkeypatch.setenv("GCP_PROJECT_ID", "some-project")
+
+    settings = load_settings(tmp_path / "no.env", required=("GCP_PROJECT_ID",))
+
+    assert (settings.gcp_project_id, settings.document_ai_location) == ("some-project", "us")

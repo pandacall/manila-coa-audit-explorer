@@ -1,6 +1,6 @@
 # OCR the scanned short documents with Document AI once, and commit the proofread text
 
-The transmittal letters of 2020–2023 and every year's Management Responsibility statement are pictures of paper (ticket #10). Four are PDF scans without a usable text layer, CY 2020's letter is a scan whose text layer is junk, and CY 2021's "Word" letter is a single PNG inside a `.docx` (only its "Copy furnished" list is text). Only CY 2024's letter is native text.
+The transmittal letters of 2020–2023 and every year's Management Responsibility statement are pictures of paper (ticket #10). Four are PDF scans without a usable text layer, CY 2020's letter is a scan whose text layer is unreliable, and CY 2021's "Word" letter is a single PNG inside a `.docx` (only its "Copy furnished" list is text). Only CY 2024's letter is native text.
 
 `coa-explorer ocr` reads these with Document AI Enterprise OCR and writes `data/reviewed/<file name>.txt`, the same page-headed format the CY 2023 Auditor's Report's reviewed transcription already uses and that `pdf_reader` already loads. A person proofreads the file against the scan and commits it. `extract` and `index` read only the committed text, so they need no GCP access; `ocr` is never part of a normal run, and it refuses to replace an existing transcription without `--overwrite` because it may hold a reviewer's corrections (as ADR-0003 does for the AAPSI and APMT).
 
