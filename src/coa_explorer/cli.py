@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from collections.abc import Sequence
 from pathlib import Path
 
-from coa_explorer import links, part2, part3
+from coa_explorer import links, part2, part3, smoke
 from coa_explorer.config import DEFAULT_INDEX, REPO_ROOT, load_settings
 from coa_explorer.embedder import Embedder, GeminiEmbedder
 from coa_explorer.index import build_index, load_records
@@ -50,7 +51,13 @@ def main(argv: Sequence[str] | None = None, *, embedder: Embedder | None = None)
 
     serve = steps.add_parser("serve", help="run the web app locally")
     serve.add_argument("--host", default="127.0.0.1")
-    serve.add_argument("--port", type=int, default=8000)
+    # Cloud Run says which port to listen on through $PORT.
+    serve.add_argument("--port", type=int, default=int(os.environ.get("PORT", 8000)))
+
+    check = steps.add_parser("smoke", help="ask a running app a question and check the answer")
+    check.add_argument("--url", required=True, help="base URL of the running app")
+    check.add_argument("--question", default=smoke.QUESTION)
+    check.add_argument("--timeout", type=float, default=120, help="seconds to wait per request")
 
     args = parser.parse_args(argv)
     if args.step == "index":
@@ -59,6 +66,8 @@ def main(argv: Sequence[str] | None = None, *, embedder: Embedder | None = None)
         return serve_step(args.host, args.port)
     if args.step == "links":
         return links_step(args.records)
+    if args.step == "smoke":
+        return smoke_step(args.url, args.question, args.timeout)
     return extract_step(args.reports, args.out, check=args.check)
 
 
@@ -138,6 +147,15 @@ def links_step(records: Path) -> int:
         if d["drift"]:
             print(f"  CY {d['tracked_in']} Part III cites {d['origin']}: drift {d['drift']:+d}")
     return 0
+
+
+def smoke_step(url: str, question: str, timeout: float) -> int:
+    problems = smoke.check(url, question, timeout)
+    for problem in problems:
+        print(f"smoke check failed: {problem}", file=sys.stderr)
+    if not problems:
+        print(f"{url} answered with cited key points")
+    return 1 if problems else 0
 
 
 def serve_step(host: str, port: int) -> int:
