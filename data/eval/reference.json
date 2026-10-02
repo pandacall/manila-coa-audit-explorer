@@ -15,7 +15,7 @@
         "The cause was lapses in preparing and submitting Bank Reconciliation Statements"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "cash-advances-2021",
@@ -31,7 +31,7 @@
         "Management adhered to COA's recommendations"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "gad-programs-2022",
@@ -46,7 +46,7 @@
         "COA recommended a catch-up plan for the 43 unimplemented activities"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "revenue-shortfall-2024",
@@ -62,7 +62,7 @@
         "COA attributed the shortfall to insufficient periodic monitoring and review of underperforming income accounts"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "double-payment-subsidy-2021",
@@ -78,7 +78,7 @@
         "COA recommended establishing accountability for the excess payments and recovering them"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "district-hospitals-property-2024",
@@ -94,7 +94,7 @@
         "Semi-expendable items worth P1.128 million were inappropriately reported in the Waste Materials Report"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "hospital-charges-2022",
@@ -109,7 +109,7 @@
         "The utilization rate for 2022 was only 25 per cent"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "dialysis-joint-venture-2020",
@@ -125,7 +125,7 @@
         "COA found some of its stipulations unclear, inadequate and disadvantageous to the City"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "unremitted-withholdings-2023",
@@ -140,7 +140,7 @@
         "The amounts were due to the BIR, GSIS, Pag-IBIG and PhilHealth"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "property-tax-assessment-2023",
@@ -156,7 +156,7 @@
         "1,130 real property units were omitted from the Assessment Rolls"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "other-city-budget",
@@ -166,7 +166,7 @@
       "expected_citations": [],
       "key_facts": [],
       "unanswerable": true,
-      "approved": false
+      "approved": true
     },
     {
       "id": "mayoral-election",
@@ -176,7 +176,7 @@
       "expected_citations": [],
       "key_facts": [],
       "unanswerable": true,
-      "approved": false
+      "approved": true
     }
   ]
 }
