@@ -9,7 +9,10 @@ async function* events(question) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ question }),
   });
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  // A refusal (rate limit 429, store down 503) still arrives as one event line.
+  if (!response.ok && response.status !== 429 && response.status !== 503) {
+    throw new Error(`HTTP ${response.status}`);
+  }
   const reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
   let buffer = "";
   for (;;) {
@@ -109,6 +112,54 @@ function Answer({ result }) {
   </section>`;
 }
 
+// 👍/👎 on a logged answer; the rating is stored against the logged question.
+function Feedback({ questionId }) {
+  const [rating, setRating] = useState(null);
+  const [failed, setFailed] = useState(false);
+
+  async function rate(value) {
+    setFailed(false);
+    try {
+      const response = await fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question_id: questionId, rating: value }),
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      setRating(value);
+    } catch (err) {
+      setFailed(true);
+    }
+  }
+
+  return html`<p class="feedback">
+    Was this answer helpful?
+    <button type="button" aria-pressed=${rating === "up"} aria-label="Helpful" onClick=${() => rate("up")}>👍</button>
+    <button type="button" aria-pressed=${rating === "down"} aria-label="Not helpful" onClick=${() => rate("down")}>👎</button>
+    ${rating && html`<span class="note"> Thanks for the feedback.</span>`}
+    ${failed && html`<span class="error"> Could not save your feedback.</span>`}
+  </p>`;
+}
+
+// Shown when the day's question cap is used up: example questions with the answers saved earlier.
+function DemoLimit({ result }) {
+  return html`<section class="demo-limit">
+    <h2>${result.message}</h2>
+    <p>
+      The demo only answers a limited number of questions a day to keep it free to run. Please come
+      back tomorrow. In the meantime, here are some example questions with their saved answers.
+    </p>
+    ${result.examples.map(
+      (example) => html`<details key=${example.question}>
+        <summary>${example.question}</summary>
+        ${example.answer
+          ? html`<${Answer} result=${example.answer} />`
+          : html`<p class="note">No saved answer for this one yet.</p>`}
+      </details>`
+    )}
+  </section>`;
+}
+
 function App() {
   const [question, setQuestion] = useState("");
   const [busy, setBusy] = useState(false);
@@ -151,11 +202,17 @@ function App() {
       <button disabled=${busy}>${busy ? "Working…" : "Ask"}</button>
     </form>
     ${busy && html`<ul class="progress">${progress.map((m, i) => html`<li key=${i}>${m}</li>`)}</ul>`}
-    ${result && result.type === "error" && html`<p class="error">${result.message}</p>`}
-    ${result && result.type !== "error" && html`<${Answer} result=${result} />`}
+    ${result && (result.type === "error" || result.type === "rate_limited") &&
+    html`<p class="error">${result.message}</p>`}
+    ${result && result.type === "demo_limit" && html`<${DemoLimit} result=${result} />`}
+    ${result && (result.type === "answer" || result.type === "not_covered") &&
+    html`<${Answer} result=${result} />`}
+    ${result && result.question_id && html`<${Feedback} questionId=${result.question_id} key=${result.question_id} />`}
     <footer>
-      Independent project, not affiliated with COA. Answers are AI-generated from the 2020–2024
-      Annual Audit Reports and may be wrong; check the cited source.
+      <p>
+        Independent project, not affiliated with COA. Answers are AI-generated from the 2020–2024 AARs; verify against the cited source.
+      </p>
+      <p>Questions are logged anonymously and deleted after 30 days.</p>
     </footer>
   </main>`;
 }
