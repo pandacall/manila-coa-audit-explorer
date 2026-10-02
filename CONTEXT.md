@@ -58,6 +58,9 @@ The status Management claims for its own Action Plan in the AAPSI. Always attrib
 **Originating Observation**:
 The Audit Observation, in an earlier AAR, that a Prior Years' Recommendation was first raised under. It may predate 2020 and so lie outside the collection.
 
+**Timeline**:
+How one Originating Observation's Recommendations fared across the AARs: when it was raised (if in the collection), then COA's Status of Implementation in each later AAR's Part III, each step with its own Citation. Management's action is shown apart, as Management's own account.
+
 **Action Plan**:
 Management's stated plan, owner and target date for addressing a Recommendation, as reported in the AAPSI.
 
@@ -84,5 +87,5 @@ A separately accounted pool of City money, chiefly the General Fund (GF) and the
 ### Answers
 
 **Citation**:
-A pointer from an answer to its source, written the way COA cites itself: AAR year, Part, Audit Observation number where applicable, and page — e.g. "CY 2023 AAR, Part II, Observation No. 5, p. 71".
+A pointer from an answer to its source, written the way COA cites itself: AAR year, Part, Audit Observation number where applicable, and page — e.g. "CY 2023 AAR, Part II, Observation No. 5, p. 71", or for a Part III row, "CY 2023 AAR, Part III, CY 2022 Observation No. 3, p. 93" (the AAR whose Part III it is, then the Originating Observation it follows up).
 _Avoid_: Reference, source link

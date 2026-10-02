@@ -1,0 +1,1070 @@
+{
+  "aar_year": 2021,
+  "source_file": "Manila-City-Annual-Audit-Report-2021/10-ManilaCity2021_Part3-Status_of_PYs_Recomm.docx",
+  "table_rows": 87,
+  "stated_recommendations": 58,
+  "observations": [
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2020 Observation No. 1 Pages 69-71",
+      "origin_year": 2020,
+      "origin_observation": 1,
+      "origin_page_start": 69,
+      "origin_page_end": 71,
+      "summary": "Accounting errors in recording cash-in-bank (CiB) transactions amounting to P66.815 million resulted in the misstatement of affected CiB accounts and weighed on the fair presentation of these accounts in the City’s Financial Statements (FS).",
+      "recommendations": [
+        {
+          "number": 1,
+          "recommendation": "We recommended that Management: Prepare the adjusting entry to record the 6,169 checks with a total amount of P5.913 million in the CkDJ; and",
+          "status": "Not Implemented",
+          "status_text": "Not Implemented",
+          "status_note": null,
+          "management_action": "The OCAT claimed that these are void and canceled checks and will get certification from the bank that these were not encashed.",
+          "reason": "These void and canceled checks are not yet submitted to the CAO. The bank confirmation will prove that the adjustment is not necessary.",
+          "shared": [],
+          "page_start": 92,
+          "page_end": 92,
+          "citation": "CY 2021 AAR, Part III, CY 2020 Observation No. 1, p. 92"
+        },
+        {
+          "number": 2,
+          "recommendation": "Adopt preventive and corrective measures to address the accounting deficiencies noted in Paragraph no. 1.7 of Observation No. 1.",
+          "status": "Not Implemented",
+          "status_text": "Not Implemented",
+          "status_note": "Recommendation is reiterated (Finding No. 1, pp. 75-79)",
+          "management_action": "The OCAT made proper adjusting entries to correct the misstatements.",
+          "reason": "Since the PPSAS System does not capture all the checks issued by batch, corrective measures such as indicating the series of the checks in the Payee and Particulars columns of the CkDJ were not done by the OCAT. CYs 2014-2021 reconciling items remained unadjusted/not recorded in the books.",
+          "shared": [],
+          "page_start": 92,
+          "page_end": 93,
+          "citation": "CY 2021 AAR, Part III, CY 2020 Observation No. 1, pp. 92-93"
+        },
+        {
+          "number": 3,
+          "recommendation": "We recommended that Management submit supporting documents as basis for recording of the reconciling items from CYs 2014 to CY 2020 in the amount of P60.902 million.",
+          "status": "Partially Implemented",
+          "status_text": "Partially Implemented",
+          "status_note": null,
+          "management_action": "The OCAT submitted the documents supporting the recording of the reconciling items.",
+          "reason": "As of June 11, 2022, the following reconciling items are not yet adjusted: GF - net overstatement on account of unrecognized deposits, withdrawals and other errors - P12,534,572.43 SEF - net overstatement on account of unrecognized debit memos - P645,894.46 TF - net overstatement on account of unrecognized deposits, withdrawals, credit and debit memos and other errors - P6,973,693.45",
+          "shared": [],
+          "page_start": 93,
+          "page_end": 93,
+          "citation": "CY 2021 AAR, Part III, CY 2020 Observation No. 1, p. 93"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2020 Observation No. 2 Pages 72-74",
+      "origin_year": 2020,
+      "origin_observation": 2,
+      "origin_page_start": 72,
+      "origin_page_end": 74,
+      "summary": "Deficiencies in accounting for PPE undermine the quality of PPE information presented in the City’s FS.",
+      "recommendations": [
+        {
+          "number": 4,
+          "recommendation": "We recommended that Management: Provide depreciation for the 4,087 depreciable PPE items totaling P10,262,638,264.46;",
+          "status": "Implemented",
+          "status_text": "Fully Implemented",
+          "status_note": null,
+          "management_action": "Depreciation for the 4,087 depreciable PPE items is already recognized in the books.",
+          "reason": null,
+          "shared": [],
+          "page_start": 94,
+          "page_end": 94,
+          "citation": "CY 2021 AAR, Part III, CY 2020 Observation No. 2, p. 94"
+        },
+        {
+          "number": 5,
+          "recommendation": "In the absence of documents establishing the acquisition cost of four PPE items with nominal costs totaling P20,061.43, measure these PPE using their fair value and disclose the valuation in the Notes to FS;",
+          "status": "Implemented",
+          "status_text": "Fully Implemented",
+          "status_note": null,
+          "management_action": "The City derecognized from the books patrimonial properties that are recognized at nominal cost amounting to P45,645.13 and disclosed in the Notes to FS.",
+          "reason": null,
+          "shared": [],
+          "page_start": 94,
+          "page_end": 94,
+          "citation": "CY 2021 AAR, Part III, CY 2020 Observation No. 2, p. 94"
+        },
+        {
+          "number": 6,
+          "recommendation": "Record PPE individually in the PPE records (Paragraph 2.3.1 of Observation No. 2); and",
+          "status": "Implemented",
+          "status_text": "Fully Implemented",
+          "status_note": null,
+          "management_action": "Items of PPE recognized in the accounting and property records in bulk amount are already recorded individually.",
+          "reason": null,
+          "shared": [],
+          "page_start": 94,
+          "page_end": 94,
+          "citation": "CY 2021 AAR, Part III, CY 2020 Observation No. 2, p. 94"
+        },
+        {
+          "number": 7,
+          "recommendation": "Instruct the OCAT and City General Services Office (CGSO) to indicate in their PPE records the condition of the PPE using common condition codes as well as the information listed in para. 2.3.2 of Observation No. 2.",
+          "status": "Implemented",
+          "status_text": "Fully Implemented",
+          "status_note": null,
+          "management_action": "The OCAT fully adheres to such recommendation.",
+          "reason": "Substantially implemented as almost all the PPE have PN in the accounting records. Currently adopting the PN assigned by the CGSO.",
+          "shared": [],
+          "page_start": 94,
+          "page_end": 97,
+          "citation": "CY 2021 AAR, Part III, CY 2020 Observation No. 2, pp. 94-97"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2020 Observation No. 3 Pages 74-79",
+      "origin_year": 2020,
+      "origin_observation": 3,
+      "origin_page_start": 74,
+      "origin_page_end": 79,
+      "summary": "The Joint Venture Agreement (JVA) entered into by the City of Manila with B. Braun Avitum Philippines, Inc. (BBAPI) does not have certain provisions prescribed in City Ordinance No. 8346 and has unclear and inadequate stipulations which are disadvantageous to the interest of the CGM.",
+      "recommendations": [
+        {
+          "number": 8,
+          "recommendation": "Pursuant to para. 10 of the JVA, we recommended that Management come up with JVA addendum/ amendments or similar binding document to correct the provisions and deficiencies therein that work against the interest of the CGM (Paragraphs 3.3, 3.10 and 3.11) with the end view of, among others: increasing the CGM share in the revenue of the JV commensurate to the CGM’s contribution/investment therein; and",
+          "status": "Partially Implemented",
+          "status_text": "Partially Implemented",
+          "status_note": null,
+          "management_action": "In its letter dated September 9, 2021, BBAPI requested that the prevailing revenue sharing be maintained until the JVA is formally amended. It also said that it is amenable to assess and determine the new revenue sharing agreement based on the prevailing conditions.",
+          "reason": "As of June 9, 2022, there is no amendment on the JVA, and the new revenue sharing is pending with the Joint Selection Committee.",
+          "shared": [],
+          "page_start": 98,
+          "page_end": 99,
+          "citation": "CY 2021 AAR, Part III, CY 2020 Observation No. 3, pp. 98-99"
+        },
+        {
+          "number": 9,
+          "recommendation": "taking-over the procurement of pharmaceuticals and other consumable items utilized in the dialysis of patients to: (i) conform with the relevant provisions of RA No. 9184; and (ii) ensure reasonable pricing and compliance to quality standards of these items.",
+          "status": "Implemented",
+          "status_text": "Fully Implemented",
+          "status_note": null,
+          "management_action": "The City has taken complete control of the procurement and pricing of the pharmaceuticals products, other supplies and consumables.",
+          "reason": null,
+          "shared": [],
+          "page_start": 99,
+          "page_end": 99,
+          "citation": "CY 2021 AAR, Part III, CY 2020 Observation No. 3, p. 99"
+        },
+        {
+          "number": 10,
+          "recommendation": "If BBAPI refuses the correction of the foregoing provisions and deficiencies therein that work against the interest of the CGM, terminate the JVA but ensuring in the process the uninterrupted dialysis treatment services by the City.",
+          "status": "Partially Implemented",
+          "status_text": "Partially Implemented",
+          "status_note": null,
+          "management_action": "Same as “a” and “b” above",
+          "reason": "As of June 9, 2022, there is no amendment on the JVA, and the new revenue sharing is pending with the Joint Selection Committee.",
+          "shared": [],
+          "page_start": 99,
+          "page_end": 99,
+          "citation": "CY 2021 AAR, Part III, CY 2020 Observation No. 3, p. 99"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2020 Observation No. 4 Pages 79-84",
+      "origin_year": 2020,
+      "origin_observation": 4,
+      "origin_page_start": 79,
+      "origin_page_end": 84,
+      "summary": "Unsubmitted documents supporting the JVA with JBROS Construction Corporation for the Arroceros Compound Mixed-Use Development prevented the full evaluation of and casts doubt on the validity of the Swiss Challenge to which such joint venture project was subjected. Further, the continuing failure of the JBROS to perform its obligations under the JVA deprives the CGM beneficial use of the Arroceros Compound; and the CGM has not fully protected its interest by its failure to require JBROS to post performance bond covering the period within which the latter is obligated to complete the joint venture project.",
+      "recommendations": [
+        {
+          "number": 11,
+          "recommendation": "We recommended that the CGM: Submit the documents enumerated in para. 4.7 to establish the validity of the Swiss Challenge;",
+          "status": "Implemented",
+          "status_text": "Fully Implemented",
+          "status_note": null,
+          "management_action": "JVA documents vis-à-vis those required in the Manila JVO are submitted to the Audit Team.",
+          "reason": null,
+          "shared": [],
+          "page_start": 100,
+          "page_end": 100,
+          "citation": "CY 2021 AAR, Part III, CY 2020 Observation No. 4, p. 100"
+        },
+        {
+          "number": 12,
+          "recommendation": "Rescind the JVA in view of the continuing failure of the JBROS to perform its obligations under this JVA and in order to realize beneficial gain from the herein Arroceros Compound; and",
+          "status": "Not Implemented",
+          "status_text": "Not Implemented",
+          "status_note": null,
+          "management_action": null,
+          "reason": "JBROS claims it did not commit material breach that would warrant rescission of JVA.",
+          "shared": [],
+          "page_start": 100,
+          "page_end": 100,
+          "citation": "CY 2021 AAR, Part III, CY 2020 Observation No. 4, p. 100"
+        },
+        {
+          "number": 13,
+          "recommendation": "Prospectively, protect reasonably the interest of the CGM by ensuring that JVAs are adequately bonded.",
+          "status": "Partially Implemented",
+          "status_text": "Partially Implemented",
+          "status_note": null,
+          "management_action": "Management agreed to comply with the recommendation.",
+          "reason": "No new JVAs in CY 2021 contracted to validate the management action. Recommendation is applicable to future JVAs.",
+          "shared": [],
+          "page_start": 100,
+          "page_end": 100,
+          "citation": "CY 2021 AAR, Part III, CY 2020 Observation No. 4, p. 100"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2020 Observation No. 5 Pages 84-86",
+      "origin_year": 2020,
+      "origin_observation": 5,
+      "origin_page_start": 84,
+      "origin_page_end": 86,
+      "summary": "In view of the restrictions posed by the COVID-19 pandemic, the City failed to implement 74 Gender and Development (GAD) program/projects/activities (PPAs) with total corresponding budget of P566.235 million and establish fully the requisite GAD database.",
+      "recommendations": [
+        {
+          "number": 14,
+          "recommendation": "We recommended that Management implement a catch-up plan for the undelivered GAD PPAs programmed for CY 2020 and establish the requisite GAD database.",
+          "status": "Partially Implemented",
+          "status_text": "Partially Implemented",
+          "status_note": "Recommendation is reiterated (Finding No. 5, pp. 87-89)",
+          "management_action": "The CPDO maintains a database that has the information needs of GAD. The City Mayor signed the Ordinance No. 8681, providing for a City GAD Code on November 10, 2020.",
+          "reason": "Although not in the format prescribed, the CPDO database serves the purpose.",
+          "shared": [],
+          "page_start": 101,
+          "page_end": 101,
+          "citation": "CY 2021 AAR, Part III, CY 2020 Observation No. 5, p. 101"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2019 Observation No. 1 Pages 63-67",
+      "origin_year": 2019,
+      "origin_observation": 1,
+      "origin_page_start": 63,
+      "origin_page_end": 67,
+      "summary": "The City has not submitted 1,684 disbursement vouchers (DVs) and their supporting documents involving P2.275 billion, thereby limiting the extent of audit, preventing us to establish fully the validity of the underlying transactions, and forfeiting the benefit of, among others, timely detecting errors and deficiencies; identifying areas for improvement; and having input to assessments of accountability and decisions that need to be made. One thousand four hundred thirty-five (1,435) of these unsubmitted DVs in the amount of P2.142 billion pertain to the disbursements from CY 2015 to June 30, 2019 and are the accountabilities of the previous City Administrations.",
+      "recommendations": [
+        {
+          "number": 15,
+          "recommendation": "We recommended that Management: Direct the CTO to: Produce and submit to the OCAT without further delay all the 288 DVs in Paragraph 1.7 of Observation No. 1;",
+          "status": "Partially Implemented",
+          "status_text": "Partially Implemented",
+          "status_note": null,
+          "management_action": "As of December 31, 2020, 36 paid DVs (P51.352 million) are not yet submitted by the CTO to the OCAT (payments for BTr, PS-DBM, etc. that lack Official Receipt or Deposit Slip and for Job Order workers lacking duplicates of checks).",
+          "reason": "Of the unsubmitted DVs, 259 in the amount of P152.187 million are in the custody of the CTO as of July 6, 2022.",
+          "shared": [],
+          "page_start": 102,
+          "page_end": 102,
+          "citation": "CY 2021 AAR, Part III, CY 2019 Observation No. 1, p. 102"
+        },
+        {
+          "number": 16,
+          "recommendation": "Submit to the OCAT within the prescribed period all the DVs supporting the RCI; and",
+          "status": "Partially Implemented",
+          "status_text": "Partially Implemented",
+          "status_note": null,
+          "management_action": "Out of the 288 DVs, 36 are not yet submitted to the OCAT.",
+          "reason": "Most of the DVs supporting the RCI are not yet submitted within the prescribed period.",
+          "shared": [],
+          "page_start": 102,
+          "page_end": 102,
+          "citation": "CY 2021 AAR, Part III, CY 2019 Observation No. 1, p. 102"
+        },
+        {
+          "number": 17,
+          "recommendation": "Require the OCAT to: Submit to the CAO without further delay all the 1,684 DVs specified in para. 1.5 of Observation No. 1; and",
+          "status": "Partially Implemented",
+          "status_text": "Partially Implemented",
+          "status_note": null,
+          "management_action": "The City Mayor directed the OIC CTO and OIC OCAT to write the former City Treasurer and Accountant informing them of the unsubmitted DVs from CY 2015 to June 30, 2019 and attach copy of the attendant AOM.",
+          "reason": "There had been submission of July 2019 to 2020 accounts but, as of July 6, 2022, there remain unsubmitted 357 DVs involving P193.474 million. In 2021, the bulk of the unsubmitted DVs are with the CTO which we have physically counted and examined. As of the same date, however, 1,386 DVs in the amount of P2.028 billion which pertain to the disbursements from CY 2015 to June 30, 2019 and are the accountabilities of the previous City Administrations, are not yet submitted.",
+          "shared": [],
+          "page_start": 102,
+          "page_end": 105,
+          "citation": "CY 2021 AAR, Part III, CY 2019 Observation No. 1, pp. 102-105"
+        },
+        {
+          "number": 18,
+          "recommendation": "Henceforth, submit to the CAO within the prescribed period all the DVs supporting the checks issued in the RCI with the list of original DVs still with the CTO, in the proper case, and stop the preparation of a separate schedule of DVs; and",
+          "status": "Partially Implemented",
+          "status_text": "Partially Implemented",
+          "status_note": null,
+          "management_action": "The OCAT and CTO, set a system that will hasten DV submission to CAO.",
+          "reason": "Not all DVs specified in the RCI are submitted to the CAO.",
+          "shared": [],
+          "page_start": 105,
+          "page_end": 105,
+          "citation": "CY 2021 AAR, Part III, CY 2019 Observation No. 1, p. 105"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2019 Observation No. 3 Pages 71-73",
+      "origin_year": 2019,
+      "origin_observation": 3,
+      "origin_page_start": 71,
+      "origin_page_end": 73,
+      "summary": "The City had not disclosed in the Notes to FS the required information relevant to the understanding of the accounts presented in its FS that will enable users of these FS to evaluate the significance of the assets, liabilities and equity to the City’s financial position and performance and the nature and extent of risks arising from them.",
+      "recommendations": [
+        {
+          "number": 19,
+          "recommendation": "We recommended that Management direct the OCAT to disclose in the Notes to FS the foregoing information.",
+          "status": "Partially Implemented",
+          "status_text": "Partially Implemented",
+          "status_note": null,
+          "management_action": "The OCAT made proper disclosure in the Notes to FS.",
+          "reason": "Certain information relevant to the understanding of the City’s budget performance (i.e., reasons for the changes in the budget and for the material departures from the approved budget and actual amount) are not yet disclosed in the Notes to FS.",
+          "shared": [],
+          "page_start": 106,
+          "page_end": 106,
+          "citation": "CY 2021 AAR, Part III, CY 2019 Observation No. 3, p. 106"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2019 Observation No. 6 Pages 78-80",
+      "origin_year": 2019,
+      "origin_observation": 6,
+      "origin_page_start": 78,
+      "origin_page_end": 80,
+      "summary": "The City had not settled cash advances (CAs) totaling P203.440 million, P198.791 million or 97.7 percent of which were drawn by and are the accountabilities of the past City Administrations. These advances were intended to defray the expenses for the year in which they were granted, thus, the expenses paid out of them had not been recognized in the year incurred, thereby affecting the fair presentation in the financial statements of the cash advance, expense and equity accounts.",
+      "recommendations": [
+        {
+          "number": 20,
+          "recommendation": "We recommended that Management: Enforce strictly the CA liquidation within the prescribed period; and",
+          "status": "Partially Implemented",
+          "status_text": "Partially Implemented",
+          "status_note": "Recommendation is reiterated (Finding No. 2, pp. 80-81)",
+          "management_action": "The OCAT now strictly requires the accountable officers (AOs) to fully liquidate their outstanding CAs within the deadline. It is now regularly sending the statement of account to the AOs demanding liquidation of advances.",
+          "reason": "CAs amounting to Php182.725 million remained unliquidated as of June 13, 2022.",
+          "shared": [],
+          "page_start": 107,
+          "page_end": 107,
+          "citation": "CY 2021 AAR, Part III, CY 2019 Observation No. 6, p. 107"
+        },
+        {
+          "number": 21,
+          "recommendation": "In the case of the officers and employees drawing cash advances, require them to authorize the City to deduct such CAs from their pay upon their failure to liquidate such advances within the prescribed period; and",
+          "status": "Partially Implemented",
+          "status_text": "Partially Implemented",
+          "status_note": null,
+          "management_action": "It is a City’s policy that requires the AOs to authorize the City to deduct their outstanding CAs from their salary.",
+          "reason": "Copy of the policy/authority to deduct (from their salary) was not yet submitted to the CAO.",
+          "shared": [],
+          "page_start": 107,
+          "page_end": 107,
+          "citation": "CY 2021 AAR, Part III, CY 2019 Observation No. 6, p. 107"
+        },
+        {
+          "number": 22,
+          "recommendation": "Refrain from granting additional CA to an AO with unsettled CA.",
+          "status": "Implemented",
+          "status_text": "Fully Implemented",
+          "status_note": null,
+          "management_action": "In order to avoid the overlapping of CAs, Management directed the OCAT to issue a certification that the AO has no outstanding CA as basis for the approval of the DV/advances.",
+          "reason": null,
+          "shared": [],
+          "page_start": 107,
+          "page_end": 108,
+          "citation": "CY 2021 AAR, Part III, CY 2019 Observation No. 6, pp. 107-108"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2019 Observation No. 8 Pages 83-91",
+      "origin_year": 2019,
+      "origin_observation": 8,
+      "origin_page_start": 83,
+      "origin_page_end": 91,
+      "summary": "Lease contracts poorly managed by the past City administrations resulted in inadequately protected interest of the City on leases, deficient and unreliable lease data, uncollected rent and faulty accounting of lease assets and income. This is not in keeping with sound contract management controls and the accounting standards.",
+      "recommendations": [
+        {
+          "number": 23,
+          "recommendation": "We recommended that Management improve the City’s lease management by: Directing the Committee on Patrimonial Properties to: (a) conduct review of lease contracts; and (b) craft the policies and procedure on lease management embodying the elements enumerated in para. 8.5 and submit the same to the City Council for review and the passing of an ordinance;",
+          "status": "Implemented",
+          "status_text": "Fully Implemented",
+          "status_note": null,
+          "management_action": "The CGSO submitted the first draft of the policies and procedures for lease management to the Patrimonial Property Committee for review and consideration.",
+          "reason": null,
+          "shared": [],
+          "page_start": 108,
+          "page_end": 108,
+          "citation": "CY 2021 AAR, Part III, CY 2019 Observation No. 8, p. 108"
+        },
+        {
+          "number": 24,
+          "recommendation": "Pending the passing of the foregoing ordinance, issuing guidelines on lease administration factoring in those elements in para. 8.5 of Observation No. 8;",
+          "status": "Partially Implemented",
+          "status_text": "Partially Implemented",
+          "status_note": null,
+          "management_action": "CGSO is preparing a memorandum issuing guidelines on lease administration for submission to the City Administrator.",
+          "reason": "Guidelines on lease administration are not yet issued.",
+          "shared": [],
+          "page_start": 108,
+          "page_end": 108,
+          "citation": "CY 2021 AAR, Part III, CY 2019 Observation No. 8, p. 108"
+        },
+        {
+          "number": 25,
+          "recommendation": "Consistent with pertinent laws, rules and regulations on lease, executing contracts or agreements with the 416 lessees mentioned in para. 8.6, with clear provisions that safeguard the City’s interests, ensure the attainment of its financial objectives (like the provision of penalty clause) and meet the service requirements of its constituents;",
+          "status": "Implemented",
+          "status_text": "Fully Implemented",
+          "status_note": null,
+          "management_action": "The Occupancy Agreement issued to the 416 occupants of the Numancia Residences stated that the tenants are only required to pay maintenance fees instead of rent.",
+          "reason": null,
+          "shared": [],
+          "page_start": 108,
+          "page_end": 108,
+          "citation": "CY 2021 AAR, Part III, CY 2019 Observation No. 8, p. 108"
+        },
+        {
+          "number": 26,
+          "recommendation": "Providing copies of the executed contracts to the City Auditor’s Office;",
+          "status": "Implemented",
+          "status_text": "Fully Implemented",
+          "status_note": null,
+          "management_action": "Copies of 13 executed contracts are submitted to the CAO.",
+          "reason": null,
+          "shared": [],
+          "page_start": 108,
+          "page_end": 108,
+          "citation": "CY 2021 AAR, Part III, CY 2019 Observation No. 8, p. 108"
+        },
+        {
+          "number": 27,
+          "recommendation": "Instructing the CGSO-PPD, OCAT and CTO to: (a) maintain all the data on leases vital to effectively manage them and enable compliance with accounting and reporting standards; and (b) regularly reconcile their lease data;",
+          "status": "Implemented",
+          "status_text": "Fully Implemented",
+          "status_note": null,
+          "management_action": "The Patrimonial Property Registry Cards were modified to ensure that all vital information are recorded. The OCAT is now provided with a monthly report of collection and delinquent accounts. To assist concerned offices in tracking lease contracts, the CTO shall maintain a SL based on daily collections.",
+          "reason": null,
+          "shared": [],
+          "page_start": 108,
+          "page_end": 109,
+          "citation": "CY 2021 AAR, Part III, CY 2019 Observation No. 8, pp. 108-109"
+        },
+        {
+          "number": 28,
+          "recommendation": "Directing the OCAT to maintain SLs for each of the lessees indicating therein all the vital information that will enable efficient and effective lease tracking and accounting.",
+          "status": "Not Implemented",
+          "status_text": "Not Implemented",
+          "status_note": null,
+          "management_action": "Management has no reply on the recommendation.",
+          "reason": "SL for each lessee is not yet maintained.",
+          "shared": [],
+          "page_start": 109,
+          "page_end": 109,
+          "citation": "CY 2021 AAR, Part III, CY 2019 Observation No. 8, p. 109"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2019 Observation No. 9 Pages 91-97",
+      "origin_year": 2019,
+      "origin_observation": 9,
+      "origin_page_start": 91,
+      "origin_page_end": 97,
+      "summary": "Underassessment of 670 sample real property units (RPUs) drawn from the Assessment Roll resulted in foregone realty tax of about P9.686 million, in CY 2019 alone.",
+      "recommendations": [
+        {
+          "number": 29,
+          "recommendation": "We recommended that Management improve the collection of RPT, both current and delinquent, at a level materially surpassing the highest collection posted since the implementation of the general revision of real property values.",
+          "status": "Implemented",
+          "status_text": "Fully Implemented",
+          "status_note": null,
+          "management_action": "The OIC CTO in her letter dated November 9,2020 referred to the OIC DA the report on the status of Notice of Delinquency not yet served to delinquent owners for its action. The OIC DA, in a letter dated September 29, 2020 requested CTO for the updated Certified List of Delinquencies to help in the cleansing of real property records by looking into the tax delinquencies which were long inactive. Developed and put in production the in-house digital system of the Department of Assessment which will increase tax base and intensify collection of realty taxes (See Executive Summary of this report for the vital features of the digital system).",
+          "reason": null,
+          "shared": [],
+          "page_start": 109,
+          "page_end": 110,
+          "citation": "CY 2021 AAR, Part III, CY 2019 Observation No. 9, pp. 109-110"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2019 Observation No. 10 Pages 97-99",
+      "origin_year": 2019,
+      "origin_observation": 10,
+      "origin_page_start": 97,
+      "origin_page_end": 99,
+      "summary": "The Joint Venture Agreements (JVAs) do not have certain provisions prescribed in the City’s Joint Venture Ordinance (JVO) which are vital to enforcing joint venture obligations and accountability. Moreover, the City failed to collect its income share from the concerned Joint Ventures (JV) amounting to P14.314 million.",
+      "recommendations": [
+        {
+          "number": 30,
+          "recommendation": "We recommended that Management: Work with the JV partners in coming up with a JVA addendum or similar binding document that will address the deficiencies in the JVAs and, prospectively, ensure that any JVA complies fully with this JVO; and",
+          "status": "Not Implemented",
+          "status_text": "Not Implemented",
+          "status_note": null,
+          "management_action": "The Management has no reply on the recommendation.",
+          "reason": "No JVA addendum was executed as of to June 13, 2022.",
+          "shared": [],
+          "page_start": 110,
+          "page_end": 114,
+          "citation": "CY 2021 AAR, Part III, CY 2019 Observation No. 10, pp. 110-114"
+        },
+        {
+          "number": 31,
+          "recommendation": "Collect from the JVs the full City share in income as of December 31, 2019.",
+          "status": "Implemented",
+          "status_text": "Fully Implemented",
+          "status_note": null,
+          "management_action": "Two JV partners, the Marketlife and XRC Developers Inc. have remitted the CYs 2020 and 2021 City Shares amounting to P30.433 million and P19.860 million, respectively.",
+          "reason": null,
+          "shared": [],
+          "page_start": 114,
+          "page_end": 114,
+          "citation": "CY 2021 AAR, Part III, CY 2019 Observation No. 10, p. 114"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2019 Observation No. 11 Pages 99-101",
+      "origin_year": 2019,
+      "origin_observation": 11,
+      "origin_page_start": 99,
+      "origin_page_end": 101,
+      "summary": "The City has not yet deployed the E-Trikes to the intended beneficiaries but managed to make use of them to deliver emergency services during the COVID-19 pandemic rather than just leaving them idle and depreciate.",
+      "recommendations": [
+        {
+          "number": 32,
+          "recommendation": "We recommended that Management: In accordance with the City’s obligation specified in the Deed of Donation, document fully the unintended benefits realized from using the E-Trike during COVID-19 pandemic and report them to the DOE; and",
+          "status": "Implemented",
+          "status_text": "Fully Implemented",
+          "status_note": null,
+          "management_action": "The E-Trikes are already deployed to the intended beneficiaries.",
+          "reason": null,
+          "shared": [],
+          "page_start": 114,
+          "page_end": 115,
+          "citation": "CY 2021 AAR, Part III, CY 2019 Observation No. 11, pp. 114-115"
+        },
+        {
+          "number": 33,
+          "recommendation": "Fast-track the total deployment of the E-Trike to the intended beneficiaries once the pandemic emergency is over.",
+          "status": "Implemented",
+          "status_text": "Fully Implemented",
+          "status_note": null,
+          "management_action": "The E-Trikes are already deployed to the intended beneficiaries.",
+          "reason": null,
+          "shared": [],
+          "page_start": 115,
+          "page_end": 115,
+          "citation": "CY 2021 AAR, Part III, CY 2019 Observation No. 11, p. 115"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2018 Observation No. 8 Pages 77-81",
+      "origin_year": 2018,
+      "origin_observation": 8,
+      "origin_page_start": 77,
+      "origin_page_end": 81,
+      "summary": "The accuracy of the balance of Due to NGAs account of P154.682 million at year-end was doubtful due to (a) existence of negative balance of P3.353 million in the GF and disparity between the GL and SLs for TF by P68,172.09 and (b) improper maintenance of SLs and existence of dormant accounts amounting to P33.302 million, aged eight to 11 years, thus, the account was not fairly presented in the FS.",
+      "recommendations": [
+        {
+          "number": 34,
+          "recommendation": "We recommended that the OCAT facilitate the return of the excess/unutilized funds to the source agency, when identified, or remit to the BTr.",
+          "status": "Partially Implemented",
+          "status_text": "Partially Implemented",
+          "status_note": null,
+          "management_action": "The OCAT corrected such misstatements. Review of the account is ongoing to establish accurately the amount to be remitted.",
+          "reason": "Excess/unutilized funds were neither returned to the source agency nor remitted to the BTr. Dormant accounts still exist, now aged 11 to 14 years.",
+          "shared": [],
+          "page_start": 115,
+          "page_end": 115,
+          "citation": "CY 2021 AAR, Part III, CY 2018 Observation No. 8, p. 115"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2018 Observation No. 12 Pages 85-88",
+      "origin_year": 2018,
+      "origin_observation": 12,
+      "origin_page_start": 85,
+      "origin_page_end": 88,
+      "summary": "The OCAT’s inability to monitor and require the AOs to immediately settle their CAs once the purposes for which these were granted have been served, resulted to the non-liquidation of the outstanding balance of P249.941 million at year end, contrary to the relevant provisions of COA Circular No. 97-002 dated February 10, 1997.",
+      "recommendations": [
+        {
+          "number": 35,
+          "recommendation": "We recommended that Management require the City Accountant to whenever applicable condition exists, request for write-off of dormant unliquidated CAs which remained non-moving for 10 years or more and where settlement/collectability could no longer be ascertained in accordance with the guidelines and procedures provided under COA Circular No. 2016-005.",
+          "status": "Partially Implemented",
+          "status_text": "Partially Implemented",
+          "status_note": null,
+          "management_action": "The OCAT is confirming the dormancy of these accounts for the request for write-off. Securing the relevant data/information for these dormant unliquidated CAs is ongoing.",
+          "reason": "Documentation is ongoing.",
+          "shared": [],
+          "page_start": 116,
+          "page_end": 116,
+          "citation": "CY 2021 AAR, Part III, CY 2018 Observation No. 12, p. 116"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2018 Observation No. 15 Pages 91-92",
+      "origin_year": 2018,
+      "origin_observation": 15,
+      "origin_page_start": 91,
+      "origin_page_end": 92,
+      "summary": "The creation, organization and operation of an Internal Audit Service (IAS) mandated under Section 2 of RA No. 3456 as amended by RA No. 4177 was not undertaken by the City, thus, Management was not accorded with the assistance in the achievement of an efficient and effective fiscal administration and performance of agency affairs and functions.",
+      "recommendations": [
+        {
+          "number": 36,
+          "recommendation": "We recommended that the LCE facilitate the creation, organization and operation of the City’s IAS as required under RA No. 3456 as amended by RA No. 4177, to assist in the achievement of an efficient and effective fiscal administration and performance of City’s affairs and functions.",
+          "status": "Not Implemented",
+          "status_text": "Not Implemented",
+          "status_note": null,
+          "management_action": "Lack of effective action by the concerned officials.",
+          "reason": "The City's Internal Audit merely pre-audits the financial transactions and is under the OCAT.",
+          "shared": [],
+          "page_start": 117,
+          "page_end": 117,
+          "citation": "CY 2021 AAR, Part III, CY 2018 Observation No. 15, p. 117"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2018 Observation No. 16 Pages 92-93",
+      "origin_year": 2018,
+      "origin_observation": 16,
+      "origin_page_start": 92,
+      "origin_page_end": 93,
+      "summary": "The excess amount of collections/proceeds from sale of bid documents and other related fees amounting to P13.958 million as of December 31, 2018 was still being maintained under the TF instead of transferring the same to the GF pursuant to Item 6.2 of DBM Circular No. 2004-5A.",
+      "recommendations": [
+        {
+          "number": 37,
+          "recommendation": "We recommended that Management direct the City Treasurer to cause the immediate transfer of the unutilized amount of the proceeds from the collection of bid documents and related fees from the TF to the GF.",
+          "status": "Partially Implemented",
+          "status_text": "Partially Implemented",
+          "status_note": null,
+          "management_action": "The OCAT is determining the excess on the collections/ proceeds. Once completed, a DV will be prepared for the fund transfer to GF.",
+          "reason": "For CY 2021, the OCAT had not transferred the excess amount of collections/ proceeds from sale of bid documents from TF to GF.",
+          "shared": [],
+          "page_start": 117,
+          "page_end": 117,
+          "citation": "CY 2021 AAR, Part III, CY 2018 Observation No. 16, p. 117"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2018 Observation No. 17 Pages 93-94",
+      "origin_year": 2018,
+      "origin_observation": 17,
+      "origin_page_start": 93,
+      "origin_page_end": 94,
+      "summary": "The inability of the OCAT to submit to CAO the monthly pre-closing trial balances (TBs) within the prescribed period is contrary to Section 70 of the Manual, Volume I, thus, prevented the immediate review and analysis on the fairness of presentation of the accounts in the FSs.",
+      "recommendations": [
+        {
+          "number": 38,
+          "recommendation": "We recommended that Management direct the OCAT to expedite the preparation of the monthly pre-closing, as well as the year end TBs and the FSs to facilitate the submission of the same to the CAO within the prescribed period in compliance with Section 70 of the Manual, Volume I.",
+          "status": "Partially Implemented",
+          "status_text": "Partially Implemented",
+          "status_note": null,
+          "management_action": "The OCAT had submitted the TB together with supporting schedules for GF, SEF and TF way beyond the prescribed period of submission.",
+          "reason": "There is delay in the submission of these accounting reports/records.",
+          "shared": [],
+          "page_start": 118,
+          "page_end": 118,
+          "citation": "CY 2021 AAR, Part III, CY 2018 Observation No. 17, p. 118"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2018 Observation No. 19 Pages 96-98",
+      "origin_year": 2018,
+      "origin_observation": 19,
+      "origin_page_start": 96,
+      "origin_page_end": 98,
+      "summary": "A total of 1,489 business establishments in 92 barangays were not found in the city database, thus, operating without the required city permits contrary to Section 143(h) of the LGC. There are 5,432 businesses that are not in the barangays’ list but were granted business permits without the issuance/ submission of barangay clearance as required in Section 152(c) of the LGC.",
+      "recommendations": [
+        {
+          "number": 39,
+          "recommendation": "We recommended that Management direct the officials in charge with assessment and collection of business taxes to intensify further the collection of business taxes and to perform the following courses of actions: Identify, capture and update in the database all the establishments conducting business within its territorial jurisdiction to serve as reference for the imposition of business taxes, fees and corresponding charges;",
+          "status": "Partially Implemented",
+          "status_text": "Partially Implemented",
+          "status_note": null,
+          "management_action": "Once the License Division and Bureau of Permits (BOP) have verified their existence on the database, CTO shall cause the assessment and collection of business taxes and regulatory fees pursuant to Section 152 of the LGC and Ordinance No. 8331. The BOP requested the Manila Barangay Bureau (MBB) to require all barangays to submit the list of business establishments in their jurisdiction for reconciliation / updating of the database.",
+          "reason": "The preparation by the MBB of the requested list of business establishments operating in each barangay is ongoing.",
+          "shared": [],
+          "page_start": 118,
+          "page_end": 118,
+          "citation": "CY 2021 AAR, Part III, CY 2018 Observation No. 19, p. 118"
+        },
+        {
+          "number": 40,
+          "recommendation": "Compare data of identified existing establishments in the City against the data of the concerned barangays; and",
+          "status": "Partially Implemented",
+          "status_text": "Partially Implemented",
+          "status_note": null,
+          "management_action": "The BOP requested the MBB to require all barangays to submit the list of business establishments in their jurisdiction for reconciliation / updating of the database.",
+          "reason": "Same as in the preceding recommendation.",
+          "shared": [],
+          "page_start": 118,
+          "page_end": 122,
+          "citation": "CY 2021 AAR, Part III, CY 2018 Observation No. 19, pp. 118-122"
+        },
+        {
+          "number": 41,
+          "recommendation": "Pursue the checking of the database with the information contained in the schedule attached for establishments listed in the barangays to determine businesses operating in the City without the required permits and conduct inspection of establishments if necessary.",
+          "status": "Partially Implemented",
+          "status_text": "Partially Implemented",
+          "status_note": null,
+          "management_action": "Same as in the preceding recommendation.",
+          "reason": "Same as in the preceding recommendation.",
+          "shared": [],
+          "page_start": 122,
+          "page_end": 122,
+          "citation": "CY 2021 AAR, Part III, CY 2018 Observation No. 19, p. 122"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2018 Observation No. 24 Pages 108-112",
+      "origin_year": 2018,
+      "origin_observation": 24,
+      "origin_page_start": 108,
+      "origin_page_end": 112,
+      "summary": "The maximum utilization of the 20% Development Fund (DF) was not fully attained due to (a) savings/unexpended balances amounting to P18.513 million not re-appropriated to eligible development projects; (b) 24 prior years’ development projects worth P95.408 million that remained unimplemented; and (c) delay in execution of 47 awarded projects and non-procurement ten projects for lack of proper planning.",
+      "recommendations": [
+        {
+          "number": 42,
+          "recommendation": "We reiterated our recommendation that the City Budget Officer and the City Development Council of Manila re-appropriate for eligible development projects the savings/unexpended balance from the implementation of projects under the 20% DF pursuant to Section II. 5 of DILG Memorandum Circular No. 99-66 dated April 23, 1999, to attain maximum utilization of the fund; and",
+          "status": "Partially Implemented",
+          "status_text": "Partially Implemented",
+          "status_note": null,
+          "management_action": "The City Budget Officer requested the City Engineer to submit the breakdown of the proposed projects under the 20% DF and OCAT to issue Certificate of Availability of Funds for the unexpended balances from CYs 2011 to 2016.",
+          "reason": "Re-appropriation of savings/ unexpended balance cannot be determined due to non-submission of the Registry of Appropriations, Allotments and Obligations - Capital Outlay for continuing appropriation of the ongoing infrastructure projects.",
+          "shared": [],
+          "page_start": 122,
+          "page_end": 127,
+          "citation": "CY 2021 AAR, Part III, CY 2018 Observation No. 24, pp. 122-127"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2018 Observation No. 28, Pages 130-134",
+      "origin_year": 2018,
+      "origin_observation": 28,
+      "origin_page_start": 130,
+      "origin_page_end": 134,
+      "summary": "The mandatory positions in the Local Disaster Risk Reduction and Management Office (LDRRMO) were not fully established. Out of the P2.491 billion available LDRRM Fund, only P974.768 million or 39.13 percent was utilized due to the delay/non-implementation of planned PPAs. Copy of the Report on Sources and Utilization of Disaster Risk Reduction and Management Fund remained unsubmitted to the CAO and Office of the Civil Defense and the DILG-LGOO.",
+      "recommendations": [
+        {
+          "number": 43,
+          "recommendation": "We recommended that Management facilitate the creation of the required mandatory positions or assign/designate qualified personnel/employees to help and assist the Director of the MDRRMO in the efficient and effective operations of the said Office.",
+          "status": "Implemented",
+          "status_text": "Fully Implemented",
+          "status_note": null,
+          "management_action": "Two of three mandatory positions are filled up based on the organizational chart submitted by the City's LDRRMO.",
+          "reason": null,
+          "shared": [],
+          "page_start": 128,
+          "page_end": 131,
+          "citation": "CY 2021 AAR, Part III, CY 2018 Observation No. 28, pp. 128-131"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2018 Observation No. 30 Pages 135-136",
+      "origin_year": 2018,
+      "origin_observation": 30,
+      "origin_page_start": 135,
+      "origin_page_end": 136,
+      "summary": "Taxes withheld on compensation, payment of consultants, job orders (JOs), contractors and suppliers in CY 2018 were not remitted accurately and in full, thus, showing under remittance in the total amount of P44.940 million, which may result in the incurrence of unnecessary penalties and charges.",
+      "recommendations": [
+        {
+          "number": 44,
+          "recommendation": "We recommended that Management direct the City Accountant to analyze the balance of the Due to BIR to determine the nature and composition of the account. If the balance pertains to unremitted taxes, then cause the immediate remittance to the BIR, otherwise, make the necessary adjustments.",
+          "status": "Partially Implemented",
+          "status_text": "Partially Implemented",
+          "status_note": "Recommendation is reiterated (Finding No. 6, pp. 89-91)",
+          "management_action": "The remaining amounts being reconciled with the records of the BIR pertain to the time of the previous City administration.",
+          "reason": "A total of P13,699,640.96 taxes withheld remained unremitted to the BIR as of June 5, 2022.",
+          "shared": [],
+          "page_start": 131,
+          "page_end": 131,
+          "citation": "CY 2021 AAR, Part III, CY 2018 Observation No. 30, p. 131"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2017 Observation No. 4 Pages 66-67",
+      "origin_year": 2017,
+      "origin_observation": 4,
+      "origin_page_start": 66,
+      "origin_page_end": 67,
+      "summary": "Time Deposit (TD) placement for the TF in the amount of P639.134 million is contrary to Section 94, Chapter 5 of the Manual, Volume I.",
+      "recommendations": [
+        {
+          "number": 45,
+          "recommendation": "We recommended that Management require the City Accountant to: Determine the sources of funds placed in TDs for the TF; and",
+          "status": "Not Implemented",
+          "status_text": "Not Implemented",
+          "status_note": null,
+          "management_action": "Identification of sources of funds by CTO and OCAT is ongoing.",
+          "reason": "The sources of funds placed in TDs has not been determined yet by the OCAT.",
+          "shared": [],
+          "page_start": 133,
+          "page_end": 133,
+          "citation": "CY 2021 AAR, Part III, CY 2017 Observation No. 4, p. 133"
+        },
+        {
+          "number": 46,
+          "recommendation": "Coordinate with the CTO for the review of agreements and commitments of the City and establish linkages with the concerned agencies to determine if there remain existing liabilities to the national government agencies (NGAs) / other government agencies so that return of excess / unutilized funds may be made as required; otherwise, transfer the remaining balance to the GF after reconciliation or remit to the Bureau of the Treasury (BTr).",
+          "status": "Partially Implemented",
+          "status_text": "Partially Implemented",
+          "status_note": null,
+          "management_action": "The TF 30-day TD started in CYs 2009, 2010, 2013 and 2014, to generate fund for projects. Interests earned to date is P109.451 million, P60 million of which funded the Supplemental Budget No. 1, s. 2020 intended to help the City’s employees affected by the COVID-19.",
+          "reason": "Establishing the accuracy and correctness of records is ongoing.",
+          "shared": [],
+          "page_start": 133,
+          "page_end": 133,
+          "citation": "CY 2021 AAR, Part III, CY 2017 Observation No. 4, p. 133"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2017 Observation No. 10 Pages 78-80",
+      "origin_year": 2017,
+      "origin_observation": 10,
+      "origin_page_start": 78,
+      "origin_page_end": 80,
+      "summary": "The Traffic TF balance in the amount of P75.735 million recorded as Due to Officers and Employees-Ordinance Violation Receipt (OVR), 25% sub-account under the TF was reclassified to Due to Officers and Employees-OVR, 20% and Due to Officers and Employees-OVR, 5% sub-accounts in the amount of P60.588 million and P15.147 million, respectively, without the necessary list of payees, thus, the corresponding back-up cash of the said account may be compromised, if the same is released to traffic enforcers (20 percent) and traffic enforcement units (five percent) of the City.",
+      "recommendations": [
+        {
+          "number": 47,
+          "recommendation": "We recommended that Management direct the OCAT to revert the said amount from the TF to the GF in the event that the sub-account does not belong or could no longer be determined as pertaining to any specific payee, traffic enforcers and traffic enforcement units, particularly the amount recorded prior to the amendment of the Ordinance.",
+          "status": "Not Implemented",
+          "status_text": "Not Implemented",
+          "status_note": null,
+          "management_action": "The MTPB had coordinated with the OCAT and CTO to facilitate the determination of the specific payees or employees entitled to the same.",
+          "reason": "No reversion yet from TF to GF has been made by the OCAT.",
+          "shared": [],
+          "page_start": 134,
+          "page_end": 134,
+          "citation": "CY 2021 AAR, Part III, CY 2017 Observation No. 10, p. 134"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2017 Observation No. 11 Pages 80-83",
+      "origin_year": 2017,
+      "origin_observation": 11,
+      "origin_page_start": 80,
+      "origin_page_end": 83,
+      "summary": "Out of the City’s Shares from Philippine Amusement and Gaming Corporation (PAGCOR), Lotto Charity Fund (LCF), and donations and Endowment Fund from the Philippine Charity Sweepstakes Office (PCSO) in the aggregate amount of P281.149 million, only P78.027 million or 28 percent was utilized, thus, the optimum use of the funds, the intentions and the purposes for which the funds were granted were not fully achieved. The City’s Shares from PAGCOR was not fully utilized. Unutilized share from the PCSO Lotto Charity Fund and Donations to Hospitals in the amount of P90.886 million and P1.514 million, respectively. Out of the Endowment Fund for the three city hospitals of P3.500 million, only P0.100 million was utilized or 2.8 percent of the amount.",
+      "recommendations": [
+        {
+          "number": 48,
+          "recommendation": "We recommended that Management: Consider in the preparation of the City’s annual plan those qualified PPAs to be funded under the PAGCOR fund to fully achieve the objectives and purposes for which the fund was granted;",
+          "status": "Partially Implemented",
+          "status_text": "Partially Implemented",
+          "status_note": null,
+          "management_action": "Out of the PAGCOR fund, P39.332 million was utilized while the balance increased to P442.348 million as of December 31, 2020.",
+          "reason": "The PAGCOR fund was not yet transferred from the TF to the GF.",
+          "shared": [],
+          "page_start": 135,
+          "page_end": 135,
+          "citation": "CY 2021 AAR, Part III, CY 2017 Observation No. 11, p. 135"
+        },
+        {
+          "number": 49,
+          "recommendation": "Consider in the preparation of the City’s annual plan some of the PPAs which could be funded under the PCSO aligned with the intentions/purposes of the fund authorized by the Board of Directors of the said office;",
+          "status": "Not Implemented",
+          "status_text": "Not Implemented",
+          "status_note": null,
+          "management_action": "None in the Host City Shares received for CY 2020 was utilized.",
+          "reason": "Utilization of the fund for its intended purposes has not been achieved to date.",
+          "shared": [],
+          "page_start": 135,
+          "page_end": 137,
+          "citation": "CY 2021 AAR, Part III, CY 2017 Observation No. 11, pp. 135-137"
+        },
+        {
+          "number": 50,
+          "recommendation": "Review the previous years’ PCSO donations to hospitals and Manila Health Department to determine if there are restrictions on the said funds otherwise, consolidate them in the GF; and",
+          "status": "Not Implemented",
+          "status_text": "Not Implemented",
+          "status_note": null,
+          "management_action": "Lack of effective action by the concerned officials.",
+          "reason": "Restrictions, if any, has not been established to date.",
+          "shared": [],
+          "page_start": 137,
+          "page_end": 137,
+          "citation": "CY 2021 AAR, Part III, CY 2017 Observation No. 11, p. 137"
+        },
+        {
+          "number": 51,
+          "recommendation": "Identify the causes/reason for the non-implementation of the Endowment Fund Program of the city hospitals and the non-maintenance of separate depository account required in MOA for Sta Ana Hospital.",
+          "status": "Not Implemented",
+          "status_text": "Not Implemented",
+          "status_note": null,
+          "management_action": "Lack of effective action by the concerned officials.",
+          "reason": "Accounting records show that no program under the Endowment Fund Program was implemented to date.",
+          "shared": [],
+          "page_start": 137,
+          "page_end": 137,
+          "citation": "CY 2021 AAR, Part III, CY 2017 Observation No. 11, p. 137"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2017 Observation No. 12 Pages 83-84",
+      "origin_year": 2017,
+      "origin_observation": 12,
+      "origin_page_start": 83,
+      "origin_page_end": 84,
+      "summary": "The City’s share from PAGCOR and LCF from the PCSO totaling P185.250 million and P90.886 million, respectively, were erroneously recorded as Inter-Agency Payables (Due to Government-Owned and Controlled Corporation (GOCCs)-PAGCOR/PCSO accounts under the TF instead of Share from PAGCOR/PCSO accounts in the GF books of accounts.",
+      "recommendations": [
+        {
+          "number": 52,
+          "recommendation": "We recommended that the City Treasurer transfer immediately the cash in bank corresponding to the unutilized PCSO LCF from the TF to the GF in order to augment the scarce resources of the GF to be utilized for expenditures aligned with the intentions / purposes of Executive Order No. 357, series of 1996, as amended. Henceforth, maintain a separate record/cashbook of the PAGCOR funds under the GF.",
+          "status": "Not Implemented",
+          "status_text": "Not Implemented",
+          "status_note": null,
+          "management_action": "The CTO recognized shares from PAGCOR and PCSO as TF, and maintains a separate depository account for PAGCOR and deposited the latter in the TF account proper. The OCAT maintains the SL for each account.",
+          "reason": "The funds were not yet transferred from the TF to the GF and recorded in Due to GOCCs - PAGCOR and Due to GOCCs - PCSO accounts.",
+          "shared": [],
+          "page_start": 137,
+          "page_end": 137,
+          "citation": "CY 2021 AAR, Part III, CY 2017 Observation No. 12, p. 137"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2017 Observation No. 13 Pages 85-86",
+      "origin_year": 2017,
+      "origin_observation": 13,
+      "origin_page_start": 85,
+      "origin_page_end": 86,
+      "summary": "The funds from the LDRRM, PCSO, PhilHealth, Department of Social Welfare and Development, barangay Real Property Tax shares and other sources under the TF were lumped into one bank account and the corresponding interest earned therein in the amount of P45.823 million was recorded as Other Payables-Undistributed Interest. As a result, the cash pertaining to the interest earned for each account held in trust remained idle and was not utilized to finance the City’s PPAs the undistributed interest included those earned from a DBP bank account without the necessary details and HYSA.",
+      "recommendations": [
+        {
+          "number": 53,
+          "recommendation": "We recommended that the City Treasurer cause the immediate transfer of the cash in bank corresponding to the interest earned from the LBP-Proper under the TF to the GF depository account based on the recomputation and identification of the fund source/s, in order to augment or make the funds available for future utilization.",
+          "status": "Not Implemented",
+          "status_text": "Not Implemented",
+          "status_note": null,
+          "management_action": "The CTO maintained one depository account for these funds under the TF account proper in good faith. Interest earned accruing to each fund was recognized by OCAT per Monthly Bank Statement.",
+          "reason": "No transfer to the GF account was made.",
+          "shared": [],
+          "page_start": 138,
+          "page_end": 138,
+          "citation": "CY 2021 AAR, Part III, CY 2017 Observation No. 13, p. 138"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2017 Observation No. 15 Pages 87-94",
+      "origin_year": 2017,
+      "origin_observation": 15,
+      "origin_page_start": 87,
+      "origin_page_end": 94,
+      "summary": "The release of the quarterly RPT shares for the 896 Barangays of the City for CY 2017 in the amount of P952.225 million was delayed by 56 to 93 days, contrary to Section 271(d) of RA No. 7160. Likewise, the accuracy of the said RPT shares recorded under the Due to Local Government Units (LGUs)-Barangay account could not be ascertained because of the (a) inclusion in the distribution list of 27 non-existent barangays, of which actual release was made to one barangay; (b) unreconciled balances of the reciprocal accounts, Due from LGUs-City of Manila and Due to LGUs-Barangay account for CYs 2015 and 2016; (c) incomplete/non-maintenance of barangay books of accounts for CYs 2015 to 2017; and (d) lack of manpower under the OCAT to handle accounting and bookkeeping functions.",
+      "recommendations": [
+        {
+          "number": 54,
+          "recommendation": "We recommended that: The OCAT submit promptly the pertinent JEVs, DVs and supporting documents to the CAO pertaining to the barangay RPT shares to facilitate the audit and to avoid the suspension of the transaction/s; and",
+          "status": "Implemented",
+          "status_text": "Fully Implemented",
+          "status_note": null,
+          "management_action": "The OCAT submitted the JEVs, DVs and supporting documents relative to the barangay RPT shares.",
+          "reason": null,
+          "shared": [],
+          "page_start": 139,
+          "page_end": 139,
+          "citation": "CY 2021 AAR, Part III, CY 2017 Observation No. 15, p. 139"
+        },
+        {
+          "number": 55,
+          "recommendation": "The BAD fast track the preparation of the books of accounts for CYs 2015 to 2016 for those barangays without FS and related accounting records submitted to the Audit Team.",
+          "status": "Partially Implemented",
+          "status_text": "Partially Implemented",
+          "status_note": null,
+          "management_action": "Prepared FS and other accounting records: CYs 2015 - 100 percent and 2016 - 90 percent.",
+          "reason": "Status of submission as of April 25, 2022: 2020 – 3 percent 2019 - 26 percent 2018 - 54 percent",
+          "shared": [],
+          "page_start": 139,
+          "page_end": 139,
+          "citation": "CY 2021 AAR, Part III, CY 2017 Observation No. 15, p. 139"
+        }
+      ]
+    },
+    {
+      "aar_year": 2021,
+      "reference": "AAR 2017 Observation No. 31 Pages 133-138",
+      "origin_year": 2017,
+      "origin_observation": 31,
+      "origin_page_start": 133,
+      "origin_page_end": 138,
+      "summary": "The ultimate goals and objectives of the City in the acquisition of Computerized Total Information Systems Management (CTISM) software and computer hardware amounting to P139.817 million were not attained since the CTISM software remained not fully operational due to (a) the noted glitches in the system that needs to be corrected/repaired; (b) the needed modification of the forms installed in the systems to fit the needs of the end-user offices; and (c) the lack of trained/competent personnel to operate the system.",
+      "recommendations": [
+        {
+          "number": 56,
+          "recommendation": "We recommended that Management: Require the concerned City officials to coordinate with ICNS for the immediate modification and repair of the CTISM specifically on the eBarangay Computer and eHospital Management Systems to put them in good operating condition for its optimum utilization;",
+          "status": "Not Implemented",
+          "status_text": "Not Implemented",
+          "status_note": null,
+          "management_action": "Lack of effective action by the concerned officials.",
+          "reason": "Modification and repair of the CTISM has not been coordinated with the ICNS.",
+          "shared": [],
+          "page_start": 140,
+          "page_end": 140,
+          "citation": "CY 2021 AAR, Part III, CY 2017 Observation No. 31, p. 140"
+        },
+        {
+          "number": 57,
+          "recommendation": "Make proper representation with the contractor for the conduct of extensive training for the hospital personnel to educate them in the proper way of operating the System; and",
+          "status": "Not Implemented",
+          "status_text": "Not Implemented",
+          "status_note": null,
+          "management_action": "Lack of effective action by the concerned officials.",
+          "reason": "Extensive training for the hospital personnel has not been conducted.",
+          "shared": [],
+          "page_start": 140,
+          "page_end": 140,
+          "citation": "CY 2021 AAR, Part III, CY 2017 Observation No. 31, p. 140"
+        },
+        {
+          "number": 58,
+          "recommendation": "Require the Electronic Data Processing (EDP) Office to facilitate the renewal or updating of the firewall’s license for its reconfiguration, as well as, the web server for the new IP address for the immediate realization of the on-line payment of real property and business taxes.",
+          "status": "Not Implemented",
+          "status_text": "Not Implemented",
+          "status_note": null,
+          "management_action": "Lack of effective action by the concerned officials.",
+          "reason": "EDP Office has not yet renewed / updated the firewall’s license.",
+          "shared": [],
+          "page_start": 140,
+          "page_end": 145,
+          "citation": "CY 2021 AAR, Part III, CY 2017 Observation No. 31, pp. 140-145"
+        }
+      ]
+    }
+  ]
+}

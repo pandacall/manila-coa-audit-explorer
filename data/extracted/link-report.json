@@ -1,0 +1,465 @@
+{
+  "counts": {
+    "linked": 35,
+    "out_of_collection": 95,
+    "unmatched": 0
+  },
+  "unmatched": [],
+  "page_drift": [
+    {
+      "tracked_in": 2021,
+      "origin": "CY 2020 Observation No. 1",
+      "cited_pages": [
+        69,
+        71
+      ],
+      "derived_pages": [
+        69,
+        71
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2021,
+      "origin": "CY 2020 Observation No. 2",
+      "cited_pages": [
+        72,
+        74
+      ],
+      "derived_pages": [
+        72,
+        74
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2021,
+      "origin": "CY 2020 Observation No. 3",
+      "cited_pages": [
+        74,
+        79
+      ],
+      "derived_pages": [
+        74,
+        79
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2021,
+      "origin": "CY 2020 Observation No. 4",
+      "cited_pages": [
+        79,
+        84
+      ],
+      "derived_pages": [
+        79,
+        84
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2021,
+      "origin": "CY 2020 Observation No. 5",
+      "cited_pages": [
+        84,
+        86
+      ],
+      "derived_pages": [
+        84,
+        86
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2022,
+      "origin": "CY 2021 Observation No. 1",
+      "cited_pages": [
+        74,
+        74
+      ],
+      "derived_pages": [
+        74,
+        78
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2022,
+      "origin": "CY 2021 Observation No. 2",
+      "cited_pages": [
+        79,
+        79
+      ],
+      "derived_pages": [
+        79,
+        80
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2022,
+      "origin": "CY 2021 Observation No. 3",
+      "cited_pages": [
+        80,
+        80
+      ],
+      "derived_pages": [
+        80,
+        83
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2022,
+      "origin": "CY 2021 Observation No. 4",
+      "cited_pages": [
+        83,
+        83
+      ],
+      "derived_pages": [
+        83,
+        86
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2022,
+      "origin": "CY 2021 Observation No. 5",
+      "cited_pages": [
+        86,
+        86
+      ],
+      "derived_pages": [
+        86,
+        88
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2022,
+      "origin": "CY 2021 Observation No. 6",
+      "cited_pages": [
+        88,
+        88
+      ],
+      "derived_pages": [
+        88,
+        90
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2022,
+      "origin": "CY 2020 Observation No. 1",
+      "cited_pages": [
+        69,
+        69
+      ],
+      "derived_pages": [
+        69,
+        71
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2022,
+      "origin": "CY 2020 Observation No. 3",
+      "cited_pages": [
+        74,
+        74
+      ],
+      "derived_pages": [
+        74,
+        79
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2022,
+      "origin": "CY 2020 Observation No. 4",
+      "cited_pages": [
+        79,
+        79
+      ],
+      "derived_pages": [
+        79,
+        84
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2022,
+      "origin": "CY 2020 Observation No. 5",
+      "cited_pages": [
+        84,
+        84
+      ],
+      "derived_pages": [
+        84,
+        86
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2023,
+      "origin": "CY 2022 Observation No. 1",
+      "cited_pages": [
+        73,
+        73
+      ],
+      "derived_pages": [
+        73,
+        76
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2023,
+      "origin": "CY 2022 Observation No. 2",
+      "cited_pages": [
+        76,
+        76
+      ],
+      "derived_pages": [
+        76,
+        77
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2023,
+      "origin": "CY 2022 Observation No. 3",
+      "cited_pages": [
+        77,
+        77
+      ],
+      "derived_pages": [
+        77,
+        78
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2023,
+      "origin": "CY 2022 Observation No. 4",
+      "cited_pages": [
+        78,
+        78
+      ],
+      "derived_pages": [
+        78,
+        79
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2023,
+      "origin": "CY 2022 Observation No. 5",
+      "cited_pages": [
+        79,
+        79
+      ],
+      "derived_pages": [
+        79,
+        80
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2023,
+      "origin": "CY 2022 Observation No. 6",
+      "cited_pages": [
+        81,
+        81
+      ],
+      "derived_pages": [
+        81,
+        82
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2023,
+      "origin": "CY 2021 Observation No. 1",
+      "cited_pages": [
+        74,
+        74
+      ],
+      "derived_pages": [
+        74,
+        78
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2023,
+      "origin": "CY 2021 Observation No. 2",
+      "cited_pages": [
+        79,
+        79
+      ],
+      "derived_pages": [
+        79,
+        80
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2023,
+      "origin": "CY 2021 Observation No. 3",
+      "cited_pages": [
+        80,
+        80
+      ],
+      "derived_pages": [
+        80,
+        83
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2023,
+      "origin": "CY 2021 Observation No. 4",
+      "cited_pages": [
+        83,
+        83
+      ],
+      "derived_pages": [
+        83,
+        86
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2023,
+      "origin": "CY 2020 Observation No. 1",
+      "cited_pages": [
+        69,
+        69
+      ],
+      "derived_pages": [
+        69,
+        71
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2023,
+      "origin": "CY 2020 Observation No. 3",
+      "cited_pages": [
+        74,
+        74
+      ],
+      "derived_pages": [
+        74,
+        79
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2023,
+      "origin": "CY 2020 Observation No. 4",
+      "cited_pages": [
+        79,
+        79
+      ],
+      "derived_pages": [
+        79,
+        84
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2024,
+      "origin": "CY 2023 Observation No. 1",
+      "cited_pages": [
+        71,
+        71
+      ],
+      "derived_pages": [
+        71,
+        75
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2024,
+      "origin": "CY 2023 Observation No. 2",
+      "cited_pages": [
+        75,
+        75
+      ],
+      "derived_pages": [
+        75,
+        77
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2024,
+      "origin": "CY 2023 Observation No. 3",
+      "cited_pages": [
+        77,
+        77
+      ],
+      "derived_pages": [
+        77,
+        81
+      ],
+      "drift": 0
+    },
+    {
+      "tracked_in": 2024,
+      "origin": "CY 2023 Observation No. 4",
+      "cited_pages": [
+        82,
+        82
+      ],
+      "derived_pages": [
+        81,
+        84
+      ],
+      "drift": -1
+    },
+    {
+      "tracked_in": 2024,
+      "origin": "CY 2023 Observation No. 5",
+      "cited_pages": [
+        85,
+        85
+      ],
+      "derived_pages": [
+        84,
+        86
+      ],
+      "drift": -1
+    },
+    {
+      "tracked_in": 2024,
+      "origin": "CY 2023 Observation No. 6",
+      "cited_pages": [
+        88,
+        88
+      ],
+      "derived_pages": [
+        86,
+        87
+      ],
+      "drift": -2
+    },
+    {
+      "tracked_in": 2024,
+      "origin": "CY 2021 Observation No. 4",
+      "cited_pages": [
+        83,
+        83
+      ],
+      "derived_pages": [
+        83,
+        86
+      ],
+      "drift": 0
+    }
+  ]
+}

@@ -78,10 +78,11 @@ def test_every_result_carries_a_complete_citation(index):
 
     assert len(pieces) > 5
     for piece in pieces:
-        assert re.fullmatch(
-            r"CY \d{4} AAR, Part II, Observation No\. \d+, pp?\. \d+(-\d+)?", piece.citation
-        ), piece.citation
-        assert piece.part == "II"
+        pattern = {
+            "II": r"CY \d{4} AAR, Part II, Observation No\. \d+, pp?\. \d+(-\d+)?",
+            "III": r"CY \d{4} AAR, Part III, CY \d{4} Observation No\. \d+, pp?\. \d+(-\d+)?",
+        }[piece.part]
+        assert re.fullmatch(pattern, piece.citation), piece.citation
 
 
 def test_unmatched_and_hostile_queries_return_nothing_rather_than_failing(index):
