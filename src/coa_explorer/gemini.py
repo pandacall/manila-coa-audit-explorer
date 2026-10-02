@@ -6,12 +6,20 @@ are no API keys. The model name comes from configuration.
 
 from __future__ import annotations
 
+import io
+import json
+
+import pypdfium2
 from google import genai
 from google.genai import types
 
+from coa_explorer.aapsi import PAGE_PROMPTS, row_schema
 from coa_explorer.models import Message, ModelTurn, ToolCall, ToolSpec, Usage
 
 MAX_OUTPUT_TOKENS = 8192
+PAGE_OUTPUT_TOKENS = 32768
+PAGE_TIMEOUT_MS = 300_000
+PAGE_DPI = 200
 
 
 class GeminiAdapter:
@@ -88,3 +96,52 @@ def to_content(message: Message) -> types.Content:
         role="model" if message.role == "model" else "user",
         parts=[types.Part(text=message.text or "(no response)")],
     )
+
+
+class GeminiPageReader:
+    """Reads one scanned AAPSI or APMT page into table rows (the `PageReader` interface).
+
+    Structured output into the known columns, temperature 0 and low thinking: in the ticket #7
+    prototype default thinking cost five times as much and was no more faithful.
+
+    The page is rendered here and sent as a 200 dpi image rather than as the PDF: sent as a PDF
+    the small APMT print came back with misread digits ("Page 78" for "Page 79") and reworded
+    recommendations, and from the image it did not.
+    """
+
+    def __init__(self, *, project: str, location: str, model: str):
+        self._client = genai.Client(
+            vertexai=True,
+            project=project,
+            location=location,
+            http_options=types.HttpOptions(timeout=PAGE_TIMEOUT_MS),
+        )
+        self._model = model
+
+    def read_page(self, pdf: bytes, document: str) -> list[dict]:
+        response = self._client.models.generate_content(
+            model=self._model,
+            contents=[
+                types.Part.from_bytes(data=render_png(pdf), mime_type="image/png"),
+                PAGE_PROMPTS[document],
+            ],
+            config=types.GenerateContentConfig(
+                temperature=0,
+                response_mime_type="application/json",
+                response_json_schema=row_schema(document),
+                media_resolution=types.MediaResolution.MEDIA_RESOLUTION_HIGH,
+                max_output_tokens=PAGE_OUTPUT_TOKENS,
+                thinking_config=types.ThinkingConfig(thinking_level=types.ThinkingLevel.LOW),
+            ),
+        )
+        if not response.text:
+            raise RuntimeError(f"Gemini returned no text for a {document} page")
+        return json.loads(response.text)["rows"]
+
+
+def render_png(pdf: bytes, dpi: int = PAGE_DPI) -> bytes:
+    """The first page of a PDF as a PNG, upright (the scans' rotation flags are applied)."""
+    page = pypdfium2.PdfDocument(pdf)[0]
+    out = io.BytesIO()
+    page.render(scale=dpi / 72).to_pil().save(out, format="PNG")
+    return out.getvalue()

@@ -111,12 +111,13 @@ class Index:
         Executive Summary / Auditor's Report documents), grouped together.
 
         Keyword and vector matches are merged into one ranking (reciprocal rank fusion). `years`,
-        `parts` ("ES" Executive Summary, "I" Auditor's Report, "II", "III"; document codes, not all
-        of them COA Parts), `observation` (a Part II observation number) and `status` (COA's
-        Status of Implementation, for Part III) narrow the search; with no query words, the filters
-        alone are a direct lookup, an observation filter returning that observation's pieces in
-        reading order. With no `years`, observations are ordered newest year first (most relevant
-        first within a year); with `years`, most relevant first.
+        `parts` ("ES" Executive Summary, "I" Auditor's Report, "II", "III", "AAPSI", "APMT";
+        document codes, not all of them COA Parts), `observation` (a Part II number; the other
+        Parts have none) and `status` (COA's Status of Implementation, for Part III and APMT)
+        narrow the search; with no query words, the filters alone are a direct lookup, an
+        observation filter returning that observation's pieces in reading order. With no `years`,
+        observations are ordered newest year first (most relevant first within a year); with
+        `years`, most relevant first.
         """
         match = fts_query(query)
         if not match and observation is None and not parts and not status:

@@ -107,3 +107,67 @@ def test_the_links_command_prints_the_report(capsys):
     assert "130 Part III references: 35 linked to Part II, 95 out of the collection" in output
     assert "0 unmatched" in output
     assert "drift" in output
+
+
+class OneRowReader:
+    """Reads every scanned page as one row that follows up CY 2023 Observation No. 1."""
+
+    def read_page(self, pdf: bytes, document: str) -> list[dict]:
+        columns = (
+            "reference observations recommendations action_plan person_responsible target_from"
+            " target_to status reason_for_delay action_taken follow_up_date coa_status actual_from"
+            " actual_to remarks"
+        ).split()
+        row = dict.fromkeys(columns, "")
+        row.update(reference="AAR 2023 Observation No. 1 Page 79", recommendations="Reconcile.")
+        return [row]
+
+
+def test_extract_aapsi_writes_a_record_per_document_and_year_and_reports_the_links(tmp_path):
+    main(["extract", "--out", str(tmp_path)])
+
+    code = main(
+        ["extract-aapsi", "--out", str(tmp_path), "--passes", "1"], page_reader=OneRowReader()
+    )
+
+    assert code == 0
+    written = sorted(
+        p.relative_to(tmp_path).as_posix()
+        for folder in ("aapsi", "apmt")
+        for p in tmp_path.glob(f"{folder}/*.json")
+    )
+    assert written == ["aapsi/2023.json", "aapsi/2024.json", "apmt/2023.json", "apmt/2024.json"]
+    apmt = json.loads((tmp_path / "apmt" / "2024.json").read_text(encoding="utf-8"))
+    assert (apmt["document"], apmt["pdf_pages"]) == ("APMT", 12)
+    assert apmt["observations"][0]["rows"][0]["citation"] == (
+        "CY 2024 APMT, CY 2023 Observation No. 1, p. 1"
+    )
+    report = json.loads((tmp_path / "monitoring-link-report.json").read_text(encoding="utf-8"))
+    assert report["counts"] == {"linked": 7 + 3 + 25 + 12, "out_of_collection": 0, "unmatched": 0}
+
+
+def test_extract_aapsi_will_not_overwrite_reviewed_records_unless_told_to(tmp_path, capsys):
+    main(["extract", "--out", str(tmp_path)])
+    args = ["extract-aapsi", "--out", str(tmp_path), "--passes", "1", "--years", "2023"]
+    assert main(args, page_reader=OneRowReader()) == 0
+    reviewed = tmp_path / "aapsi" / "2023.json"
+    reviewed.write_text('{"reviewed": true}\n', encoding="utf-8")
+
+    assert main(args, page_reader=OneRowReader()) == 1
+    assert "--overwrite" in capsys.readouterr().err
+    assert reviewed.read_text(encoding="utf-8") == '{"reviewed": true}\n'
+    assert main([*args, "--overwrite"], page_reader=OneRowReader()) == 0
+    assert json.loads(reviewed.read_text(encoding="utf-8"))["aar_year"] == 2023
+
+
+def test_the_links_command_also_prints_the_aapsi_and_apmt_references(tmp_path, capsys):
+    main(["extract", "--out", str(tmp_path)])
+    main(["extract-aapsi", "--out", str(tmp_path), "--passes", "1"], page_reader=OneRowReader())
+    capsys.readouterr()
+
+    assert main(["links", "--records", str(tmp_path)]) == 0
+
+    output = capsys.readouterr().out
+    assert "130 Part III references" in output
+    assert "AAPSI references: 32 linked to Part II" in output
+    assert "APMT references: 15 linked to Part II" in output

@@ -10,7 +10,7 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from coa_explorer import front_matter, links, part2, part3, smoke
+from coa_explorer import aapsi, front_matter, links, part2, part3, smoke
 from coa_explorer.config import (
     DEFAULT_INDEX,
     DEFAULT_REVIEWED,
@@ -20,7 +20,7 @@ from coa_explorer.config import (
     load_settings,
 )
 from coa_explorer.embedder import Embedder, GeminiEmbedder
-from coa_explorer.index import build_index, load_records
+from coa_explorer.index import build_index, load_monitoring, load_records
 
 if TYPE_CHECKING:  # the Gemini and web stacks are imported lazily, only by the steps that need them
     from coa_explorer.answer import AnswerEngine
@@ -29,11 +29,19 @@ if TYPE_CHECKING:  # the Gemini and web stacks are imported lazily, only by the 
 DEFAULT_REPORTS = REPO_ROOT / "coa-audit-reports"
 DEFAULT_OUT = REPO_ROOT / "data" / "extracted"
 LINK_REPORT = "link-report.json"
+MONITORING_LINK_REPORT = "monitoring-link-report.json"
 YEARS = (2020, 2021, 2022, 2023, 2024)
+MONITORING_YEARS = (2023, 2024)  # the years COA published an AAPSI and an APMT for
 
 
-def main(argv: Sequence[str] | None = None, *, embedder: Embedder | None = None) -> int:
-    """Run a step. `embedder` replaces Gemini for `index` (tests pass a fake)."""
+def main(
+    argv: Sequence[str] | None = None,
+    *,
+    embedder: Embedder | None = None,
+    page_reader: aapsi.PageReader | None = None,
+) -> int:
+    """Run a step. `embedder` replaces Gemini for `index` and `page_reader` replaces it for
+    `extract-aapsi` (tests pass fakes)."""
     parser = argparse.ArgumentParser(prog="coa-explorer", description=__doc__)
     steps = parser.add_subparsers(dest="step", required=True)
 
@@ -56,6 +64,27 @@ def main(argv: Sequence[str] | None = None, *, embedder: Embedder | None = None)
         "--check",
         action="store_true",
         help="write nothing; exit 1 if the records in --out differ from a fresh extraction",
+    )
+
+    scans = steps.add_parser(
+        "extract-aapsi",
+        help="read the scanned AAPSI and APMT tables with Gemini (costs a few cents; review the"
+        " output before committing it)",
+    )
+    scans.add_argument("--reports", type=Path, default=DEFAULT_REPORTS, help="raw AAR folder")
+    scans.add_argument("--out", type=Path, default=DEFAULT_OUT, help="where aapsi/ and apmt/ go")
+    scans.add_argument("--years", type=int, nargs="+", default=list(MONITORING_YEARS))
+    scans.add_argument("--documents", nargs="+", choices=aapsi.DOCUMENTS, default=aapsi.DOCUMENTS)
+    scans.add_argument(
+        "--passes",
+        type=int,
+        default=2,
+        help="times each page is read; pages whose readings differ are flagged for review",
+    )
+    scans.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="replace records that exist (they may hold a human review's corrections)",
     )
 
     index = steps.add_parser(
@@ -102,6 +131,8 @@ def main(argv: Sequence[str] | None = None, *, embedder: Embedder | None = None)
         return save_examples_step(args.out)
     if args.step == "links":
         return links_step(args.records)
+    if args.step == "extract-aapsi":
+        return extract_aapsi_step(args, page_reader)
     if args.step == "smoke":
         return smoke_step(args.url, args.question, args.timeout)
     return extract_step(args.reports, args.out, check=args.check, reviewed=args.reviewed)
@@ -162,6 +193,57 @@ def extract_step(
     return 0
 
 
+def extract_aapsi_step(args: argparse.Namespace, reader: aapsi.PageReader | None) -> int:
+    targets = [(y, d) for y in args.years for d in args.documents]
+    existing = [
+        args.out / d.lower() / f"{y}.json"
+        for y, d in targets
+        if (args.out / d.lower() / f"{y}.json").exists()
+    ]
+    if existing and not args.overwrite:
+        names = ", ".join(str(p) for p in existing)
+        print(f"{names} already exist; pass --overwrite to replace them", file=sys.stderr)
+        return 1
+    reader = reader or gemini_page_reader()
+    for year, document in targets:
+        record = aapsi.extract_document(args.reports, year, document, reader, passes=args.passes)
+        target = args.out / document.lower() / f"{year}.json"
+        write_record(target, record.to_dict())
+        print(
+            f"wrote {target}: {len(record.rows)} rows from {record.pdf_pages} pages,"
+            f" {len(record.review_notes)} page(s) where the readings differ"
+        )
+    write_record(args.out / MONITORING_LINK_REPORT, monitoring_link_report(args.out))
+    print(f"wrote {args.out / MONITORING_LINK_REPORT}")
+    return 0
+
+
+def monitoring_link_report(records: Path) -> dict:
+    """How the AAPSI and APMT references link to Part II (`link-report.json` covers Part III)."""
+    every = links.build_links(
+        load_records(records / "part2"), load_records(records / "part3"), load_monitoring(records)
+    )
+    return links.report([link for link in every if link.document != links.PART_III])
+
+
+def write_record(target: Path, record: dict) -> None:
+    target.parent.mkdir(parents=True, exist_ok=True)
+    # newline="" keeps the line endings identical on every platform, so reruns never diff.
+    with target.open("w", encoding="utf-8", newline="") as f:
+        f.write(render(record))
+
+
+def gemini_page_reader():
+    from coa_explorer.gemini import GeminiPageReader
+
+    settings = load_settings()
+    return GeminiPageReader(
+        project=settings.gcp_project_id,
+        location=settings.gemini_location,
+        model=settings.gemini_extraction_model,
+    )
+
+
 def gemini_embedder() -> GeminiEmbedder:
     settings = load_settings()
     return GeminiEmbedder(
@@ -180,25 +262,33 @@ def index_step(records: Path, out: Path, embedder: Embedder) -> int:
 def links_step(records: Path) -> int:
     part2_records = load_records(records / "part2")
     part3_records = load_records(records / "part3")
-    result = links.report(links.build_links(part2_records, part3_records))
+    every = links.build_links(part2_records, part3_records, load_monitoring(records))
+    for document in (links.PART_III, *aapsi.DOCUMENTS):
+        ours = [link for link in every if link.document == document]
+        if ours:
+            print_links(document, links.report(ours))
+    return 0
+
+
+def print_links(document: str, result: dict) -> None:
     counts = result["counts"]
     print(
-        f"{sum(counts.values())} Part III references: {counts[links.LINKED]} linked to Part II,"
+        f"{sum(counts.values())} {document} references: {counts[links.LINKED]} linked to Part II,"
         f" {counts[links.OUT_OF_COLLECTION]} out of the collection,"
         f" {counts[links.UNMATCHED]} unmatched"
     )
     for item in result["unmatched"]:
-        print(f"unmatched: CY {item['tracked_in']} Part III, {item['reference']}: {item['reason']}")
+        where = f"CY {item['tracked_in']} {document}"
+        print(f"unmatched: {where}, {item['reference']!r}: {item['reason']}")
     drifts = [d["drift"] for d in result["page_drift"]]
     if drifts:
         print(
-            f"derived Part II starting page vs COA's citation: {len(drifts)} links, drift from"
-            f" {min(drifts)} to {max(drifts)} pages"
+            f"derived Part II starting page vs the page {document} cites: {len(drifts)} links,"
+            f" drift from {min(drifts)} to {max(drifts)} pages"
         )
     for d in result["page_drift"]:
         if d["drift"]:
-            print(f"  CY {d['tracked_in']} Part III cites {d['origin']}: drift {d['drift']:+d}")
-    return 0
+            print(f"  CY {d['tracked_in']} {document} cites {d['origin']}: drift {d['drift']:+d}")
 
 
 def smoke_step(url: str, question: str, timeout: float) -> int:

@@ -366,9 +366,12 @@ def write_fixture_records(
     part3: dict[int, dict] | None = None,
     summaries: dict[int, dict] | None = None,
     auditors_reports: dict[int, dict] | None = None,
+    monitoring: dict[str, dict[int, dict]] | None = None,
 ) -> Path:
-    """Write Part II (and Part III, Executive Summary, Auditor's Report) records in the layout
-    `coa-explorer extract` writes. Only the default fixtures include the front matter."""
+    """Write Part II, Part III, the Executive Summary, the Auditor's Report and (when given)
+    AAPSI/APMT records in the layout `coa-explorer extract` and `extract-aapsi` write. Only the
+    default fixtures include the Executive Summary and Auditor's Report. `monitoring` maps "AAPSI"
+    and "APMT" to their records by AAR year."""
     if part3 is None:
         part3 = FIXTURE_PART3 if years is None else {}
     if summaries is None:
@@ -380,6 +383,7 @@ def write_fixture_records(
         ("part3", part3),
         ("executive_summary", summaries),
         ("auditors_report", auditors_reports),
+        *((document.lower(), by_year) for document, by_year in (monitoring or {}).items()),
     ):
         (directory / part).mkdir(parents=True, exist_ok=True)
         for year, record in records.items():

@@ -10,9 +10,13 @@ one piece per section, split on paragraph boundaries when long; a heading with n
 Each carries the section's Citation.
 
 Each Prior Years' Recommendation in Part III becomes one piece (COA's Status of Implementation with
-Management's action and reason), plus a row in `follow_ups`. The `links` table records, for every
-block of Part III rows, the Originating Observation it names and whether it lies in the collection;
-timelines are assembled from these two tables and the Part II pieces.
+Management's action and reason), plus a row in `follow_ups`. Each AAPSI row (Management's Action
+Plan and Reported Status) and each APMT row (COA's validation) becomes one piece, plus a row in
+`monitoring_rows`; every part of their text is labelled with whose words it is, and a piece's
+`status` is COA's Status of Implementation only, so an AAPSI piece never has one. The `links` table
+records, for every block of Part III, AAPSI and APMT rows, the Originating Observation it names and
+whether it lies in the collection; timelines are assembled from these tables and the Part II
+pieces.
 """
 
 from __future__ import annotations
@@ -24,10 +28,11 @@ from pathlib import Path
 
 import sqlite_vec
 
+from coa_explorer.aapsi import DOCUMENTS
 from coa_explorer.embedder import Embedder
 from coa_explorer.front_matter import EXECUTIVE_SUMMARY
 from coa_explorer.links import build_links
-from coa_explorer.timeline import clip_title
+from coa_explorer.timeline import clip_title, disagreement
 
 MAX_PIECE_CHARS = 1800
 
@@ -62,7 +67,8 @@ CREATE TABLE links (
     cited_start INTEGER,
     cited_end INTEGER,
     derived_start INTEGER,
-    derived_end INTEGER
+    derived_end INTEGER,
+    document TEXT NOT NULL
 );
 CREATE TABLE follow_ups (
     key TEXT PRIMARY KEY,
@@ -78,6 +84,31 @@ CREATE TABLE follow_ups (
     management_action TEXT,
     reason TEXT,
     shared TEXT NOT NULL,
+    citation TEXT NOT NULL
+);
+CREATE TABLE monitoring_rows (
+    key TEXT PRIMARY KEY,
+    document TEXT NOT NULL,
+    aar_year INTEGER NOT NULL,
+    number INTEGER NOT NULL,
+    origin_year INTEGER,
+    origin_observation INTEGER,
+    summary TEXT NOT NULL,
+    recommendation TEXT,
+    action_plan TEXT,
+    person_responsible TEXT,
+    target_from TEXT,
+    target_to TEXT,
+    reported_status_text TEXT,
+    reported_status TEXT,
+    reason TEXT,
+    action_taken TEXT,
+    follow_up_date TEXT,
+    status_text TEXT,
+    status TEXT,
+    actual_from TEXT,
+    actual_to TEXT,
+    remarks TEXT,
     citation TEXT NOT NULL
 );
 CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -100,6 +131,18 @@ def load_records(directory: Path) -> dict[int, dict]:
     }
 
 
+def load_monitoring(records_dir: Path) -> dict[str, dict[int, dict]]:
+    """The AAPSI and APMT records under `aapsi/` and `apmt/`, keyed by document then AAR year."""
+    return {document: load_records(records_dir / document.lower()) for document in DOCUMENTS}
+
+
+MONITORING_COLUMNS = (
+    "recommendation action_plan person_responsible target_from target_to reported_status_text"
+    " reported_status reason action_taken follow_up_date status_text status actual_from actual_to"
+    " remarks citation"
+).split()
+
+
 def load_vec_extension(db: sqlite3.Connection) -> None:
     db.enable_load_extension(True)
     sqlite_vec.load(db)
@@ -118,6 +161,7 @@ def build_index(records_dir: Path, db_path: Path, embedder: Embedder) -> int:
         *load_records(records_dir / "executive_summary").values(),
         *load_records(records_dir / "auditors_report").values(),
     ]
+    monitoring = load_monitoring(records_dir)
     db_path.parent.mkdir(parents=True, exist_ok=True)
     db_path.unlink(missing_ok=True)
     with sqlite3.connect(db_path) as db:
@@ -159,9 +203,14 @@ def build_index(records_dir: Path, db_path: Path, embedder: Embedder) -> int:
             for tracked in record["observations"]:
                 for rec in tracked["recommendations"]:
                     add_follow_up(db, record["aar_year"], tracked, rec)
-        for link in build_links(part2, part3):
+        for document, records in monitoring.items():
+            for record in records.values():
+                for block in record["observations"]:
+                    for row in block["rows"]:
+                        add_monitoring_row(db, record["aar_year"], document, block, row)
+        for link in build_links(part2, part3, monitoring):
             db.execute(
-                "INSERT INTO links VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO links VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 (
                     link.tracked_in,
                     link.reference,
@@ -172,6 +221,7 @@ def build_index(records_dir: Path, db_path: Path, embedder: Embedder) -> int:
                     link.origin_citation,
                     *(link.cited_pages or (None, None)),
                     *(link.derived_pages or (None, None)),
+                    link.document,
                 ),
             )
         db.execute("INSERT INTO pieces_fts(rowid, title, text) SELECT id, title, text FROM pieces")
@@ -253,6 +303,102 @@ def add_follow_up(db: sqlite3.Connection, year: int, tracked: dict, rec: dict) -
             rec["citation"],
         ),
     )
+
+
+def add_monitoring_row(
+    db: sqlite3.Connection, year: int, document: str, block: dict, row: dict
+) -> None:
+    key = f"{year}-{document}-{row['number']}"
+    db.execute(
+        PIECE_INSERT,
+        (
+            key,
+            year,
+            document,
+            None,
+            block["origin_year"],
+            block["origin_observation"],
+            row["status"],  # COA's, so None for an AAPSI row, which has none
+            "action_plan" if document == "AAPSI" else "coa_validation",
+            clip_title(block["summary"] or block["reference"] or document),
+            monitoring_text(document, block, row),
+            row["page"],
+            row["page"],
+            row["citation"],
+        ),
+    )
+    db.execute(
+        f"INSERT INTO monitoring_rows (key, document, aar_year, number, origin_year,"
+        f" origin_observation, summary, {', '.join(MONITORING_COLUMNS)})"
+        f" VALUES ({', '.join('?' * (7 + len(MONITORING_COLUMNS)))})",
+        (
+            key,
+            document,
+            year,
+            row["number"],
+            block["origin_year"],
+            block["origin_observation"],
+            block["summary"],
+            *(row[name] for name in MONITORING_COLUMNS),
+        ),
+    )
+
+
+def monitoring_text(document: str, block: dict, row: dict) -> str:
+    """The searchable text of one AAPSI or APMT row, each part labelled with whose words it is.
+
+    The AAPSI's columns are Management's account; in the APMT the same columns are Management's and
+    only the validation columns are COA's. A disagreement between the two statuses is said outright.
+    """
+    if block["origin_year"] is None or block["origin_observation"] is None:
+        origin = block["reference"] or "no Reference printed"
+    else:
+        origin = f"CY {block['origin_year']} AAR, Observation No. {block['origin_observation']}"
+    lines = [
+        f"Management's Action Plan (AAPSI): {origin}"
+        if document == "AAPSI"
+        else f"COA's Action Plan Monitoring Tool (APMT): {origin}"
+    ]
+    coa: list[tuple[str, str | None]] = []
+    if document == "APMT":
+        coa = [
+            ("Status of Implementation (COA)", row["status_text"]),
+            ("Date of COA's follow-up", row["follow_up_date"]),
+            ("Actual implementation date (COA)", dates(row["actual_from"], row["actual_to"])),
+            ("COA's remarks", row["remarks"]),
+        ]
+    said = disagreement(row["reported_status"], row["status"])
+    management = [
+        ("Action Plan (Management)", row["action_plan"]),
+        ("Person or department responsible (Management)", row["person_responsible"]),
+        ("Target implementation (Management)", dates(row["target_from"], row["target_to"])),
+        ("Reported Status (Management)", row["reported_status_text"]),
+        (
+            "Reason for partial implementation, delay or non-implementation (Management)",
+            row["reason"],
+        ),
+        ("Action taken or to be taken (Management)", row["action_taken"]),
+    ]
+    lines += [
+        f"{label}: {value}"
+        for label, value in [
+            ("Observation", block["summary"]),
+            ("Recommendation", row["recommendation"]),
+            *coa,
+            (
+                "Reported Status and Status of Implementation disagree",
+                f"{said}." if said else None,
+            ),
+            *management,
+        ]
+        if value
+    ]
+    return "\n".join(lines)
+
+
+def dates(start: str | None, end: str | None) -> str | None:
+    """A target or actual period as printed: "2023 to 2024", or whichever of the two is given."""
+    return " to ".join(d for d in (start, end) if d) or None
 
 
 def follow_up_text(tracked: dict, rec: dict) -> str:

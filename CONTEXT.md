@@ -65,10 +65,13 @@ The Audit Observation, in an earlier AAR, that a Prior Years' Recommendation was
 The first column of Part III's table, naming the earlier Audit Observation (AAR year, observation number, pages) that a block of rows follows up. COA's own word; it is not a Citation.
 
 **Timeline**:
-How one Originating Observation's Recommendations fared across the AARs: when it was raised (if in the collection), then COA's Status of Implementation in each later AAR's Part III, each step with its own Citation. Management's action is shown apart, as Management's own account.
+How one Originating Observation's Recommendations fared across the AARs: when it was raised (if in the collection), then, for each AAR, COA's Status of Implementation (from Part III or the APMT), each step with its own Citation. Management's own account (its action, and from the AAPSI its Action Plan and Reported Status) is shown apart and attributed. Where Management's Reported Status and COA's Status of Implementation disagree, the Timeline says so.
 
 **Action Plan**:
 Management's stated plan, owner and target date for addressing a Recommendation, as reported in the AAPSI.
+
+**Disagreement**:
+Where Management's Reported Status and COA's Status of Implementation for the same Recommendation differ, worded as "Management reported this as implemented; COA assessed it as partially implemented". Management's "Ongoing" has no Status of Implementation equivalent, so it is never a Disagreement.
 
 **AAPSI**:
 Agency Action Plan and Status of Implementation: Management's own report of its Action Plans and claimed progress.
@@ -93,6 +96,6 @@ A separately accounted pool of City money, chiefly the General Fund (GF) and the
 ### Answers
 
 **Citation**:
-A pointer from an answer to its source, written the way COA cites itself: AAR year, Part, Audit Observation number where applicable, and page — e.g. "CY 2023 AAR, Part II, Observation No. 5, p. 71", or for a Part III row, "CY 2023 AAR, Part III, CY 2022 Observation No. 3, p. 93" (the AAR whose Part III it is, then the Originating Observation it follows up).
+A pointer from an answer to its source, written the way COA cites itself: AAR year, Part, Audit Observation number where applicable, and page — e.g. "CY 2023 AAR, Part II, Observation No. 5, p. 71", or for a Part III row, "CY 2023 AAR, Part III, CY 2022 Observation No. 3, p. 93" (the AAR whose Part III it is, then the Originating Observation it follows up), and for an AAPSI or APMT row, "CY 2023 APMT, CY 2022 Observation No. 3, p. 2" (the document, the Originating Observation, and the page of the scanned PDF, which prints none of its own).
 For the Executive Summary the exact anchor is its section letter and the page is a Roman numeral, "CY 2023 AAR, Executive Summary, Section E, p. iii"; for the Auditor's Report, which sits in Part I, "CY 2022 AAR, Part I, Auditor's Report, pp. 2-3".
 _Avoid_: source link (and "Reference", which is Part III's column)
