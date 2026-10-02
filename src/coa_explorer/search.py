@@ -22,6 +22,7 @@ from coa_explorer.timeline import Timeline, assemble_timeline
 
 DEFAULT_LIMIT = 5  # Audit Observations per search
 CANDIDATES = 50  # pieces taken from each of keyword and vector search before merging
+LOOKUP_LIMIT = 1000  # pieces a filter-only lookup may return; nothing is ranked, so no cut-off
 RRF_K = 60
 # Vector search always returns the nearest pieces, related or not. With gemini-embedding-001 (768
 # dimensions, cosine), on-topic questions reached 0.2-0.37 and off-topic ones ("who won the
@@ -199,7 +200,7 @@ class Index:
     def _lookup_ids(self, where: list[str], params: list) -> list[int]:
         rows = self._db.execute(
             f"SELECT id FROM pieces WHERE {' AND '.join(where)} ORDER BY aar_year DESC, id LIMIT ?",
-            [*params, CANDIDATES],
+            [*params, LOOKUP_LIMIT],
         ).fetchall()
         return [row[0] for row in rows]
 

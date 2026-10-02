@@ -192,6 +192,13 @@ def test_every_part_iii_recommendation_is_indexed_by_status_with_COAs_totals(rea
         assert found == expected, year
 
 
+def test_a_whole_years_part_iii_can_be_listed_beyond_the_ranked_search_cut_off(real_index):
+    # CY 2022's Part III has 53 recommendations, more than the 50 pieces a ranked search considers.
+    pieces = real_index.search("", years=[2022], parts=["III"], limit=500)
+
+    assert len(pieces) == 53
+
+
 def test_the_real_cash_in_bank_observation_has_a_timeline_across_four_aars(real_index):
     # CY 2020 Observation No. 1 (cash-in-bank accounting errors) is followed up in 2021, 2022, 2023.
     timeline = real_index.timeline(2020, 1)

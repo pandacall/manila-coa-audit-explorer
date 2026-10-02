@@ -425,3 +425,17 @@ def test_the_model_is_told_to_name_the_years_a_topic_appeared_in(index):
     system, _, _ = adapter.requests[0]
     assert "newest first" in system
     assert "say which years" in system
+
+
+def test_an_absurdly_large_number_in_a_tool_argument_is_reported_to_the_model_not_fatal(index):
+    adapter = ScriptedAdapter(
+        search("cash", years=[10**30]),
+        timeline_call(10**30, 3),
+        submit("s", [point("p", CASH_ADVANCES_2023)]),
+    )
+
+    events = ask(index, adapter)
+
+    assert final(events)["type"] != "error"
+    assert "error" in adapter.requests[1][1][-1].tool_results[0].content
+    assert "error" in adapter.requests[2][1][-1].tool_results[0].content
