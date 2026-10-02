@@ -194,7 +194,8 @@ finish() {
 #                       GCP_PROJECT_ID, GCP_REGION,
 #                       GCP_WORKLOAD_IDENTITY_PROVIDER,
 #                       GCP_DEPLOYER_SERVICE_ACCOUNT,
-#                       GCP_RUNTIME_SERVICE_ACCOUNT, GCP_ARTIFACT_REPOSITORY
+#                       GCP_RUNTIME_SERVICE_ACCOUNT, GCP_ARTIFACT_REPOSITORY,
+#                       GEMINI_LOCATION, GEMINI_ANSWER_MODEL, GEMINI_EMBEDDING_MODEL
 # ──────────────────────────────────────────────────────────────────────────
 
 # Git Bash on Windows rewrites arguments that look like POSIX paths
@@ -363,6 +364,8 @@ say "Deployer account: what GitHub Actions impersonates to deploy."
 ensure_sa "$DEPLOYER_SA_ID" "$DEPLOYER_SA" "COA Explorer CI deployer"
 grant_project_role "$DEPLOYER_SA" roles/run.admin
 grant_project_role "$DEPLOYER_SA" roles/artifactregistry.writer
+# CI builds the search index on each deploy, which embeds every piece with Gemini on Vertex AI.
+grant_project_role "$DEPLOYER_SA" roles/aiplatform.user
 # Service Account User is scoped to the runtime account only, so CI can deploy
 # a service that runs as it but can't act as any other account.
 retry 5 gcloud iam service-accounts add-iam-policy-binding "$RUNTIME_SA" \
@@ -575,6 +578,13 @@ write_env FIRESTORE_DATABASE "$FIRESTORE_DB"
 write_env FIRESTORE_LOG_COLLECTION "$LOG_COLLECTION"
 write_env FIRESTORE_TTL_FIELD "$TTL_FIELD"
 write_env ARTIFACT_REPOSITORY "$AR_REPO"
+
+# CI needs the same non-secret model settings: the embedding model to build the index and the
+# answer model to configure the deployed service.
+say "Saving the model settings as GitHub Actions variables too (not secrets):"
+set_var GEMINI_LOCATION "global"
+set_var GEMINI_ANSWER_MODEL "$GEMINI_ANSWER_MODEL"
+set_var GEMINI_EMBEDDING_MODEL "$GEMINI_EMBEDDING_MODEL"
 
 pause "Press Enter to continue."
 

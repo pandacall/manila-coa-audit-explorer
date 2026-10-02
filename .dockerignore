@@ -1,0 +1,9 @@
+# Allow-list: the image needs only the app and the prebuilt index.
+*
+!pyproject.toml
+!uv.lock
+!.python-version
+!README.md
+!src
+!build/coa.sqlite
+**/__pycache__
