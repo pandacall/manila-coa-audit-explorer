@@ -10,9 +10,10 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from coa_explorer import aapsi, links, part2, part3, smoke
+from coa_explorer import aapsi, front_matter, links, part2, part3, smoke
 from coa_explorer.config import (
     DEFAULT_INDEX,
+    DEFAULT_REVIEWED,
     DEFAULT_SAVED_ANSWERS,
     REPO_ROOT,
     Settings,
@@ -45,11 +46,19 @@ def main(
     steps = parser.add_subparsers(dest="step", required=True)
 
     extract = steps.add_parser(
-        "extract", help="extract Part II and Part III into JSON records, and report their links"
+        "extract",
+        help="extract the Executive Summary, Auditor's Report, Part II and Part III into JSON"
+        " records, and report the links of Part III",
     )
     extract.add_argument("--reports", type=Path, default=DEFAULT_REPORTS, help="raw AAR folder")
     extract.add_argument(
-        "--out", type=Path, default=DEFAULT_OUT, help="where part2/, part3/ and the report go"
+        "--reviewed",
+        type=Path,
+        default=DEFAULT_REVIEWED,
+        help="reviewed transcriptions that stand in for the text layer of scanned PDFs",
+    )
+    extract.add_argument(
+        "--out", type=Path, default=DEFAULT_OUT, help="where the record folders and report go"
     )
     extract.add_argument(
         "--check",
@@ -126,10 +135,18 @@ def main(
         return extract_aapsi_step(args, page_reader)
     if args.step == "smoke":
         return smoke_step(args.url, args.question, args.timeout)
-    return extract_step(args.reports, args.out, check=args.check)
+    return extract_step(args.reports, args.out, check=args.check, reviewed=args.reviewed)
 
 
-def extract_step(reports: Path, out: Path, *, check: bool = False) -> int:
+def extract_step(
+    reports: Path, out: Path, *, check: bool = False, reviewed: Path = DEFAULT_REVIEWED
+) -> int:
+    summaries = {
+        year: front_matter.extract_executive_summary(reports, year, reviewed) for year in YEARS
+    }
+    auditors_reports = {
+        year: front_matter.extract_auditors_report(reports, year, reviewed) for year in YEARS
+    }
     part2_records = {year: part2.extract_year(reports, year) for year in YEARS}
     part3_records = {year: part3.extract_year(reports, year) for year in YEARS}
     link_report = links.report(
@@ -139,6 +156,14 @@ def extract_step(reports: Path, out: Path, *, check: bool = False) -> int:
         )
     )
     outputs = {
+        **{
+            Path("executive_summary") / f"{year}.json": record.to_dict()
+            for year, record in summaries.items()
+        },
+        **{
+            Path("auditors_report") / f"{year}.json": record.to_dict()
+            for year, record in auditors_reports.items()
+        },
         **{
             Path("part2") / f"{year}.json": record.to_dict()
             for year, record in part2_records.items()

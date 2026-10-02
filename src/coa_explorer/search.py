@@ -107,15 +107,17 @@ class Index:
         status: str | None = None,
         limit: int = DEFAULT_LIMIT,
     ) -> list[Piece]:
-        """Matching pieces from at most `limit` Audit Observations, grouped by observation.
+        """Matching pieces from at most `limit` Audit Observations (or Part III blocks, or
+        Executive Summary / Auditor's Report documents), grouped together.
 
         Keyword and vector matches are merged into one ranking (reciprocal rank fusion). `years`,
-        `parts` ("II", "III", "AAPSI", "APMT"), `observation` (a Part II number; the other Parts
-        have none) and `status` (COA's Status of Implementation, for Part III and APMT) narrow the
-        search; with no query words, the filters
-        alone are a direct lookup, an observation filter returning that observation's pieces in
-        reading order. With no `years`, observations are ordered newest year first (most relevant
-        first within a year); with `years`, most relevant first.
+        `parts` ("ES" Executive Summary, "I" Auditor's Report, "II", "III", "AAPSI", "APMT";
+        document codes, not all of them COA Parts), `observation` (a Part II number; the other
+        Parts have none) and `status` (COA's Status of Implementation, for Part III and APMT)
+        narrow the search; with no query words, the filters alone are a direct lookup, an
+        observation filter returning that observation's pieces in reading order. With no `years`,
+        observations are ordered newest year first (most relevant first within a year); with
+        `years`, most relevant first.
         """
         match = fts_query(query)
         if not match and observation is None and not parts and not status:

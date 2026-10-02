@@ -24,6 +24,9 @@ _Avoid_: Audit opinion letter
 The audited agency: the City Government of Manila, as COA addresses it. In plain-language answers, say "the City of Manila".
 _Avoid_: LGU, the city (in document-facing contexts)
 
+**Reviewed transcription**:
+A person-proofread text of a scanned document, committed in place of the PDF's own unreliable text layer so that OCR errors never become cited facts.
+
 ### Observations
 
 **Audit Observation**:
@@ -94,4 +97,5 @@ A separately accounted pool of City money, chiefly the General Fund (GF) and the
 
 **Citation**:
 A pointer from an answer to its source, written the way COA cites itself: AAR year, Part, Audit Observation number where applicable, and page — e.g. "CY 2023 AAR, Part II, Observation No. 5, p. 71", or for a Part III row, "CY 2023 AAR, Part III, CY 2022 Observation No. 3, p. 93" (the AAR whose Part III it is, then the Originating Observation it follows up), and for an AAPSI or APMT row, "CY 2023 APMT, CY 2022 Observation No. 3, p. 2" (the document, the Originating Observation, and the page of the scanned PDF, which prints none of its own).
+For the Executive Summary the exact anchor is its section letter and the page is a Roman numeral, "CY 2023 AAR, Executive Summary, Section E, p. iii"; for the Auditor's Report, which sits in Part I, "CY 2022 AAR, Part I, Auditor's Report, pp. 2-3".
 _Avoid_: source link (and "Reference", which is Part III's column)
