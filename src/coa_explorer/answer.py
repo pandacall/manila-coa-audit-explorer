@@ -34,7 +34,12 @@ You answer questions about the Commission on Audit's (COA) Annual Audit Reports 
 City of Manila, 2020-2024, for ordinary residents, journalists and students. Part II holds each \
 year's Audit Observations and Recommendations. Part III holds, for each AAR, COA's Status of \
 Implementation of Prior Years' Recommendations (Implemented, Partially Implemented or Not \
-Implemented), with Management's action and the reason given for partial or non-implementation.
+Implemented), with Management's action and the reason given for partial or non-implementation. \
+The Executive Summary (search it with `parts` ["ES"]) is COA's own overview of the year: the \
+City's financial and operational highlights, the scope of the audit, a summary of the audit \
+opinion and significant observations, and the status of prior years' recommendations. The \
+Auditor's Report (Part I; search it with `parts` ["I"]) is COA's formal opinion on whether the \
+Financial Statements are fairly presented.
 
 How to work
 - Call `search` to find passages. Search again with different words, or a year or observation \
@@ -49,6 +54,11 @@ such as "2023 Observation No. 5", search with an empty query and `years` and `ob
 observations, so a topic that may span many years needs a search per year to be sure. When a topic \
 appears in several years, say which years in your summary, going by the citations of the passages \
 you used.
+- For a year's highlights, `search` with an empty query, `parts` ["ES"] and that `years` filter: \
+you get the Executive Summary's sections in reading order, each with its own citation. For COA's \
+opinion on the Financial Statements, `search` `parts` ["I"] with the `years` filter: the \
+"Qualified Opinion" (or other opinion) section states the opinion, and the section on its bases \
+gives the matters behind it.
 - To find out whether Manila acted on a recommendation, find the observation with `search`, then \
 call `timeline` with the `origin_year` and `origin_observation` printed on its results. It returns \
 when the observation was raised and COA's Status of Implementation in each later AAR, each step \
@@ -74,6 +84,10 @@ of fraud, corruption or wrongdoing. Never use words such as "fraud", "corruption
 strongly than the report does.
 - Say "COA observed" or "COA recommended", not "COA found the City guilty". Refer to the audited \
 agency as "the City of Manila".
+- COA's opinion on the Financial Statements is unmodified (also called unqualified, or clean), \
+qualified, adverse, or a disclaimer. A qualified opinion means COA found the statements fairly \
+presented except for the matters it describes. Say which opinion COA gave in the words of the \
+Auditor's Report, and never call a qualified opinion clean.
 - Management's response is Management Comment; COA's reply is the Auditor's Rejoinder. If a \
 passage records one, present it fairly and attribute it to Management.
 - A Status of Implementation is COA's assessment and the authoritative one. What Management says \
@@ -86,7 +100,8 @@ SEARCH_TOOL = ToolSpec(
     name="search",
     description=(
         "Search COA's Annual Audit Reports on the City of Manila, by exact words or by meaning: "
-        "Part II Audit Observations and Part III follow-up of Prior Years' Recommendations. "
+        "Part II Audit Observations, Part III follow-up of Prior Years' Recommendations, the "
+        "Executive Summary and the Auditor's Report. "
         "Returns passages, each with an `id`, its `citation` and the observation it is about "
         "(`origin_year`, `origin_observation`, for the `timeline` tool); with no `years` filter "
         "they are ordered newest year first."
@@ -105,8 +120,11 @@ SEARCH_TOOL = ToolSpec(
             },
             "parts": {
                 "type": "array",
-                "items": {"type": "string", "enum": ["II", "III"]},
-                "description": "Restrict to Part II (observations) and/or Part III (follow-up).",
+                "items": {"type": "string", "enum": ["ES", "I", "II", "III"]},
+                "description": (
+                    "Restrict to the Executive Summary (ES), the Auditor's Report (I), Part II "
+                    "(observations) and/or Part III (follow-up)."
+                ),
             },
             "observation": {
                 "type": "integer",
@@ -203,9 +221,13 @@ SUBMIT_TOOL = ToolSpec(
 
 class Citation(BaseModel):
     text: str = Field(
-        description="COA's format, e.g. 'CY 2023 AAR, Part II, Observation No. 5, p. 71'"
+        description="COA's format, e.g. 'CY 2023 AAR, Part II, Observation No. 5, p. 71' or "
+        "'CY 2023 AAR, Executive Summary, Section E, p. iii'"
     )
-    title: str = Field(description="Title of the Audit Observation")
+    title: str = Field(
+        description="Title of the Audit Observation, or of the Executive Summary or Auditor's "
+        "Report section"
+    )
 
 
 class KeyPoint(BaseModel):

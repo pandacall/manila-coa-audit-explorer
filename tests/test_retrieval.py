@@ -82,6 +82,8 @@ def test_every_result_carries_a_complete_citation(index):
         pattern = {
             "II": r"CY \d{4} AAR, Part II, Observation No\. \d+, pp?\. \d+(-\d+)?",
             "III": r"CY \d{4} AAR, Part III, CY \d{4} Observation No\. \d+, pp?\. \d+(-\d+)?",
+            "ES": r"CY \d{4} AAR, Executive Summary, Section [A-Z], pp?\. [ivx]+(-[ivx]+)?",
+            "I": r"CY \d{4} AAR, Part I, Auditor's Report, pp?\. \d+(-\d+)?",
         }[piece.part]
         assert re.fullmatch(pattern, piece.citation), piece.citation
 
@@ -132,6 +134,72 @@ def test_everyday_wording_finds_the_passage_that_keywords_miss(index):
     pieces = index.search("money still unsettled")
 
     assert (pieces[0].aar_year, pieces[0].observation_number) == (2022, 3)
+
+
+# ---------------------------------------------------------------------------------------------
+# Executive Summary and Auditor's Report
+
+
+def test_the_opinion_is_found_in_the_auditors_report_with_its_citation(index):
+    pieces = index.search("qualified opinion", years=[2022], parts=["I"])
+
+    assert [p.title for p in pieces] == ["Auditor's Report: Qualified Opinion"]
+    opinion = pieces[0]
+    assert (opinion.aar_year, opinion.part, opinion.kind) == (2022, "I", "auditors_report")
+    assert opinion.citation == "CY 2022 AAR, Part I, Auditor's Report, p. 1"
+    assert opinion.observation_number is None
+    assert "except for the effects" in opinion.text
+
+
+def test_a_year_filter_with_no_query_lists_the_executive_summary_in_reading_order(index):
+    pieces = index.search("", years=[2023], parts=["ES"])
+
+    assert [p.title for p in pieces] == [
+        "Executive Summary: Financial Highlights",
+        "Executive Summary: Operational Highlights",
+    ]
+    assert [p.citation for p in pieces] == [
+        "CY 2023 AAR, Executive Summary, Section B, pp. i-ii",
+        "CY 2023 AAR, Executive Summary, Section C, p. ii",
+    ]
+    assert (pieces[0].page_start, pieces[0].page_end) == (1, 2)
+
+
+def test_executive_summary_highlights_without_a_year_come_newest_first(index):
+    pieces = index.search("highlights", parts=["ES"])
+
+    years = [p.aar_year for p in pieces]
+    assert years == sorted(years, reverse=True)
+    assert set(years) == {2022, 2023}
+
+
+def test_parts_keep_the_summary_the_report_and_the_observations_apart(index):
+    assert {p.part for p in index.search("financial statements", parts=["ES"])} == {"ES"}
+    assert {p.part for p in index.search("financial statements", parts=["I"])} == {"I"}
+    assert {p.part for p in index.search("financial statements", parts=["II"])} == {"II"}
+    assert {p.part for p in index.search("financial statements", parts=["es"])} == {"ES"}
+
+
+def test_a_heading_with_no_text_makes_no_piece(index):
+    pieces = index.search("", years=[2022], parts=["I"])
+
+    assert "Auditor's Report: Report on the Financial Statements" not in [p.title for p in pieces]
+    assert len(pieces) == 2
+
+
+def test_the_heading_of_a_section_is_searchable(index):
+    pieces = index.search("Operational Highlights")
+
+    assert pieces[0].citation == "CY 2023 AAR, Executive Summary, Section C, p. ii"
+
+
+def test_expanding_a_front_matter_hit_keeps_just_the_matching_sections(index):
+    pieces = index.search("qualified opinion", years=[2022], parts=["ES", "I"])
+
+    expanded = index.expand(pieces)
+
+    assert sorted((o.aar_year, o.number) for o in expanded) == [(2022, None), (2022, None)]
+    assert {o.citation.split(",")[1].strip() for o in expanded} == {"Executive Summary", "Part I"}
 
 
 def observations_of(pieces):

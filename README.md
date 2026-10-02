@@ -12,17 +12,19 @@ uv run pytest
 uv run ruff check .
 ```
 
-## Extracting Parts II and III
+## Extracting the AARs
 
 ```bash
 uv run coa-explorer extract
 ```
 
-Reads each year's Part II (Audit Observations and Recommendations) and Part III (Status of
-Implementation of Prior Years' Recommendations) Word files under `coa-audit-reports/` and writes
-committed, human-readable JSON to `data/extracted/`: `part2/<year>.json`, `part3/<year>.json` (one
-record per Prior Years' Recommendation, with COA's Status of Implementation, Management's action and
-the reason given) and `link-report.json`. Re-running produces no diff. To check that the committed
+Reads each year's Executive Summary, Auditor's Report, Part II (Audit Observations and
+Recommendations) and Part III (Status of Implementation of Prior Years' Recommendations) under
+`coa-audit-reports/` and writes committed, human-readable JSON to `data/extracted/`:
+`executive_summary/<year>.json`, `auditors_report/<year>.json` (one record per section),
+`part2/<year>.json`, `part3/<year>.json` (one record per Prior Years' Recommendation, with COA's
+Status of Implementation, Management's action and the reason given) and `link-report.json`.
+Re-running produces no diff. To check that the committed
 records are current without writing anything (exit code 1 if they are stale):
 
 ```bash
@@ -40,6 +42,28 @@ pages for 2023). Print it with:
 ```bash
 uv run coa-explorer links
 ```
+
+### Executive Summary and Auditor's Report
+
+Both are split into COA's own sections, each one a piece with its own Citation: the Executive
+Summary's lettered sections ("CY 2023 AAR, Executive Summary, Section E, p. iii"; its pages are the
+lowercase Roman numerals COA prints) and the Auditor's Report's standard headings ("CY 2022 AAR,
+Part I, Auditor's Report, pp. 2-3"). Which file is read differs by year: the Executive Summary is
+Word for 2020-2023 and PDF for 2024; the Auditor's Report is Word for 2020-2021 and PDF for
+2022-2024. The PDF Executive Summaries COA also published for 2020-2023 (`_duplicates/`) are never
+extracted; the tests use them only to check the Word-derived Roman pages.
+
+PDF pages are the PDF's real pages (the reader checks that the page number each page prints is
+its position in the PDF), read from the text the PDF already carries; nothing is OCR'd. PDF text
+layers have small spacing artefacts from how COA's files were produced ("relat ed"), which are left
+as they are. Word pages are derived from the saved layout (ADR-0001), so they are best-effort: the
+2021-2023 Executive Summaries agree exactly with COA's PDF renderings, but the CY 2020 one is
+derived a page early from Section C on because Word saved no page break after its first table.
+The section letter is the exact anchor.
+
+The CY 2023 Auditor's Report is a scan whose text layer is too garbled to cite ("Qualffled", "Section
+7 4"), so its text comes from a reviewed transcription in `data/reviewed/` instead; see the README
+there. `extract --reviewed <dir>` reads transcriptions from another folder.
 
 Where a Word cell's paragraphs cannot be matched one-to-one with the recommendations in it, the
 whole cell text is attached to each recommendation it covers and the column is named in the record's
@@ -59,8 +83,9 @@ uv run coa-explorer serve   # http://127.0.0.1:8000
 `index` embeds every piece with `GEMINI_EMBEDDING_MODEL` (gemini-embedding-001, 768 dimensions) on
 Vertex AI, so it needs the same GCP access as `serve` and takes about half a minute; rebuild it
 whenever the extracted records or the embedding model change. Search merges keyword (FTS5) and
-vector (sqlite-vec) matches into one ranking, can be narrowed by year, Part or observation number,
-and with no year named returns the newest year first. Open http://127.0.0.1:8000, ask a question
+vector (sqlite-vec) matches into one ranking, can be narrowed by year, part (`ES` Executive
+Summary, `I` Auditor's Report, `II`, `III`) or observation number, and with no year named returns
+the newest year first. Open http://127.0.0.1:8000, ask a question
 about Part II or about whether the City acted on COA's recommendations, and the page shows the
 summary and key points, each with Citation chips in COA's format. A follow-up question also shows a
 timeline: when the observation was raised and COA's Status of Implementation in each later AAR,

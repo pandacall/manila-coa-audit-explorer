@@ -61,6 +61,24 @@ def read_blocks(path: Path) -> list[Block]:
     return reader.read(document.find(W + "body"))
 
 
+def page_number_format(path: Path) -> str:
+    """How the document's page numbers are printed: Word's ``w:pgNumType`` format of its first
+    section, e.g. "lowerRoman" for the Executive Summary; "decimal" when none is set."""
+    with zipfile.ZipFile(path) as z:
+        document = ET.fromstring(z.read("word/document.xml"))
+    for section in document.iter(W + "sectPr"):
+        number = section.find(W + "pgNumType")
+        if number is not None and number.get(W + "fmt"):
+            return number.get(W + "fmt")
+        break
+    return "decimal"
+
+
+def format_page_number(page: int, fmt: str) -> str:
+    """A page number as printed in `fmt` (a Word number format such as "decimal")."""
+    return _format_number(page, fmt)
+
+
 def _read_part(z: zipfile.ZipFile, name: str) -> ET.Element | None:
     try:
         return ET.fromstring(z.read(name))

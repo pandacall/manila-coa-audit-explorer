@@ -1,0 +1,63 @@
+{
+  "aar_year": 2020,
+  "document": "Auditor's Report",
+  "source_file": "Manila-City-Annual-Audit-Report-2020/05-ManilaCity2020_Part1-Auditor's_Report.docx",
+  "text_source": "Word document",
+  "page_format": "decimal",
+  "sections": [
+    {
+      "label": null,
+      "heading": "Independent Auditor’s Report",
+      "page_start": 1,
+      "page_end": 1,
+      "pages": "1",
+      "citation": "CY 2020 AAR, Part I, Auditor's Report, p. 1",
+      "text": "Mayor FRANCISCO “ISKO MORENO” DOMAGOSO\nCity of Manila"
+    },
+    {
+      "label": null,
+      "heading": "Qualified Opinion",
+      "page_start": 1,
+      "page_end": 1,
+      "pages": "1",
+      "citation": "CY 2020 AAR, Part I, Auditor's Report, p. 1",
+      "text": "We have audited the financial statements of the City of Manila, which comprise the Statement of Financial Position as at December 31, 2020, and the Statement of Financial Performance, Statement of Changes in Net Assets/Equity, and Statement of Cash Flows, for the year then ended, and the Notes to Financial Statements, including a summary of significant accounting policies and other explanatory information.\nIn our opinion, except for the effects and possible effects of the matters discussed in the Basis for Qualified Opinion section of our report, the accompanying financial statements present fairly, in all material respects, the financial position of the City of Manila as at December 31, 2020, and its financial performance, cash flows, changes in net assets/equity, for the year then ended, and notes to financial statements in accordance with International Public Sector Accounting Standards (IPSAS)."
+    },
+    {
+      "label": null,
+      "heading": "Basis for Qualified Opinion",
+      "page_start": 1,
+      "page_end": 2,
+      "pages": "1-2",
+      "citation": "CY 2020 AAR, Part I, Auditor's Report, pp. 1-2",
+      "text": "Accounting errors in recording cash-in-bank (CiB) transactions amounting to P66.815 million resulted in the misstatement of affected CiB accounts and weighed on the fair presentation of these accounts in the City’s Financial Statements (FS).\nMoreover, deficiencies in accounting for property, plant and equipment (PPE) undermine the quality of PPE information presented in the City’s FS.\nWe conducted our audit in accordance with International Standards of Supreme Audit Institutions (ISSAIs). Our responsibilities under those standards are further described in the Auditor's Responsibilities for the Audit of the Financial Statements section of our report. We are independent of the agency in accordance with the Revised Code of Conduct and Ethical Standards for Commission on Audit Officials and employees (Code of Ethics) together with the ethical requirements that are relevant to our audit of the financial statements, and we have fulfilled our other ethical responsibilities in accordance with these requirements. We believe that the audit evidence we have obtained is sufficient and appropriate to provide a basis for our qualified opinion."
+    },
+    {
+      "label": null,
+      "heading": "Emphasis of Matter Paragraph",
+      "page_start": 2,
+      "page_end": 2,
+      "pages": "2",
+      "citation": "CY 2020 AAR, Part I, Auditor's Report, p. 2",
+      "text": "Without modifying our opinion, we draw attention to Note 30 of the Notes to Financial Statements, which explains that the restated financial statements for the year ended December 31, 2019 have been restated from those which we originally reported on September 28, 2020."
+    },
+    {
+      "label": null,
+      "heading": "Responsibilities of Management and Those Charged with Governance for the Financial Statements",
+      "page_start": 2,
+      "page_end": 2,
+      "pages": "2",
+      "citation": "CY 2020 AAR, Part I, Auditor's Report, p. 2",
+      "text": "Management is responsible for the preparation and fair presentation of the financial statements in accordance with IPSAS, and for such internal control as management determines is necessary to enable the preparation of financial statements that are free from material misstatement, whether due to fraud or error.\nThose charged with governance are responsible for overseeing the agency’s financial reporting process."
+    },
+    {
+      "label": null,
+      "heading": "Auditor’s Responsibilities for the Audit of the Financial Statements",
+      "page_start": 2,
+      "page_end": 3,
+      "pages": "2-3",
+      "citation": "CY 2020 AAR, Part I, Auditor's Report, pp. 2-3",
+      "text": "Our objectives are to obtain reasonable assurance about whether the financial statements as a whole are free from material misstatement, whether due to fraud or error, and to issue an auditor’s report that includes our opinion. Reasonable assurance is a high level of assurance but is not a guarantee that an audit conducted in accordance with ISSAIs will always detect a material misstatement when it exists. Misstatements can arise from fraud or error and are considered material if, individually or in the aggregate, they could reasonably be expected to influence the economic decisions of users taken on the basis of these financial statements.\nAs part of an audit in accordance with ISSAIs, we exercise professional judgment and maintain professional skepticism throughout the audit. We also:\nIdentify and assess the risks of material misstatement of the financial statements, whether due to fraud or error, design and perform audit procedures responsive to those risks, and obtain audit evidence that is sufficient and appropriate to provide a basis for our opinion. The risk of not detecting a material misstatement resulting from fraud is higher than for one resulting from error, as fraud may involve collusion, forgery, intentional omissions, misrepresentations, or the override of internal control;\nObtain an understanding of internal control relevant to the audit in order to design audit procedures that are appropriate in the circumstances, but not for the purpose of expressing an opinion on the effectiveness of the Company’s internal control;\nEvaluate the appropriateness of accounting policies used and the reasonableness of accounting estimates and related disclosures made by management; and\nEvaluate the overall presentation, structure and content of the financial statements, including the disclosures, and whether the financial statements represent the underlying transactions and events in a manner that achieves fair presentation.\nWe communicate with those charged with governance regarding, among other matters, the planned scope and timing of the audit and significant audit findings, including any significant deficiencies in internal control that we identify during our audit.\nWe also provide those charged with governance with a statement that we have complied with relevant ethical requirements regarding independence, and to communicate with them all relationships and other matters that may reasonably be thought to bear on our independence, and where applicable, related safeguards.\nCOMMISSION ON AUDIT"
+    }
+  ]
+}

@@ -439,3 +439,64 @@ def test_an_absurdly_large_number_in_a_tool_argument_is_reported_to_the_model_no
     assert final(events)["type"] != "error"
     assert "error" in adapter.requests[1][1][-1].tool_results[0].content
     assert "error" in adapter.requests[2][1][-1].tool_results[0].content
+
+
+def test_a_question_about_the_audit_opinion_is_answered_from_the_auditors_report(index):
+    adapter = ScriptedAdapter(
+        search("opinion", years=[2022], parts=["I"]),
+        submit(
+            "COA gave a qualified opinion on the 2022 statements, not a clean one.",
+            [point("COA's opinion was qualified.", "2022-I-AR-2-1")],
+        ),
+    )
+
+    events = ask(index, adapter, "Did Manila get a clean audit opinion in 2022?")
+
+    _, messages, _ = adapter.requests[1]
+    passages = messages[-1].tool_results[0].content
+    assert [p["id"] for p in passages] == ["2022-I-AR-2-1"]
+    assert passages[0]["kind"] == "auditors_report"
+    answer = Answer.model_validate(final(events))
+    citation = answer.key_points[0].citations[0]
+    assert citation.text == "CY 2022 AAR, Part I, Auditor's Report, p. 1"
+    assert citation.title == "Auditor's Report: Qualified Opinion"
+
+
+def test_a_years_highlights_are_answered_from_the_executive_summary(index):
+    adapter = ScriptedAdapter(
+        search("", years=[2023], parts=["ES"]),
+        submit(
+            "COA's Executive Summary for 2023 reports assets of P81.680 billion.",
+            [point("Assets were P81.680 billion.", "2023-ES-B-1")],
+        ),
+    )
+
+    events = ask(index, adapter, "What are the highlights of the 2023 audit report?")
+
+    _, messages, _ = adapter.requests[1]
+    assert [p["id"] for p in messages[-1].tool_results[0].content] == [
+        "2023-ES-B-1",
+        "2023-ES-C-1",
+    ]
+    answer = Answer.model_validate(final(events))
+    assert [c.text for c in answer.key_points[0].citations] == [
+        "CY 2023 AAR, Executive Summary, Section B, pp. i-ii"
+    ]
+
+
+def test_the_model_is_told_about_the_executive_summary_and_the_auditors_report(index):
+    adapter = ScriptedAdapter(search("opinion"), submit("Summary.", [point("P.", IPSAS_5)]))
+
+    ask(index, adapter)
+
+    system, _, tools = adapter.requests[0]
+    assert "Executive Summary" in system
+    assert "Auditor's Report" in system
+    assert "never call a qualified opinion clean" in system
+    search_tool = next(tool for tool in tools if tool.name == "search")
+    assert search_tool.parameters["properties"]["parts"]["items"]["enum"] == [
+        "ES",
+        "I",
+        "II",
+        "III",
+    ]

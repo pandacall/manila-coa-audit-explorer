@@ -233,13 +233,154 @@ FIXTURE_PART3 = {
 }
 
 
+def front_matter_section(
+    year: int, document: str, heading: str, text: str, pages: tuple[int, int], label=None
+) -> dict:
+    """One section of an Executive Summary (Roman pages) or an Auditor's Report (plain pages)."""
+    roman = ["", "i", "ii", "iii", "iv", "v", "vi"]
+    summary = document == "Executive Summary"
+    start, end = pages
+    printed = (lambda n: roman[n]) if summary else str
+    span = printed(start) if start == end else f"{printed(start)}-{printed(end)}"
+    where = f"p. {span}" if start == end else f"pp. {span}"
+    citation = (
+        f"CY {year} AAR, Executive Summary, Section {label}, {where}"
+        if summary
+        else f"CY {year} AAR, Part I, Auditor's Report, {where}"
+    )
+    return {
+        "label": label,
+        "heading": heading,
+        "page_start": start,
+        "page_end": end,
+        "pages": span,
+        "citation": citation,
+        "text": text,
+    }
+
+
+def front_matter_record(year: int, document: str, sections: list[dict]) -> dict:
+    summary = document == "Executive Summary"
+    return {
+        "aar_year": year,
+        "document": document,
+        "source_file": f"fixture/{year}-{'es' if summary else 'ar'}.docx",
+        "text_source": "Word document",
+        "page_format": "lowerRoman" if summary else "decimal",
+        "sections": sections,
+    }
+
+
+FIXTURE_EXECUTIVE_SUMMARIES = {
+    2022: front_matter_record(
+        2022,
+        "Executive Summary",
+        [
+            front_matter_section(
+                2022,
+                "Executive Summary",
+                "Financial Highlights",
+                "Assets of P73.694 billion and liabilities of P26.765 billion.",
+                (1, 1),
+                "B",
+            ),
+            front_matter_section(
+                2022,
+                "Executive Summary",
+                "Auditor's Opinion on the Financial Statements",
+                "The Auditor rendered a qualified opinion on the fairness of presentation.",
+                (3, 4),
+                "E",
+            ),
+        ],
+    ),
+    2023: front_matter_record(
+        2023,
+        "Executive Summary",
+        [
+            front_matter_section(
+                2023,
+                "Executive Summary",
+                "Financial Highlights",
+                "Assets of P81.680 billion and liabilities of P31.374 billion.",
+                (1, 2),
+                "B",
+            ),
+            front_matter_section(
+                2023,
+                "Executive Summary",
+                "Operational Highlights",
+                "Continued mass vaccination and the Kalinga sa Manila Project.",
+                (2, 2),
+                "C",
+            ),
+        ],
+    ),
+}
+
+FIXTURE_AUDITORS_REPORTS = {
+    2022: front_matter_record(
+        2022,
+        "Auditor's Report",
+        [
+            front_matter_section(
+                2022, "Auditor's Report", "Report on the Financial Statements", "", (1, 1)
+            ),
+            front_matter_section(
+                2022,
+                "Auditor's Report",
+                "Qualified Opinion",
+                "In our opinion, except for the effects of the matter described, the financial "
+                "statements present fairly the financial position of the City of Manila.",
+                (1, 1),
+            ),
+            front_matter_section(
+                2022,
+                "Auditor's Report",
+                "Emphasis of Matter Paragraph",
+                "We draw attention to Note 31, the restated financial statements.",
+                (2, 2),
+            ),
+        ],
+    ),
+    2023: front_matter_record(
+        2023,
+        "Auditor's Report",
+        [
+            front_matter_section(
+                2023,
+                "Auditor's Report",
+                "Qualified Opinion",
+                "In our opinion, except for the effects of the matter described in the Bases for "
+                "Qualified Opinion, the financial statements present fairly.",
+                (1, 1),
+            ),
+        ],
+    ),
+}
+
+
 def write_fixture_records(
-    directory: Path, years: dict[int, dict] | None = None, part3: dict[int, dict] | None = None
+    directory: Path,
+    years: dict[int, dict] | None = None,
+    part3: dict[int, dict] | None = None,
+    summaries: dict[int, dict] | None = None,
+    auditors_reports: dict[int, dict] | None = None,
 ) -> Path:
-    """Write Part II (and Part III) records in the layout `coa-explorer extract` writes."""
+    """Write Part II (and Part III, Executive Summary, Auditor's Report) records in the layout
+    `coa-explorer extract` writes. Only the default fixtures include the front matter."""
     if part3 is None:
         part3 = FIXTURE_PART3 if years is None else {}
-    for part, records in (("part2", years or FIXTURE_YEARS), ("part3", part3)):
+    if summaries is None:
+        summaries = FIXTURE_EXECUTIVE_SUMMARIES if years is None else {}
+    if auditors_reports is None:
+        auditors_reports = FIXTURE_AUDITORS_REPORTS if years is None else {}
+    for part, records in (
+        ("part2", years or FIXTURE_YEARS),
+        ("part3", part3),
+        ("executive_summary", summaries),
+        ("auditors_report", auditors_reports),
+    ):
         (directory / part).mkdir(parents=True, exist_ok=True)
         for year, record in records.items():
             (directory / part / f"{year}.json").write_text(json.dumps(record), encoding="utf-8")
