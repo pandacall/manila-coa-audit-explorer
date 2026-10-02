@@ -9,6 +9,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_INDEX = REPO_ROOT / "build" / "coa.sqlite"
+DEFAULT_REVIEWED = REPO_ROOT / "data" / "reviewed"
 DEFAULT_SAVED_ANSWERS = REPO_ROOT / "data" / "saved-answers.json"
 
 

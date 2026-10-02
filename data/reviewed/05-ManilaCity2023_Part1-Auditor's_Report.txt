@@ -1,0 +1,81 @@
+=== page 1 ===
+REPUBLIC OF THE PHILIPPINES
+COMMISSION ON AUDIT
+Commonwealth Avenue, Quezon City
+
+LOCAL GOVERNMENT AUDIT SECTOR
+NATIONAL CAPITAL REGION
+
+INDEPENDENT AUDITOR'S REPORT
+
+Honorable MARIA SHEILAH "Honey" H. LACUNA-PANGAN, MD, FPDS
+City Mayor
+City of Manila
+
+Report on the Audit of the Financial Statements
+
+Qualified Opinion
+
+We have audited the financial statements of the City of Manila, which comprise the Statement of Financial Position as at December 31, 2023, and the Statement of Financial Performance, the Statement of Cash Flows and the Statement of Changes in Net Assets/Equity and for the year then ended, and Notes to the Financial Statements, including a summary of significant accounting policies and other explanatory information.
+
+In our opinion, except for the effects of the matter described in the Bases for Qualified Opinion section of our report, the accompanying financial statements present fairly, in all material respects, the financial position of the City of Manila as at December 31, 2023, and its financial performance, cash flows and changes in net assets/equity for the year then ended, and notes to the financial statements, in accordance with International Public Sector Accounting Standards (IPSAS).
+
+Bases for Qualified Opinion
+
+The accuracy of the Cash-in-Bank accounts balance as of December 31, 2023, amounting to P9.237 billion could not be established due to: 1) unreconciled variance of P106.634 million between books balances and the result of bank confirmations, and 2) accumulated unadjusted book reconciling items for several years totaling P182.123 million, mainly due to lapses in the preparation and submission of Bank Reconciliation Statements contrary to Section 74 of Presidential Decree No. 1445. Thus, affected the fair presentation of the Financial Statements.
+
+The accuracy, completeness, and reliability of the year-end balance of Accounts Payable amounting to P4.577 billion could not be determined due to net understatement variance of P525.085 million from confirmation results with contractors/suppliers as against balances per books contrary to Paragraph 27 of International Public Sector Accounting Standard 1. Thus, affecting the fair presentation of the Financial Statements.
+
+We conducted our audit in accordance with the International Standards of Supreme Audit Institutions (ISSAIs). Our responsibilities under those standards are further described in Auditor's Responsibilities for the Audit of the Financial Statements section of our report. We are independent of the City in accordance with the Revised Code of Conduct and Ethical
+
+=== page 2 ===
+Standards for Commission on Audit Officials and Employees (Code of Ethics), together with the ethical requirements that are relevant to our audit of the financial statements, and we have fulfilled our other ethical responsibilities in accordance with these requirements. We believe that the audit evidence we have obtained is sufficient and appropriate to provide a basis for our opinion.
+
+Emphasis of Matter
+
+Without modifying our opinion, we draw attention to Note 31 of the Notes to Financial Statements, which explains that the affected accounts of the restated financial statements for the year ended December 31, 2022, have been restated from those which we originally reported on April 24, 2023.
+
+Responsibilities of Management and Those Charged with Governance for the Financial Statements
+
+Management is responsible for the preparation and fair presentation of the financial statements in accordance with IPSAS, and for such internal control as Management determines is necessary to enable the preparation of financial statements that are free from material misstatement, whether due to fraud or error.
+
+In preparing the financial statements, Management's responsibility for assessing the City's ability to continue as a going concern, disclosing as applicable, matters related to going concern and using the going concern basis of accounting unless Management either intends to liquidate the City or to cease operations or has no alternative but to do so.
+
+Those charged with governance are responsible for overseeing the City's financial reporting process.
+
+Auditor's Responsibilities for the Audit of the Financial Statements
+
+Our objectives are to obtain reasonable assurance about whether the financial statements as a whole are free from material misstatement, whether due to fraud or error, and to issue an Auditor's Report that includes our opinion. Reasonable assurance is a high level of assurance, but is not a guarantee that an audit conducted in accordance with ISSAIs will always detect a material misstatement when it exists. Misstatements can arise from fraud or error and are considered material if, individually or in the aggregate, they could reasonably be expected to influence the economic decisions of users taken on the basis of these financial statements.
+
+As part of an audit in accordance with ISSAIs, we exercise professional judgment and maintain professional skepticism throughout the audit. We also:
+
+• Identify and assess the risks of material misstatement of the financial statements, whether due to fraud or error, design and perform audit procedures responsive to those risks, and obtain audit evidence that is sufficient and appropriate to provide a basis for our opinion. The risk of not detecting a material misstatement resulting from fraud is higher than for one resulting from error, as fraud may involve collusion, forgery, intentional omissions, misrepresentations, or the override of internal control.
+
+• Obtain an understanding of internal control relevant to the audit in order to design audit procedures that are appropriate in the circumstances, but not for the purpose of
+
+=== page 3 ===
+expressing an opinion on the effectiveness of the City's internal control.
+
+• Evaluate the appropriateness of accounting policies used and the reasonableness of accounting estimates and related disclosures made by Management.
+
+• Conclude on the appropriateness of Management's use of the going concern basis of accounting and, based on the audit evidence obtained, whether a material uncertainty exists related to events or conditions that may cast significant doubt on the City's ability to continue as a going concern. If we conclude that a material uncertainty exists, we are required to draw attention in our Auditor's Report to the related disclosures in the financial statements or, if such disclosures are inadequate, to modify our opinion. Our conclusions are based on the audit evidence obtained up to the date of our Auditor's Report. However, future events or conditions may cause the City to cease or to continue as a going concern.
+
+• Evaluate the overall presentation, structure and content of the financial statements, including the disclosures, and whether the financial statements represent the underlying transactions and events in a manner that achieves fair presentation
+
+We communicate with those charged with governance regarding, among other matters, the planned scope and timing of the audit and significant audit observations, including any significant deficiencies in internal control that we identify during our audit.
+
+We also provide those charged with governance with a statement that we have complied with relevant ethical requirements regarding independence, and to communicate with them all relationships and other matters that may reasonably be thought to bear on our independence, and where applicable, related safeguards.
+
+Report on Other Legal and Regulatory Requirements
+
+Our audits were conducted to form an opinion on the basic financial statements taken as a whole. The supplementary information for the year ended December 31, 2023, required by the Bureau of Internal Revenue as disclosed in Note 33 and other regulatory requirements as disclosed in Note 34 to the financial statements are presented for additional analysis and are not required as part of the basic financial statements prepared in accordance with IPSAS. Such supplementary information is the responsibility of the Management. The supplementary information has been subjected to the auditing procedures applied in our audit of the basic financial statements and, in our opinion, is fairly stated, in all material aspects, in relation to the basic financial statements taken as a whole.
+
+COMMISSION ON AUDIT
+
+By:
+
+JOSE DENNIS G. ISIP
+Supervising Auditor
+
+City of Manila
+May 6, 2024

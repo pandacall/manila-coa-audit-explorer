@@ -11,6 +11,8 @@ YEARS = range(2020, 2025)
 RECORD_FILES = [
     *(f"part2/{y}.json" for y in YEARS),
     *(f"part3/{y}.json" for y in YEARS),
+    *(f"executive_summary/{y}.json" for y in YEARS),
+    *(f"auditors_report/{y}.json" for y in YEARS),
     "link-report.json",
 ]
 
@@ -26,6 +28,11 @@ def test_extract_writes_one_readable_record_file_per_year_and_part(tmp_path):
     part3 = json.loads((tmp_path / "part3" / "2020.json").read_text(encoding="utf-8"))
     assert part3["table_rows"] == 55
     assert sum(len(o["recommendations"]) for o in part3["observations"]) == 79
+    summary = json.loads((tmp_path / "executive_summary" / "2024.json").read_text(encoding="utf-8"))
+    assert summary["page_format"] == "lowerRoman"
+    assert [s["label"] for s in summary["sections"]] == list("ABCDEFG")
+    report = json.loads((tmp_path / "auditors_report" / "2023.json").read_text(encoding="utf-8"))
+    assert report["text_source"].startswith("reviewed transcription")
     # Human-readable: indented, with real characters rather than escapes.
     text = (tmp_path / "part2" / "2024.json").read_text(encoding="utf-8")
     assert "\n  " in text
@@ -57,6 +64,30 @@ def test_check_mode_fails_when_a_committed_record_is_stale(tmp_path):
     assert main(["extract", "--out", str(stale), "--check"]) == 0
     (stale / "part2" / "2021.json").write_text("{}\n", encoding="utf-8")
     assert main(["extract", "--out", str(stale), "--check"]) == 1
+
+
+def test_check_mode_also_covers_the_executive_summary_and_auditors_report(tmp_path):
+    stale = tmp_path / "stale"
+    main(["extract", "--out", str(stale)])
+    (stale / "executive_summary" / "2024.json").write_text("{}\n", encoding="utf-8")
+    assert main(["extract", "--out", str(stale), "--check"]) == 1
+    main(["extract", "--out", str(stale)])
+    (stale / "auditors_report" / "2023.json").unlink()
+    assert main(["extract", "--out", str(stale), "--check"]) == 1
+
+
+def test_a_changed_reviewed_transcription_changes_the_record_it_stands_in_for(tmp_path):
+    reviewed = tmp_path / "reviewed"
+    reviewed.mkdir()
+    name = "05-ManilaCity2023_Part1-Auditor's_Report.txt"
+    original = (ROOT / "data" / "reviewed" / name).read_text(encoding="utf-8")
+    (reviewed / name).write_text(original.replace("P9.237 billion", "P9.999 billion"), "utf-8")
+
+    main(["extract", "--out", str(tmp_path / "out"), "--reviewed", str(reviewed)])
+
+    record = (tmp_path / "out" / "auditors_report" / "2023.json").read_text(encoding="utf-8")
+    assert "P9.999 billion" in record
+    assert main(["extract", "--out", str(tmp_path / "out"), "--check"]) == 1
 
 
 def test_check_mode_also_covers_part_III_and_the_link_report(tmp_path):
@@ -100,7 +131,11 @@ def test_extract_aapsi_writes_a_record_per_document_and_year_and_reports_the_lin
     )
 
     assert code == 0
-    written = sorted(p.relative_to(tmp_path).as_posix() for p in tmp_path.glob("a*/*.json"))
+    written = sorted(
+        p.relative_to(tmp_path).as_posix()
+        for folder in ("aapsi", "apmt")
+        for p in tmp_path.glob(f"{folder}/*.json")
+    )
     assert written == ["aapsi/2023.json", "aapsi/2024.json", "apmt/2023.json", "apmt/2024.json"]
     apmt = json.loads((tmp_path / "apmt" / "2024.json").read_text(encoding="utf-8"))
     assert (apmt["document"], apmt["pdf_pages"]) == ("APMT", 12)

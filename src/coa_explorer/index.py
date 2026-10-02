@@ -5,6 +5,10 @@ Citation): its description, its Recommendations, its Management Comment and, whe
 Auditor's Rejoinder. Long descriptions are split on paragraph boundaries so a piece stays small
 enough to read in full.
 
+The Executive Summary (part "ES") and the Auditor's Report (part "I", its place in the AAR) become
+one piece per section, split on paragraph boundaries when long; a heading with no text makes none.
+Each carries the section's Citation.
+
 Each Prior Years' Recommendation in Part III becomes one piece (COA's Status of Implementation with
 Management's action and reason), plus a row in `follow_ups`. Each AAPSI row (Management's Action
 Plan and Reported Status) and each APMT row (COA's validation) becomes one piece, plus a row in
@@ -26,6 +30,7 @@ import sqlite_vec
 
 from coa_explorer.aapsi import DOCUMENTS
 from coa_explorer.embedder import Embedder
+from coa_explorer.front_matter import EXECUTIVE_SUMMARY
 from coa_explorer.links import build_links
 from coa_explorer.timeline import clip_title, disagreement
 
@@ -152,6 +157,10 @@ def build_index(records_dir: Path, db_path: Path, embedder: Embedder) -> int:
     """
     part2 = load_records(records_dir / "part2")
     part3 = load_records(records_dir / "part3")
+    front_matter = [
+        *load_records(records_dir / "executive_summary").values(),
+        *load_records(records_dir / "auditors_report").values(),
+    ]
     monitoring = load_monitoring(records_dir)
     db_path.parent.mkdir(parents=True, exist_ok=True)
     db_path.unlink(missing_ok=True)
@@ -188,6 +197,8 @@ def build_index(records_dir: Path, db_path: Path, embedder: Embedder) -> int:
                         for kind, seq, text in observation_pieces(observation)
                     ],
                 )
+        for record in front_matter:
+            db.executemany(PIECE_INSERT, front_matter_pieces(record))
         for record in part3.values():
             for tracked in record["observations"]:
                 for rec in tracked["recommendations"]:
@@ -226,6 +237,31 @@ def build_index(records_dir: Path, db_path: Path, embedder: Embedder) -> int:
         (count,) = db.execute("SELECT count(*) FROM pieces").fetchone()
     db.close()
     return count
+
+
+def front_matter_pieces(record: dict) -> Iterator[tuple]:
+    """The piece rows of one Executive Summary or Auditor's Report, a section at a time."""
+    year, document = record["aar_year"], record["document"]
+    summary = document == EXECUTIVE_SUMMARY
+    part, kind = ("ES", "executive_summary") if summary else ("I", "auditors_report")
+    for number, section in enumerate(record["sections"], start=1):
+        anchor = section["label"] if summary else f"AR-{number}"
+        for seq, text in enumerate(split_text(section["text"]), start=1):
+            yield (
+                f"{year}-{part}-{anchor}-{seq}",
+                year,
+                part,
+                None,
+                None,
+                None,
+                None,
+                kind,
+                f"{document}: {section['heading']}",
+                text,
+                section["page_start"],
+                section["page_end"],
+                section["citation"],
+            )
 
 
 def add_follow_up(db: sqlite3.Connection, year: int, tracked: dict, rec: dict) -> None:
