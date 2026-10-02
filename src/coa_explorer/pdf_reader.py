@@ -41,13 +41,14 @@ def reviewed_path(pdf: Path, reviewed_dir: Path | None) -> Path | None:
 
 def read_pages(pdf: Path, reviewed_dir: Path | None = None) -> list[PdfPage]:
     """The PDF's pages, from its reviewed transcription when there is one, else its text layer."""
-    reviewer = reviewed_path(pdf, reviewed_dir)
+    transcription = reviewed_path(pdf, reviewed_dir)
     reader = PdfReader(pdf)
-    if reviewer is not None:
-        pages = _read_transcription(reviewer)
+    if transcription is not None:
+        pages = _read_transcription(transcription)
         if len(pages) != len(reader.pages):
             raise ValueError(
-                f"{reviewer.name} has {len(pages)} pages but the PDF has {len(reader.pages)} pages"
+                f"{transcription.name} has {len(pages)} pages"
+                f" but the PDF has {len(reader.pages)} pages"
             )
         return pages
     return [

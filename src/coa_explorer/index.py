@@ -25,6 +25,7 @@ from pathlib import Path
 import sqlite_vec
 
 from coa_explorer.embedder import Embedder
+from coa_explorer.front_matter import EXECUTIVE_SUMMARY
 from coa_explorer.links import build_links
 from coa_explorer.timeline import clip_title
 
@@ -191,7 +192,7 @@ def build_index(records_dir: Path, db_path: Path, embedder: Embedder) -> int:
 def front_matter_pieces(record: dict) -> Iterator[tuple]:
     """The piece rows of one Executive Summary or Auditor's Report, a section at a time."""
     year, document = record["aar_year"], record["document"]
-    summary = document == "Executive Summary"
+    summary = document == EXECUTIVE_SUMMARY
     part, kind = ("ES", "executive_summary") if summary else ("I", "auditors_report")
     for number, section in enumerate(record["sections"], start=1):
         anchor = section["label"] if summary else f"AR-{number}"

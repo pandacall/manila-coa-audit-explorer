@@ -199,7 +199,7 @@ def test_expanding_a_front_matter_hit_keeps_just_the_matching_sections(index):
     expanded = index.expand(pieces)
 
     assert sorted((o.aar_year, o.number) for o in expanded) == [(2022, None), (2022, None)]
-    assert {o.citation.split(",")[1].strip() for o in expanded} == {"Executive Summary", "Part I"}
+    assert {o.pieces[0].part for o in expanded} == {"ES", "I"}
 
 
 def observations_of(pieces):

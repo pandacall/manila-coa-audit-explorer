@@ -73,9 +73,11 @@ def main(argv: Sequence[str] | None = None, *, embedder: Embedder | None = None)
 def extract_step(
     reports: Path, out: Path, *, check: bool = False, reviewed: Path = DEFAULT_REVIEWED
 ) -> int:
-    summaries = {y: front_matter.extract_executive_summary(reports, y, reviewed) for y in YEARS}
+    summaries = {
+        year: front_matter.extract_executive_summary(reports, year, reviewed) for year in YEARS
+    }
     auditors_reports = {
-        y: front_matter.extract_auditors_report(reports, y, reviewed) for y in YEARS
+        year: front_matter.extract_auditors_report(reports, year, reviewed) for year in YEARS
     }
     part2_records = {year: part2.extract_year(reports, year) for year in YEARS}
     part3_records = {year: part3.extract_year(reports, year) for year in YEARS}
@@ -86,8 +88,14 @@ def extract_step(
         )
     )
     outputs = {
-        **{Path("executive_summary") / f"{y}.json": r.to_dict() for y, r in summaries.items()},
-        **{Path("auditors_report") / f"{y}.json": r.to_dict() for y, r in auditors_reports.items()},
+        **{
+            Path("executive_summary") / f"{year}.json": record.to_dict()
+            for year, record in summaries.items()
+        },
+        **{
+            Path("auditors_report") / f"{year}.json": record.to_dict()
+            for year, record in auditors_reports.items()
+        },
         **{
             Path("part2") / f"{year}.json": record.to_dict()
             for year, record in part2_records.items()

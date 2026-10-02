@@ -165,21 +165,6 @@ def test_2024_executive_summary_pdf_keeps_its_printed_roman_pages(executive_summ
     assert "17 or 62.96 percent were implemented" in status.text
 
 
-def test_the_pdf_reader_checks_printed_page_numbers_against_pdf_pages():
-    from coa_explorer import pdf_reader
-
-    path = (
-        REPORTS
-        / "Manila-City-Annual-Audit-Report-2024"
-        / "AAR"
-        / "03-ManilaCity2024_Executive_Summary.pdf"
-    )
-    pages = pdf_reader.read_pages(path)
-    assert [p.number for p in pages] == [1, 2, 3, 4, 5, 6]
-    assert [p.label for p in pages] == ["i", "ii", "iii", "iv", "v", "vi"]
-    assert not any(line.strip() in {"i", "ii", "iii"} for line in pages[2].lines)
-
-
 # ---------------------------------------------------------------------------------------------
 # Auditor's Report pages: real PDF pages, or derived from Word for CY 2020-2021
 
