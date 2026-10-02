@@ -34,8 +34,8 @@ to use, the answer's key points, and the key facts a good answer must state.
 Faithfulness: a key point is supported only if the source passages state or directly entail every \
 claim in it, including each number, year, status and who said it. Wording may differ. A point that \
 adds outside information, overstates what the passage says (for example calls a deficiency fraud), \
-or presents Management's claim as COA's finding is not supported. Judge only against the passages, \
-never your own knowledge.
+or presents Management's claim as COA's own assessment is not supported. Judge only against the \
+passages, never your own knowledge.
 
 Coverage: a key fact is covered if the answer's summary or key points state it, in any wording or \
 language. A vague gesture at the topic does not cover a specific fact.

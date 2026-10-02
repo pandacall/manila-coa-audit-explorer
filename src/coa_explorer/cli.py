@@ -194,7 +194,7 @@ def eval_step(
     settings = functools.cache(load_settings)
     answer_model = args.answer_model or settings().gemini_answer_model
     judge_model = args.judge_model or settings().gemini_judge_model
-    if not judge_model:
+    if not judge_model and scored:
         print("no judge model: set GEMINI_JUDGE_MODEL or pass --judge-model", file=sys.stderr)
         return 2
     index_path = args.index or settings().index_path
@@ -238,7 +238,7 @@ def eval_step(
 
 
 def serve_step(host: str, port: int) -> int:
-    # Imported here so `extract` and `index` don't need Gemini or the web stack loaded.
+    # Imported here so the other steps don't need the web stack loaded.
     import uvicorn
 
     from coa_explorer.api import create_app

@@ -2,8 +2,10 @@ name: Evaluation
 
 # A small evaluation on every pull request: the first few approved reference items go through the
 # real answer model and the Gemini Pro batch judge. It reports; it does not gate the merge.
-# Authenticates to GCP with Workload Identity Federation, using the variables that
-# scripts/setup-gcp.sh sets. There are no keys or secrets.
+# Authenticates to GCP with Workload Identity Federation, as an account that can only call Gemini
+# and use the evaluation bucket (not the deployer), using the variables that scripts/setup-gcp.sh
+# sets. There are no keys or secrets. With no approved reference items there is nothing to score,
+# so the job skips the GCP steps.
 
 on:
   pull_request:
@@ -35,15 +37,22 @@ jobs:
 
       - run: uv sync --locked
 
+      - name: Count approved reference items
+        id: approved
+        run: echo "count=$(grep -c '"approved": true' data/eval/reference.json || true)" >> "$GITHUB_OUTPUT"
+
       - uses: google-github-actions/auth@v2
+        if: steps.approved.outputs.count != '0'
         with:
           workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ vars.GCP_DEPLOYER_SERVICE_ACCOUNT }}
+          service_account: ${{ vars.GCP_EVAL_SERVICE_ACCOUNT }}
 
       - name: Build the index
+        if: steps.approved.outputs.count != '0'
         run: uv run coa-explorer index
 
       - name: Evaluate the first 5 approved reference items
+        if: steps.approved.outputs.count != '0'
         run: uv run coa-explorer eval --limit 5 --out build/eval
 
       - name: Report results

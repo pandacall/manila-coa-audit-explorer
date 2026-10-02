@@ -237,7 +237,11 @@ def test_an_item_that_fails_is_reported_and_the_rest_are_still_scored(tmp_path, 
     def broken(messages):
         raise RuntimeError("model unavailable")
 
-    adapter = ScriptedAdapter(broken, *good_answer()._turns)
+    adapter = ScriptedAdapter(
+        broken,
+        search("IPSAS 1"),
+        submit("s", [point("Comparative information was omitted.", IPSAS_5)]),
+    )
     items = [item(id="fails"), item(id="works")]
     judge = ScriptedBatchModel(all_true)
 

@@ -196,7 +196,7 @@ finish() {
 #                       GCP_WORKLOAD_IDENTITY_PROVIDER,
 #                       GCP_DEPLOYER_SERVICE_ACCOUNT,
 #                       GCP_RUNTIME_SERVICE_ACCOUNT, GCP_ARTIFACT_REPOSITORY,
-#                       GCP_EVAL_BATCH_BUCKET, GEMINI_ANSWER_MODEL, GEMINI_JUDGE_MODEL
+#                       GCP_EVAL_SERVICE_ACCOUNT, GCP_EVAL_BATCH_BUCKET, GEMINI_ANSWER_MODEL, GEMINI_JUDGE_MODEL
 # ──────────────────────────────────────────────────────────────────────────
 
 # Git Bash on Windows rewrites arguments that look like POSIX paths
@@ -400,18 +400,30 @@ EVAL_BUCKET="$GCP_PROJECT_ID-coa-eval"
 if gcloud storage buckets describe "gs://$EVAL_BUCKET" --project "$GCP_PROJECT_ID" >/dev/null 2>&1; then
   say "✓ bucket gs://$EVAL_BUCKET already exists"
 else
-  gcloud storage buckets create "gs://$EVAL_BUCKET" --location="$REGION"     --uniform-bucket-level-access --project "$GCP_PROJECT_ID"     || die "Couldn't create the evaluation bucket."
+  gcloud storage buckets create "gs://$EVAL_BUCKET" --location="$REGION" \
+    --uniform-bucket-level-access --project "$GCP_PROJECT_ID" \
+    || die "Couldn't create the evaluation bucket."
   say "✓ created gs://$EVAL_BUCKET in $REGION"
 fi
 # The files are scratch: each run writes new ones, so old ones expire after a week.
 EVAL_LIFECYCLE=$(mktemp)
 printf '{"rule":[{"action":{"type":"Delete"},"condition":{"age":7}}]}' > "$EVAL_LIFECYCLE"
-gcloud storage buckets update "gs://$EVAL_BUCKET" --lifecycle-file="$EVAL_LIFECYCLE"   --project "$GCP_PROJECT_ID" >/dev/null   && say "✓ objects expire after 7 days"   || SKIPPED+=("Expiry for gs://$EVAL_BUCKET (set a 7-day delete rule in the console)")
+gcloud storage buckets update "gs://$EVAL_BUCKET" --lifecycle-file="$EVAL_LIFECYCLE" \
+  --project "$GCP_PROJECT_ID" >/dev/null \
+  && say "✓ objects expire after 7 days" \
+  || SKIPPED+=("Expiry for gs://$EVAL_BUCKET (set a 7-day delete rule in the console)")
 rm -f "$EVAL_LIFECYCLE"
-say "CI runs a small evaluation on pull requests, so the deployer account may call Gemini and use the bucket."
-grant_project_role "$DEPLOYER_SA" roles/aiplatform.user
-retry 5 gcloud storage buckets add-iam-policy-binding "gs://$EVAL_BUCKET"   --member="serviceAccount:$DEPLOYER_SA" --role=roles/storage.objectAdmin   --project "$GCP_PROJECT_ID" >/dev/null   || die "Couldn't grant $DEPLOYER_SA access to the evaluation bucket."
-say "✓ $DEPLOYER_SA → roles/storage.objectAdmin on gs://$EVAL_BUCKET only"
+say "CI runs a small evaluation on pull requests. It gets its own account, separate from the deployer,"
+say "so code in a pull request can call Gemini and use this bucket but can't deploy anything."
+EVAL_SA_ID="coa-evaluator"
+EVAL_SA="$EVAL_SA_ID@$GCP_PROJECT_ID.iam.gserviceaccount.com"
+ensure_sa "$EVAL_SA_ID" "$EVAL_SA" "COA Explorer CI evaluator"
+grant_project_role "$EVAL_SA" roles/aiplatform.user
+retry 5 gcloud storage buckets add-iam-policy-binding "gs://$EVAL_BUCKET" \
+  --member="serviceAccount:$EVAL_SA" --role=roles/storage.objectAdmin \
+  --project "$GCP_PROJECT_ID" >/dev/null \
+  || die "Couldn't grant $EVAL_SA access to the evaluation bucket."
+say "✓ $EVAL_SA → roles/storage.objectAdmin on gs://$EVAL_BUCKET only"
 note "Vertex AI's own service agent reads and writes the bucket for the batch job."
 set_var GCP_EVAL_BATCH_BUCKET "$EVAL_BUCKET"
 pause "Press Enter to continue."
@@ -460,6 +472,12 @@ retry 5 gcloud iam service-accounts add-iam-policy-binding "$DEPLOYER_SA" \
   || die "Couldn't allow GitHub to impersonate $DEPLOYER_SA."
 say "✓ $GITHUB_REPO may impersonate $DEPLOYER_SA"
 
+retry 5 gcloud iam service-accounts add-iam-policy-binding "$EVAL_SA" \
+  --member="$WIF_PRINCIPAL" --role=roles/iam.workloadIdentityUser \
+  --project "$GCP_PROJECT_ID" >/dev/null \
+  || die "Couldn't allow GitHub to impersonate $EVAL_SA."
+say "✓ $GITHUB_REPO may impersonate $EVAL_SA"
+
 printf '\n'
 say "Saving the identifiers as GitHub Actions variables (they are not secrets):"
 set_var GCP_PROJECT_ID "$GCP_PROJECT_ID"
@@ -467,6 +485,7 @@ set_var GCP_REGION "$REGION"
 set_var GCP_WORKLOAD_IDENTITY_PROVIDER "$WIF_PROVIDER_NAME"
 set_var GCP_DEPLOYER_SERVICE_ACCOUNT "$DEPLOYER_SA"
 set_var GCP_RUNTIME_SERVICE_ACCOUNT "$RUNTIME_SA"
+set_var GCP_EVAL_SERVICE_ACCOUNT "$EVAL_SA"
 pause "Press Enter to continue."
 
 # ── 7. Firestore ──────────────────────────────────────────────────────────

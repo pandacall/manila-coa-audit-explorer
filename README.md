@@ -116,14 +116,14 @@ Scores, pooled over items:
   starting page is from the expected one (ADR-0001 makes pages best-effort, so this is measured, not
   assumed).
 - **Faithfulness** and **key-fact coverage**: Gemini Pro judges, in one Vertex AI batch job over all
-  answers, whether each key point is supported by the passages it cites and whether each key fact
+  answers, whether each key point is supported by the passages the answer cites and whether each key fact
   appears in the answer. A judge reply that can't be used is counted as `unjudged`, not as a pass.
 - **Correct refusal**: unanswerable items the app refused. **False refusal**: answerable items it
   refused (they also score no Citations and no facts).
 
 The judge runs as a batch job because it is cheaper and nobody waits on it; batch jobs exchange
 files through Cloud Storage, so `EVAL_BATCH_BUCKET` must name a bucket (`scripts/setup-gcp.sh`
-creates one, grants the CI deployer account use of it and Vertex AI, and sets the variables CI
-reads). Re-run the wizard once to get those. `.github/workflows/eval.yml` runs the first five
+creates one, plus a separate CI evaluator account that may only call Vertex AI and use the
+bucket, and sets the variables CI reads). Re-run the wizard once to get those. `.github/workflows/eval.yml` runs the first five
 approved items on every pull request from this repository and posts the summary on the run page;
 it reports and does not block the merge.

@@ -93,15 +93,19 @@ class GeminiBatchJudge:
         """The text of every `predictions.jsonl` the job wrote under `directory`."""
         parsed = urlparse(directory)
         prefix = parsed.path.lstrip("/")
-        listing = self._http.get(
-            f"{STORAGE_API}/storage/v1/b/{parsed.netloc}/o", params={"prefix": prefix}
-        )
-        listing.raise_for_status()
-        names = [
-            item["name"]
-            for item in listing.json().get("items", [])
-            if item["name"].endswith(".jsonl")
-        ]
+        names: list[str] = []
+        token = None
+        while True:  # the listing is paged
+            listing = self._http.get(
+                f"{STORAGE_API}/storage/v1/b/{parsed.netloc}/o",
+                params={"prefix": prefix, **({"pageToken": token} if token else {})},
+            )
+            listing.raise_for_status()
+            body = listing.json()
+            names += [i["name"] for i in body.get("items", []) if i["name"].endswith(".jsonl")]
+            token = body.get("nextPageToken")
+            if not token:
+                break
         texts = []
         for name in names:
             response = self._http.get(
