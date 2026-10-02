@@ -9,6 +9,10 @@ The Executive Summary (part "ES") and the Auditor's Report (part "I", its place 
 one piece per section, split on paragraph boundaries when long; a heading with no text makes none.
 Each carries the section's Citation.
 
+The Notes to Financial Statements (part "NOTES") become one piece per passage of a Note, as the
+record cut them (tables in markdown); the Note number is the piece's `observation_number`, so a
+Note can be looked up by number, and each carries the passage's own Citation and pages.
+
 Each Prior Years' Recommendation in Part III becomes one piece (COA's Status of Implementation with
 Management's action and reason), plus a row in `follow_ups`. Each AAPSI row (Management's Action
 Plan and Reported Status) and each APMT row (COA's validation) becomes one piece, plus a row in
@@ -32,9 +36,10 @@ from coa_explorer.aapsi import DOCUMENTS
 from coa_explorer.embedder import Embedder
 from coa_explorer.front_matter import EXECUTIVE_SUMMARY
 from coa_explorer.links import build_links
+from coa_explorer.notes import MAX_PASSAGE_CHARS, NOTES_PART
 from coa_explorer.timeline import clip_title, disagreement
 
-MAX_PIECE_CHARS = 1800
+MAX_PIECE_CHARS = MAX_PASSAGE_CHARS
 
 SCHEMA = """
 CREATE TABLE pieces (
@@ -161,6 +166,7 @@ def build_index(records_dir: Path, db_path: Path, embedder: Embedder) -> int:
         *load_records(records_dir / "executive_summary").values(),
         *load_records(records_dir / "auditors_report").values(),
     ]
+    notes = load_records(records_dir / "notes")
     monitoring = load_monitoring(records_dir)
     db_path.parent.mkdir(parents=True, exist_ok=True)
     db_path.unlink(missing_ok=True)
@@ -199,6 +205,8 @@ def build_index(records_dir: Path, db_path: Path, embedder: Embedder) -> int:
                 )
         for record in front_matter:
             db.executemany(PIECE_INSERT, front_matter_pieces(record))
+        for record in notes.values():
+            db.executemany(PIECE_INSERT, notes_pieces(record))
         for record in part3.values():
             for tracked in record["observations"]:
                 for rec in tracked["recommendations"]:
@@ -261,6 +269,28 @@ def front_matter_pieces(record: dict) -> Iterator[tuple]:
                 section["page_start"],
                 section["page_end"],
                 section["citation"],
+            )
+
+
+def notes_pieces(record: dict) -> Iterator[tuple]:
+    """The piece rows of one year's Notes to Financial Statements, a passage at a time."""
+    year = record["aar_year"]
+    for note in record["notes"]:
+        for seq, passage in enumerate(note["passages"], start=1):
+            yield (
+                f"{year}-N-{note['number']}-{seq}",
+                year,
+                NOTES_PART,
+                note["number"],
+                None,
+                None,
+                None,
+                "note",
+                f"Note {note['number']}: {note['title']}",
+                passage["text"],
+                passage["page_start"],
+                passage["page_end"],
+                passage["citation"],
             )
 
 
