@@ -1,0 +1,629 @@
+[
+  {
+    "question": "What did COA observe about cash advances in Manila?",
+    "answer": {
+      "type": "answer",
+      "summary": "In its 2021 and 2024 audit reports, COA observed significant balances of unliquidated cash advances in the City of Manila—₱182.725 million in CY 2021 and ₱358.524 million in CY 2024. COA highlighted delays in liquidation, substantial amounts tied to separated or deceased personnel, and the granting of additional cash advances despite unsettled prior balances.",
+      "key_points": [
+        {
+          "text": "In the CY 2024 audit, COA observed that cash advances totaling ₱358.524 million (or ₱355.158 million per paragraph 2.a) remained unliquidated as of December 31, 2024, due to non-submission of liquidation reports by Accountable Officers (AOs). Of this balance, ₱148.307 million (41.37%) had been outstanding from over 60 days to more than 10 years, making them due and demandable.",
+          "citations": [
+            {
+              "text": "CY 2024 AAR, Part II, Observation No. 2, pp. 82-88",
+              "title": "There were deficiencies in the grant and liquidation of cash advances, contrary to COA regulations to wit:"
+            }
+          ]
+        },
+        {
+          "text": "Unsettled cash advances totaling ₱106.136 million pertained to 40 AOs who were deceased, resigned, retired, on absence without official leave (AWOL), or whose employment status was undetermined, with accounts outstanding between two months and 19 years. This included ₱38.500 million for one deceased AO requested by Management for write-off as a dormant receivable.",
+          "citations": [
+            {
+              "text": "CY 2024 AAR, Part II, Observation No. 2, pp. 82-88",
+              "title": "There were deficiencies in the grant and liquidation of cash advances, contrary to COA regulations to wit:"
+            }
+          ]
+        },
+        {
+          "text": "COA noted that additional cash advances were granted to accountable officers despite unliquidated previous cash advances (including 38 additional cash advances totaling ₱158.840 million granted to four AOs from CYs 2022 to 2024), contrary to Section 89 of Presidential Decree No. 1445 and COA Circular No. 97-002.",
+          "citations": [
+            {
+              "text": "CY 2024 AAR, Part II, Observation No. 2, pp. 82-88",
+              "title": "There were deficiencies in the grant and liquidation of cash advances, contrary to COA regulations to wit:"
+            }
+          ]
+        },
+        {
+          "text": "In the CY 2021 audit, COA observed unliquidated cash advances totaling ₱182.725 million as of December 31, 2021, of which ₱95.424 million pertained to retired, resigned, deceased, or AWOL employees (mostly outstanding over three years). Additionally, liquidations amounting to ₱641,630.33 submitted by AOs had not yet been recorded by the Office of the City Accountant (OCAT).",
+          "citations": [
+            {
+              "text": "CY 2021 AAR, Part II, Observation No. 2, pp. 79-80",
+              "title": "The City had not settled cash advances totaling P182.725 million contrary to Section 89 of Presidential Decree No. 1445 and COA Circular No. 97-002 dated February 10, 1997, and bear on the fair presentation of the affected accounts in the FS."
+            }
+          ]
+        },
+        {
+          "text": "COA recommended issuing demand letters, ensuring separating personnel settle accountabilities before receiving clearances, and strictly halting additional advances to AOs with unsettled balances. In response, Management noted efforts to issue demand letters, seek write-offs for deceased employees, and enforce stricter internal policies.",
+          "citations": [
+            {
+              "text": "CY 2024 AAR, Part II, Observation No. 2, pp. 82-88",
+              "title": "There were deficiencies in the grant and liquidation of cash advances, contrary to COA regulations to wit:"
+            },
+            {
+              "text": "CY 2022 AAR, Part III, CY 2021 Observation No. 2, p. 87",
+              "title": "The City had not settled cash advances totaling P182.725 million contrary to Section 89 of Presidential Decree No. 1445 and COA Circular No. 97-002 dated February 10, 1997, and bear on the fair…"
+            },
+            {
+              "text": "CY 2023 AAR, Part III, CY 2021 Observation No. 2, pp. 98-99",
+              "title": "The City had not settled cash advances totaling P182.725 million contrary to Section 89 of Presidential Decree No. 1445 and COA Circular No. 97-002 dated February 10, 1997, and bear on the fair…"
+            }
+          ]
+        }
+      ],
+      "timelines": [
+        {
+          "origin_year": 2021,
+          "origin_observation": 2,
+          "title": "The City had not settled cash advances totaling P182.725 million contrary to Section 89 of Presidential Decree No. 1445 and COA Circular No. 97-002 dated February 10, 1997, and bear on the fair…",
+          "in_collection": true,
+          "raised": {
+            "key": "2021-2-description-1",
+            "citation": "CY 2021 AAR, Part II, Observation No. 2, pp. 79-80",
+            "title": "The City had not settled cash advances totaling P182.725 million contrary to Section 89 of Presidential Decree No. 1445 and COA Circular No. 97-002 dated February 10, 1997, and bear on the fair presentation of the affected accounts in the FS."
+          },
+          "steps": [
+            {
+              "aar_year": 2022,
+              "follow_ups": [
+                {
+                  "key": "2022-III-5",
+                  "recommendation": "We recommended that Management: Enforce the liquidation of the cash advances and, henceforth, enforce strictly the liquidation of cash advances within the prescribed period; and",
+                  "status": "Partially Implemented",
+                  "status_text": "Partially Implemented",
+                  "status_note": null,
+                  "management_action": "Demand letters (DLs) are sent quarterly to accountable officers (AOs) with outstanding balances to strictly implement the liquidation of cash advances.",
+                  "reason": "Cash advances amounting to P53.590 million remained unliquidated as of April 25, 2023 as follows: Present administration: P6.112 million Immediately preceding administration: P25.167 million Other past administrations: P22.311 million",
+                  "shared": [],
+                  "citation": "CY 2022 AAR, Part III, CY 2021 Observation No. 2, p. 87"
+                },
+                {
+                  "key": "2022-III-6",
+                  "recommendation": "Record in the book of accounts the liquidations of cash advances amounting P641,630.33 and, prospectively, promptly record the liquidations of cash advances in order to reflect them in the books of accounts in the proper period.",
+                  "status": "Not Implemented",
+                  "status_text": "Not Implemented",
+                  "status_note": null,
+                  "management_action": "The OCAT informed that the amount is not yet liquidated by the AO, therefore, not yet recorded in the books.",
+                  "reason": "The AO submitted liquidation documents to OCAT per AO reply dated April 29, 2022 to CAO DL.",
+                  "shared": [],
+                  "citation": "CY 2022 AAR, Part III, CY 2021 Observation No. 2, p. 87"
+                }
+              ]
+            },
+            {
+              "aar_year": 2023,
+              "follow_ups": [
+                {
+                  "key": "2023-III-12",
+                  "recommendation": "We recommended that Management: Enforce the liquidation of the cash advances and, henceforth, enforce strictly the liquidation of cash advances within the prescribed period; and",
+                  "status": "Implemented",
+                  "status_text": "Implemented",
+                  "status_note": null,
+                  "management_action": "Liquidation of the outstanding cash advances in the books as of December 31, 2023 were already recorded.",
+                  "reason": null,
+                  "shared": [],
+                  "citation": "CY 2023 AAR, Part III, CY 2021 Observation No. 2, pp. 98-99"
+                },
+                {
+                  "key": "2023-III-13",
+                  "recommendation": "We recommended that Management: Record in the book of accounts the liquidations of cash advances amounting P641,630.33 and, prospectively, promptly record the liquidations of cash advances in order to reflect them in the books of accounts in the proper period.",
+                  "status": "Implemented",
+                  "status_text": "Implemented",
+                  "status_note": null,
+                  "management_action": "Same as above",
+                  "reason": null,
+                  "shared": [],
+                  "citation": "CY 2023 AAR, Part III, CY 2021 Observation No. 2, pp. 98-99"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "origin_year": 2019,
+          "origin_observation": 6,
+          "title": "The City had not settled cash advances (CAs) totaling P203.440 million, P198.791 million or 97.7 percent of which were drawn by and are the accountabilities of the past City Administrations. These…",
+          "in_collection": false,
+          "raised": null,
+          "steps": [
+            {
+              "aar_year": 2020,
+              "follow_ups": [
+                {
+                  "key": "2020-III-16",
+                  "recommendation": "We recommended that Management: Enforce strictly the CA liquidation within the prescribed period;",
+                  "status": "Partially Implemented",
+                  "status_text": "Partially Implemented",
+                  "status_note": null,
+                  "management_action": "The OCAT now strictly requires the accountable officers (AOs) to fully liquidate their outstanding CAs within the deadline. It is now regularly sending the statement of account to the AOs demanding liquidation of advances. It is a City’s policy that requires the AOs to authorize the City to deduct their outstanding CAs from their salary. In order to avoid the overlapping of CAs, Management directed the OCAT to issue a certification that the AO has no outstanding CA as basis for the approval of the DV/advances.",
+                  "reason": "CAs amounting to P295.828 million remained unliquidated to date. The current City Administration is accountable for P92.903 million of these CAs. The OCAT sent demand letters (DLs) to two AOs with unliquidated CAs as of 30/04/21 of P43 million and P36 million.",
+                  "shared": [
+                    "management_action"
+                  ],
+                  "citation": "CY 2020 AAR, Part III, CY 2019 Observation No. 6, pp. 91-92"
+                },
+                {
+                  "key": "2020-III-17",
+                  "recommendation": "We recommended that Management: In the case of the officers and employees drawing cash advances, require them to authorize the City to deduct such CAs from their pay upon their failure to liquidate such advances within the prescribed period; and",
+                  "status": "Not Implemented",
+                  "status_text": "Not Implemented",
+                  "status_note": null,
+                  "management_action": "The OCAT now strictly requires the accountable officers (AOs) to fully liquidate their outstanding CAs within the deadline. It is now regularly sending the statement of account to the AOs demanding liquidation of advances. It is a City’s policy that requires the AOs to authorize the City to deduct their outstanding CAs from their salary. In order to avoid the overlapping of CAs, Management directed the OCAT to issue a certification that the AO has no outstanding CA as basis for the approval of the DV/advances.",
+                  "reason": "Copy of the policy/authority to deduct (from their salary) was not yet submitted to the CAO.",
+                  "shared": [
+                    "management_action"
+                  ],
+                  "citation": "CY 2020 AAR, Part III, CY 2019 Observation No. 6, pp. 91-92"
+                },
+                {
+                  "key": "2020-III-18",
+                  "recommendation": "We recommended that Management: Refrain from granting additional CA to an AO with unsettled CA.",
+                  "status": "Partially Implemented",
+                  "status_text": "Partially Implemented",
+                  "status_note": null,
+                  "management_action": "The OCAT now strictly requires the accountable officers (AOs) to fully liquidate their outstanding CAs within the deadline. It is now regularly sending the statement of account to the AOs demanding liquidation of advances. It is a City’s policy that requires the AOs to authorize the City to deduct their outstanding CAs from their salary. In order to avoid the overlapping of CAs, Management directed the OCAT to issue a certification that the AO has no outstanding CA as basis for the approval of the DV/advances.",
+                  "reason": "Additional CAs were granted to nine AOs in 2020 notwithstanding the fact that their previous CAs were not yet liquidated. Most of these, however, had to be done because of the demands of the pandemic.",
+                  "shared": [
+                    "management_action"
+                  ],
+                  "citation": "CY 2020 AAR, Part III, CY 2019 Observation No. 6, pp. 91-92"
+                }
+              ]
+            },
+            {
+              "aar_year": 2021,
+              "follow_ups": [
+                {
+                  "key": "2021-III-20",
+                  "recommendation": "We recommended that Management: Enforce strictly the CA liquidation within the prescribed period; and",
+                  "status": "Partially Implemented",
+                  "status_text": "Partially Implemented",
+                  "status_note": "Recommendation is reiterated (Finding No. 2, pp. 80-81)",
+                  "management_action": "The OCAT now strictly requires the accountable officers (AOs) to fully liquidate their outstanding CAs within the deadline. It is now regularly sending the statement of account to the AOs demanding liquidation of advances.",
+                  "reason": "CAs amounting to Php182.725 million remained unliquidated as of June 13, 2022.",
+                  "shared": [],
+                  "citation": "CY 2021 AAR, Part III, CY 2019 Observation No. 6, p. 107"
+                },
+                {
+                  "key": "2021-III-21",
+                  "recommendation": "In the case of the officers and employees drawing cash advances, require them to authorize the City to deduct such CAs from their pay upon their failure to liquidate such advances within the prescribed period; and",
+                  "status": "Partially Implemented",
+                  "status_text": "Partially Implemented",
+                  "status_note": null,
+                  "management_action": "It is a City’s policy that requires the AOs to authorize the City to deduct their outstanding CAs from their salary.",
+                  "reason": "Copy of the policy/authority to deduct (from their salary) was not yet submitted to the CAO.",
+                  "shared": [],
+                  "citation": "CY 2021 AAR, Part III, CY 2019 Observation No. 6, p. 107"
+                },
+                {
+                  "key": "2021-III-22",
+                  "recommendation": "Refrain from granting additional CA to an AO with unsettled CA.",
+                  "status": "Implemented",
+                  "status_text": "Fully Implemented",
+                  "status_note": null,
+                  "management_action": "In order to avoid the overlapping of CAs, Management directed the OCAT to issue a certification that the AO has no outstanding CA as basis for the approval of the DV/advances.",
+                  "reason": null,
+                  "shared": [],
+                  "citation": "CY 2021 AAR, Part III, CY 2019 Observation No. 6, pp. 107-108"
+                }
+              ]
+            },
+            {
+              "aar_year": 2022,
+              "follow_ups": [
+                {
+                  "key": "2022-III-28",
+                  "recommendation": "We recommended that Management, in the case of the officers and employees drawing cash advances, require them to authorize the City to deduct such CAs from their pay upon their failure to liquidate such advances within the prescribed period.",
+                  "status": "Partially Implemented",
+                  "status_text": "Partially Implemented",
+                  "status_note": null,
+                  "management_action": "It is a City’s policy that requires the AOs to authorize the City to deduct their outstanding CAs from their salary.",
+                  "reason": "Copy of the policy/authority to deduct (from their salary) was not submitted to the CAO.",
+                  "shared": [],
+                  "citation": "CY 2022 AAR, Part III, CY 2019 Observation No. 6, pp. 98-103"
+                }
+              ]
+            },
+            {
+              "aar_year": 2023,
+              "follow_ups": [
+                {
+                  "key": "2023-III-28",
+                  "recommendation": "We recommended that Management, in the case of the officers and employees drawing cash advances, require them to authorize the City to deduct such CAs from their pay upon their failure to liquidate such advances within the prescribed period.",
+                  "status": "Implemented",
+                  "status_text": "Implemented",
+                  "status_note": null,
+                  "management_action": "Liquidation of the outstanding cash advances in the books as of December 31, 2023 were already recorded",
+                  "reason": null,
+                  "shared": [],
+                  "citation": "CY 2023 AAR, Part III, CY 2019 Observation No. 6, pp. 110-111"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "question": "Did Manila comply with IPSAS 1 in its financial statements? Which years?",
+    "answer": {
+      "type": "answer",
+      "summary": "COA's Annual Audit Reports show that the City of Manila did not fully comply with IPSAS 1 (Presentation of Financial Statements), particularly its requirement to present fairly the City's financial position, performance, and cash flows. COA specifically cited non-compliance with IPSAS 1 in CY 2020, CY 2022, CY 2023, and CY 2024 across various asset, liability, inventory, and adjustment accounts.",
+      "key_points": [
+        {
+          "text": "In CY 2020, COA cited IPSAS fair presentation requirements under Observation No. 1, noting that accounting errors in Cash-in-Bank transactions totaling P66.815 million (including unrecorded checks and unadjusted reconciling items) weighed on the fair presentation of accounts in the financial statements.",
+          "citations": [
+            {
+              "text": "CY 2020 AAR, Part II, Observation No. 1, pp. 69-71",
+              "title": "Accounting errors in recording cash-in-bank (CiB) transactions amounting to P66.815 million resulted in the misstatement of affected CiB accounts and weighed on the fair presentation of these accounts in the City’s Fg Statements (FS)."
+            }
+          ]
+        },
+        {
+          "text": "In CY 2022, COA found the City non-compliant with Paragraph 27 of IPSAS 1 under Observation No. 1 because inventory accounts were overstated by a net P32.595 million due to record-keeping deficiencies, lack of required inventory ledgers, and unreconciled records between the accounting and property offices.",
+          "citations": [
+            {
+              "text": "CY 2022 AAR, Part II, Observation No. 1, pp. 73-76",
+              "title": "The inventory accounts were overstated by a net amount of P32.595 million due to accounting errors in record keeping, non-maintenance of inventory records and unreconciled records of the Office of the City Accountant (OCAT) and City General Services Office (CGSO) contrary to Paragraph 27 of the International Public Sector Accounting Standards (IPSAS) 1. This condition weighed on the fairness of the presentation of the inventories in the Financial Statement (FS)."
+            }
+          ]
+        },
+        {
+          "text": "In CY 2023, COA observed non-compliance with Paragraph 27 of IPSAS 1 under Observation No. 2, finding that the accuracy and reliability of the P4.577 billion Accounts Payable balance could not be determined due to a net understatement variance of P525.085 million against supplier confirmations and the failure to maintain separate subsidiary ledgers for each contractor/supplier.",
+          "citations": [
+            {
+              "text": "CY 2023 AAR, Part II, Observation No. 2, pp. 75-77",
+              "title": "The accuracy, completeness, and reliability of the year-end balance of Accounts Payable (AP) amounting to P4.577 billion could not be determined due to net understatement variance of P525.085 million from confirmation results with contractors/suppliers as against balances per books contrary to Paragraph 27 of International Public Sector Accounting Standard (IPSAS) 1. Thus, affecting the fair presentation of the FS."
+            }
+          ]
+        },
+        {
+          "text": "In CY 2024, COA reported widespread non-compliance with Paragraph 27 of IPSAS 1 across major financial statement accounts, including Cash-in-Bank (unadjusted reconciling items and bank variances), Receivables (unsupported balances and a P1.207 billion discrepancy in RPT/SET receivables), Accounts Payable (a P608.320 million variance with suppliers), and PPE accounts such as Buildings, Medical Equipment, and Construction in Progress (unreconciled discrepancies in the billions of pesos).",
+          "citations": [
+            {
+              "text": "CY 2024 AAR, Part II, Observation No. 1, pp. 78-82",
+              "title": "The reliability of the reported Cash in Bank - Local Currency, Current Account (CIB - LCCA) account amounting to P8.072 billion, cannot be ascertained due to the following:"
+            },
+            {
+              "text": "CY 2024 AAR, Part II, Observation No. 3, pp. 88-93",
+              "title": "The accuracy, existence and completeness of various receivables accounts as of December 31, 2024, cannot be ascertained due to the following:"
+            },
+            {
+              "text": "CY 2024 AAR, Part II, Observation No. 4, pp. 93-96",
+              "title": "The balance of the RPT and Special Education Tax (SET) Receivable amounting to P15.773 billion and P10.885 billion, respectively, as of December 31, 2024, cannot be ascertained due to the following:"
+            },
+            {
+              "text": "CY 2024 AAR, Part II, Observation No. 9, pp. 115-118",
+              "title": "The balances of the Buildings and School Buildings account as of December 31, 2024, cannot be ascertained due to the following:"
+            },
+            {
+              "text": "CY 2024 AAR, Part II, Observation No. 10, pp. 118-122",
+              "title": "The reliability and completeness of the PPE - Medical Equipment account balance totaling P1.825 billion could not be ascertained due to the following:"
+            },
+            {
+              "text": "CY 2024 AAR, Part II, Observation No. 12, pp. 126-130",
+              "title": "The reliability and accuracy of the Construction in Progress (CIP) account balance totaling P4.086 billion cannot be ascertained due to:"
+            },
+            {
+              "text": "CY 2024 AAR, Part II, Observation No. 13, pp. 130-131",
+              "title": "The reliability, existence and completeness of the AP account balance of P5.574 billion under the GF cannot be ascertained due to the discrepancy of P608.391 million between the balance of payables in the books and the confirmed amounts by various suppliers, contrary to Section 112 of PD No. 1445, and Paragraph 27 of IPSAS 1."
+            }
+          ]
+        },
+        {
+          "text": "In CY 2024, COA also cited Paragraph 27 of IPSAS 1 under Observation No. 19 because ineffective monitoring of delayed transactions led to frequent prior period adjustments totaling P414.963 million, resulting in restatements of the financial statements that could distort accounting data and affect fiscal planning.",
+          "citations": [
+            {
+              "text": "CY 2024 AAR, Part II, Observation No. 19, pp. 149-151",
+              "title": "The present monitoring mechanism for managing the delayed recording of transactions in the books was not effective, thereby resulting in frequent adjustments totaling P414.963 million, contrary to Paragraph 27 of IPSAS 1 and Paragraphs 46 and 47 of IPSAS 3. This resulted in the restatement of the FS, which may adversely affect future fiscal planning."
+            }
+          ]
+        }
+      ],
+      "timelines": []
+    }
+  },
+  {
+    "question": "Did Manila act on COA's recommendations about cash advances?",
+    "answer": {
+      "type": "answer",
+      "summary": "Across the 2020 through 2023 Annual Audit Reports, Manila took action on prior audit recommendations concerning cash advances—such as sending demand letters and recording liquidations—leading COA to evaluate previous findings from 2018, 2019, and 2021 as implemented by 2023. However, in the 2024 report, COA observed recurring deficiencies, finding P358.52 million in unliquidated cash advances, long-outstanding balances from separated employees, and newly granted advances to officers with unsettled accounts.",
+      "key_points": [
+        {
+          "text": "For recommendations raised in the CY 2019 audit, Manila required certification to avoid overlapping advances, leading COA to assess the rule against granting additional advances as fully implemented by 2021. The recommendation to require accountable officers to authorize salary deductions for unliquidated advances was rated not implemented in 2020, partially implemented in 2021 and 2022, and marked implemented in 2023.",
+          "citations": [
+            {
+              "text": "CY 2020 AAR, Part III, CY 2019 Observation No. 6, pp. 91-92",
+              "title": "The City had not settled cash advances (CAs) totaling P203.440 million, P198.791 million or 97.7 percent of which were drawn by and are the accountabilities of the past City Administrations. These…"
+            },
+            {
+              "text": "CY 2021 AAR, Part III, CY 2019 Observation No. 6, p. 107",
+              "title": "The City had not settled cash advances (CAs) totaling P203.440 million, P198.791 million or 97.7 percent of which were drawn by and are the accountabilities of the past City Administrations. These…"
+            },
+            {
+              "text": "CY 2021 AAR, Part III, CY 2019 Observation No. 6, pp. 107-108",
+              "title": "The City had not settled cash advances (CAs) totaling P203.440 million, P198.791 million or 97.7 percent of which were drawn by and are the accountabilities of the past City Administrations. These…"
+            },
+            {
+              "text": "CY 2022 AAR, Part III, CY 2019 Observation No. 6, pp. 98-103",
+              "title": "The City had not settled cash advances (CAs) totaling P203.440 million, P198.791 million or 97.70 per cent of which were drawn by and are the accountabilities of the past City Administrations. These…"
+            },
+            {
+              "text": "CY 2023 AAR, Part III, CY 2019 Observation No. 6, pp. 110-111",
+              "title": "The City had not settled cash advances (CAs) totaling P203.440 million, P198.791 million or 97.70 percent of which were drawn by and are the accountabilities of the past City Administrations. These…"
+            }
+          ]
+        },
+        {
+          "text": "For the CY 2021 observation on P182.725 million in unsettled cash advances, Manila issued quarterly demand letters and recorded liquidations; COA initially evaluated these recommendations as partially implemented and not implemented in 2022, but assessed both as implemented in the 2023 report.",
+          "citations": [
+            {
+              "text": "CY 2021 AAR, Part II, Observation No. 2, pp. 79-80",
+              "title": "The City had not settled cash advances totaling P182.725 million contrary to Section 89 of Presidential Decree No. 1445 and COA Circular No. 97-002 dated February 10, 1997, and bear on the fair presentation of the affected accounts in the FS."
+            },
+            {
+              "text": "CY 2022 AAR, Part III, CY 2021 Observation No. 2, p. 87",
+              "title": "The City had not settled cash advances totaling P182.725 million contrary to Section 89 of Presidential Decree No. 1445 and COA Circular No. 97-002 dated February 10, 1997, and bear on the fair…"
+            },
+            {
+              "text": "CY 2023 AAR, Part III, CY 2021 Observation No. 2, pp. 98-99",
+              "title": "The City had not settled cash advances totaling P182.725 million contrary to Section 89 of Presidential Decree No. 1445 and COA Circular No. 97-002 dated February 10, 1997, and bear on the fair…"
+            }
+          ]
+        },
+        {
+          "text": "A CY 2018 recommendation directing the City Accountant to request the write-off of dormant unliquidated cash advances non-moving for 10 years or more remained partially implemented from 2020 through 2022 while documentation was ongoing, before COA evaluated it as implemented in 2023.",
+          "citations": [
+            {
+              "text": "CY 2020 AAR, Part III, CY 2018 Observation No. 12, p. 103",
+              "title": "The OCAT’s inability to monitor and require the AOs to immediately settle their CAs once the purposes for which these were granted have been served, resulted to the non-liquidation of the…"
+            },
+            {
+              "text": "CY 2021 AAR, Part III, CY 2018 Observation No. 12, p. 116",
+              "title": "The OCAT’s inability to monitor and require the AOs to immediately settle their CAs once the purposes for which these were granted have been served, resulted to the non-liquidation of the…"
+            },
+            {
+              "text": "CY 2022 AAR, Part III, CY 2018 Observation No. 12, pp. 107-109",
+              "title": "The OCAT’s inability to monitor and require the AOs to immediately settle their CAs once the purposes for which these were granted have been served, resulted to the non-liquidation of the…"
+            },
+            {
+              "text": "CY 2023 AAR, Part III, CY 2018 Observation No. 12, pp. 116-117",
+              "title": "The OCAT’s inability to monitor and require the AOs to immediately settle their CAs once the purposes for which these were granted have been served, resulted to the non-liquidation of the…"
+            }
+          ]
+        },
+        {
+          "text": "Despite earlier actions, COA reported renewed deficiencies in the CY 2024 audit: total unliquidated cash advances stood at P358.524 million, with P148.307 million past due (ranging from over 60 days to more than 10 years) and P106.136 million involving individuals who were deceased, resigned, retired, or separated.",
+          "citations": [
+            {
+              "text": "CY 2024 AAR, Part II, Observation No. 2, pp. 82-88",
+              "title": "There were deficiencies in the grant and liquidation of cash advances, contrary to COA regulations to wit:"
+            }
+          ]
+        },
+        {
+          "text": "COA also observed in 2024 that additional cash advances had been granted to accountable officers with unliquidated balances; in response, Management stated that it had submitted write-off requests for deceased personnel, reached out to separated employees without reply, and committed to enforcing stricter monitoring and policies to prevent granting new advances prior to liquidation.",
+          "citations": [
+            {
+              "text": "CY 2024 AAR, Part II, Observation No. 2, pp. 82-88",
+              "title": "There were deficiencies in the grant and liquidation of cash advances, contrary to COA regulations to wit:"
+            }
+          ]
+        }
+      ],
+      "timelines": [
+        {
+          "origin_year": 2019,
+          "origin_observation": 6,
+          "title": "The City had not settled cash advances (CAs) totaling P203.440 million, P198.791 million or 97.7 percent of which were drawn by and are the accountabilities of the past City Administrations. These…",
+          "in_collection": false,
+          "raised": null,
+          "steps": [
+            {
+              "aar_year": 2020,
+              "follow_ups": [
+                {
+                  "key": "2020-III-16",
+                  "recommendation": "We recommended that Management: Enforce strictly the CA liquidation within the prescribed period;",
+                  "status": "Partially Implemented",
+                  "status_text": "Partially Implemented",
+                  "status_note": null,
+                  "management_action": "The OCAT now strictly requires the accountable officers (AOs) to fully liquidate their outstanding CAs within the deadline. It is now regularly sending the statement of account to the AOs demanding liquidation of advances. It is a City’s policy that requires the AOs to authorize the City to deduct their outstanding CAs from their salary. In order to avoid the overlapping of CAs, Management directed the OCAT to issue a certification that the AO has no outstanding CA as basis for the approval of the DV/advances.",
+                  "reason": "CAs amounting to P295.828 million remained unliquidated to date. The current City Administration is accountable for P92.903 million of these CAs. The OCAT sent demand letters (DLs) to two AOs with unliquidated CAs as of 30/04/21 of P43 million and P36 million.",
+                  "shared": [
+                    "management_action"
+                  ],
+                  "citation": "CY 2020 AAR, Part III, CY 2019 Observation No. 6, pp. 91-92"
+                },
+                {
+                  "key": "2020-III-17",
+                  "recommendation": "We recommended that Management: In the case of the officers and employees drawing cash advances, require them to authorize the City to deduct such CAs from their pay upon their failure to liquidate such advances within the prescribed period; and",
+                  "status": "Not Implemented",
+                  "status_text": "Not Implemented",
+                  "status_note": null,
+                  "management_action": "The OCAT now strictly requires the accountable officers (AOs) to fully liquidate their outstanding CAs within the deadline. It is now regularly sending the statement of account to the AOs demanding liquidation of advances. It is a City’s policy that requires the AOs to authorize the City to deduct their outstanding CAs from their salary. In order to avoid the overlapping of CAs, Management directed the OCAT to issue a certification that the AO has no outstanding CA as basis for the approval of the DV/advances.",
+                  "reason": "Copy of the policy/authority to deduct (from their salary) was not yet submitted to the CAO.",
+                  "shared": [
+                    "management_action"
+                  ],
+                  "citation": "CY 2020 AAR, Part III, CY 2019 Observation No. 6, pp. 91-92"
+                },
+                {
+                  "key": "2020-III-18",
+                  "recommendation": "We recommended that Management: Refrain from granting additional CA to an AO with unsettled CA.",
+                  "status": "Partially Implemented",
+                  "status_text": "Partially Implemented",
+                  "status_note": null,
+                  "management_action": "The OCAT now strictly requires the accountable officers (AOs) to fully liquidate their outstanding CAs within the deadline. It is now regularly sending the statement of account to the AOs demanding liquidation of advances. It is a City’s policy that requires the AOs to authorize the City to deduct their outstanding CAs from their salary. In order to avoid the overlapping of CAs, Management directed the OCAT to issue a certification that the AO has no outstanding CA as basis for the approval of the DV/advances.",
+                  "reason": "Additional CAs were granted to nine AOs in 2020 notwithstanding the fact that their previous CAs were not yet liquidated. Most of these, however, had to be done because of the demands of the pandemic.",
+                  "shared": [
+                    "management_action"
+                  ],
+                  "citation": "CY 2020 AAR, Part III, CY 2019 Observation No. 6, pp. 91-92"
+                }
+              ]
+            },
+            {
+              "aar_year": 2021,
+              "follow_ups": [
+                {
+                  "key": "2021-III-20",
+                  "recommendation": "We recommended that Management: Enforce strictly the CA liquidation within the prescribed period; and",
+                  "status": "Partially Implemented",
+                  "status_text": "Partially Implemented",
+                  "status_note": "Recommendation is reiterated (Finding No. 2, pp. 80-81)",
+                  "management_action": "The OCAT now strictly requires the accountable officers (AOs) to fully liquidate their outstanding CAs within the deadline. It is now regularly sending the statement of account to the AOs demanding liquidation of advances.",
+                  "reason": "CAs amounting to Php182.725 million remained unliquidated as of June 13, 2022.",
+                  "shared": [],
+                  "citation": "CY 2021 AAR, Part III, CY 2019 Observation No. 6, p. 107"
+                },
+                {
+                  "key": "2021-III-21",
+                  "recommendation": "In the case of the officers and employees drawing cash advances, require them to authorize the City to deduct such CAs from their pay upon their failure to liquidate such advances within the prescribed period; and",
+                  "status": "Partially Implemented",
+                  "status_text": "Partially Implemented",
+                  "status_note": null,
+                  "management_action": "It is a City’s policy that requires the AOs to authorize the City to deduct their outstanding CAs from their salary.",
+                  "reason": "Copy of the policy/authority to deduct (from their salary) was not yet submitted to the CAO.",
+                  "shared": [],
+                  "citation": "CY 2021 AAR, Part III, CY 2019 Observation No. 6, p. 107"
+                },
+                {
+                  "key": "2021-III-22",
+                  "recommendation": "Refrain from granting additional CA to an AO with unsettled CA.",
+                  "status": "Implemented",
+                  "status_text": "Fully Implemented",
+                  "status_note": null,
+                  "management_action": "In order to avoid the overlapping of CAs, Management directed the OCAT to issue a certification that the AO has no outstanding CA as basis for the approval of the DV/advances.",
+                  "reason": null,
+                  "shared": [],
+                  "citation": "CY 2021 AAR, Part III, CY 2019 Observation No. 6, pp. 107-108"
+                }
+              ]
+            },
+            {
+              "aar_year": 2022,
+              "follow_ups": [
+                {
+                  "key": "2022-III-28",
+                  "recommendation": "We recommended that Management, in the case of the officers and employees drawing cash advances, require them to authorize the City to deduct such CAs from their pay upon their failure to liquidate such advances within the prescribed period.",
+                  "status": "Partially Implemented",
+                  "status_text": "Partially Implemented",
+                  "status_note": null,
+                  "management_action": "It is a City’s policy that requires the AOs to authorize the City to deduct their outstanding CAs from their salary.",
+                  "reason": "Copy of the policy/authority to deduct (from their salary) was not submitted to the CAO.",
+                  "shared": [],
+                  "citation": "CY 2022 AAR, Part III, CY 2019 Observation No. 6, pp. 98-103"
+                }
+              ]
+            },
+            {
+              "aar_year": 2023,
+              "follow_ups": [
+                {
+                  "key": "2023-III-28",
+                  "recommendation": "We recommended that Management, in the case of the officers and employees drawing cash advances, require them to authorize the City to deduct such CAs from their pay upon their failure to liquidate such advances within the prescribed period.",
+                  "status": "Implemented",
+                  "status_text": "Implemented",
+                  "status_note": null,
+                  "management_action": "Liquidation of the outstanding cash advances in the books as of December 31, 2023 were already recorded",
+                  "reason": null,
+                  "shared": [],
+                  "citation": "CY 2023 AAR, Part III, CY 2019 Observation No. 6, pp. 110-111"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "origin_year": 2021,
+          "origin_observation": 2,
+          "title": "The City had not settled cash advances totaling P182.725 million contrary to Section 89 of Presidential Decree No. 1445 and COA Circular No. 97-002 dated February 10, 1997, and bear on the fair…",
+          "in_collection": true,
+          "raised": {
+            "key": "2021-2-description-1",
+            "citation": "CY 2021 AAR, Part II, Observation No. 2, pp. 79-80",
+            "title": "The City had not settled cash advances totaling P182.725 million contrary to Section 89 of Presidential Decree No. 1445 and COA Circular No. 97-002 dated February 10, 1997, and bear on the fair presentation of the affected accounts in the FS."
+          },
+          "steps": [
+            {
+              "aar_year": 2022,
+              "follow_ups": [
+                {
+                  "key": "2022-III-5",
+                  "recommendation": "We recommended that Management: Enforce the liquidation of the cash advances and, henceforth, enforce strictly the liquidation of cash advances within the prescribed period; and",
+                  "status": "Partially Implemented",
+                  "status_text": "Partially Implemented",
+                  "status_note": null,
+                  "management_action": "Demand letters (DLs) are sent quarterly to accountable officers (AOs) with outstanding balances to strictly implement the liquidation of cash advances.",
+                  "reason": "Cash advances amounting to P53.590 million remained unliquidated as of April 25, 2023 as follows: Present administration: P6.112 million Immediately preceding administration: P25.167 million Other past administrations: P22.311 million",
+                  "shared": [],
+                  "citation": "CY 2022 AAR, Part III, CY 2021 Observation No. 2, p. 87"
+                },
+                {
+                  "key": "2022-III-6",
+                  "recommendation": "Record in the book of accounts the liquidations of cash advances amounting P641,630.33 and, prospectively, promptly record the liquidations of cash advances in order to reflect them in the books of accounts in the proper period.",
+                  "status": "Not Implemented",
+                  "status_text": "Not Implemented",
+                  "status_note": null,
+                  "management_action": "The OCAT informed that the amount is not yet liquidated by the AO, therefore, not yet recorded in the books.",
+                  "reason": "The AO submitted liquidation documents to OCAT per AO reply dated April 29, 2022 to CAO DL.",
+                  "shared": [],
+                  "citation": "CY 2022 AAR, Part III, CY 2021 Observation No. 2, p. 87"
+                }
+              ]
+            },
+            {
+              "aar_year": 2023,
+              "follow_ups": [
+                {
+                  "key": "2023-III-12",
+                  "recommendation": "We recommended that Management: Enforce the liquidation of the cash advances and, henceforth, enforce strictly the liquidation of cash advances within the prescribed period; and",
+                  "status": "Implemented",
+                  "status_text": "Implemented",
+                  "status_note": null,
+                  "management_action": "Liquidation of the outstanding cash advances in the books as of December 31, 2023 were already recorded.",
+                  "reason": null,
+                  "shared": [],
+                  "citation": "CY 2023 AAR, Part III, CY 2021 Observation No. 2, pp. 98-99"
+                },
+                {
+                  "key": "2023-III-13",
+                  "recommendation": "We recommended that Management: Record in the book of accounts the liquidations of cash advances amounting P641,630.33 and, prospectively, promptly record the liquidations of cash advances in order to reflect them in the books of accounts in the proper period.",
+                  "status": "Implemented",
+                  "status_text": "Implemented",
+                  "status_note": null,
+                  "management_action": "Same as above",
+                  "reason": null,
+                  "shared": [],
+                  "citation": "CY 2023 AAR, Part III, CY 2021 Observation No. 2, pp. 98-99"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "origin_year": 2024,
+          "origin_observation": 2,
+          "title": "There were deficiencies in the grant and liquidation of cash advances, contrary to COA regulations to wit:",
+          "in_collection": true,
+          "raised": {
+            "key": "2024-2-description-1",
+            "citation": "CY 2024 AAR, Part II, Observation No. 2, pp. 82-88",
+            "title": "There were deficiencies in the grant and liquidation of cash advances, contrary to COA regulations to wit:"
+          },
+          "steps": []
+        }
+      ]
+    }
+  }
+]

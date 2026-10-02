@@ -196,7 +196,9 @@ finish() {
 #                       GCP_WORKLOAD_IDENTITY_PROVIDER,
 #                       GCP_DEPLOYER_SERVICE_ACCOUNT,
 #                       GCP_RUNTIME_SERVICE_ACCOUNT, GCP_ARTIFACT_REPOSITORY,
-#                       GCP_EVAL_SERVICE_ACCOUNT, GCP_EVAL_BATCH_BUCKET, GEMINI_ANSWER_MODEL, GEMINI_JUDGE_MODEL
+#                       GCP_EVAL_SERVICE_ACCOUNT, GCP_EVAL_BATCH_BUCKET,
+#                       GEMINI_LOCATION, GEMINI_ANSWER_MODEL, GEMINI_JUDGE_MODEL,
+#                       GEMINI_EMBEDDING_MODEL
 # ──────────────────────────────────────────────────────────────────────────
 
 # Git Bash on Windows rewrites arguments that look like POSIX paths
@@ -215,6 +217,7 @@ WIF_POOL="github"
 WIF_PROVIDER="github-actions"
 FIRESTORE_DB="coa-explorer"   # named database, so a shared project's (default) database is never touched
 LOG_COLLECTION="questions"
+LIMITS_COLLECTION="limits"   # rate-limit and daily-cap counters; expire like the log
 TTL_FIELD="expire_at"
 TRIAL_END="2026-12-01"
 
@@ -365,6 +368,8 @@ say "Deployer account: what GitHub Actions impersonates to deploy."
 ensure_sa "$DEPLOYER_SA_ID" "$DEPLOYER_SA" "COA Explorer CI deployer"
 grant_project_role "$DEPLOYER_SA" roles/run.admin
 grant_project_role "$DEPLOYER_SA" roles/artifactregistry.writer
+# CI builds the search index on each deploy, which embeds every piece with Gemini on Vertex AI.
+grant_project_role "$DEPLOYER_SA" roles/aiplatform.user
 # Service Account User is scoped to the runtime account only, so CI can deploy
 # a service that runs as it but can't act as any other account.
 retry 5 gcloud iam service-accounts add-iam-policy-binding "$RUNTIME_SA" \
@@ -509,7 +514,14 @@ gcloud firestore fields ttls update "$TTL_FIELD" --collection-group="$LOG_COLLEC
   && say "✓ TTL policy requested (Firestore finishes applying it in the background, up to ~30 min)" \
   || { warn "Couldn't (re)apply the TTL policy; it may already be enabled or still being created."
        SKIPPED+=("Check the TTL policy: gcloud firestore fields ttls list --database=$FIRESTORE_DB"); }
-note "The app must write '$TTL_FIELD' = question time + 30 days on every logged question."
+say "Enabling TTL on '$LIMITS_COLLECTION' too: the hashed-IP and daily counters expire within hours."
+gcloud firestore fields ttls update "$TTL_FIELD" --collection-group="$LIMITS_COLLECTION" \
+  --enable-ttl --async --database="$FIRESTORE_DB" --project "$GCP_PROJECT_ID" >/dev/null 2>&1 \
+  && say "✓ TTL policy requested for '$LIMITS_COLLECTION'" \
+  || { warn "Couldn't (re)apply the TTL policy on '$LIMITS_COLLECTION'; it may already be enabled."
+       SKIPPED+=("Check the TTL policies: gcloud firestore fields ttls list --database=$FIRESTORE_DB"); }
+note "The app writes '$TTL_FIELD' = question time + 30 days on every logged question, and a"
+note "short expiry on every counter."
 pause "Press Enter to continue."
 
 # ── 8. Budget alerts ──────────────────────────────────────────────────────
@@ -621,9 +633,14 @@ write_env FIRESTORE_LOG_COLLECTION "$LOG_COLLECTION"
 write_env FIRESTORE_TTL_FIELD "$TTL_FIELD"
 write_env ARTIFACT_REPOSITORY "$AR_REPO"
 write_env EVAL_BATCH_BUCKET "$EVAL_BUCKET"
-# CI reads the model names from variables, so changing one is a settings change, not a code change.
+
+# CI needs the same non-secret model settings: the embedding model to build the index and the
+# answer model to configure the deployed service.
+say "Saving the model settings as GitHub Actions variables too (not secrets):"
+set_var GEMINI_LOCATION "global"
 set_var GEMINI_ANSWER_MODEL "$GEMINI_ANSWER_MODEL"
-set_var GEMINI_JUDGE_MODEL "$GEMINI_JUDGE_MODEL"
+set_var GEMINI_EMBEDDING_MODEL "$GEMINI_EMBEDDING_MODEL"
+set_var GEMINI_JUDGE_MODEL "$GEMINI_JUDGE_MODEL"   # the evaluation judge, read by CI
 
 pause "Press Enter to continue."
 

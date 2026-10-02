@@ -129,7 +129,7 @@ def answer_item(engine: AnswerEngine, item: ReferenceItem) -> tuple[ItemResult, 
     retrieved: dict[str, Piece] = {}
     final = None
     try:
-        for event in engine.ask(item.question, retrieved):
+        for event in engine.ask(item.question, retrieved=retrieved):
             final = event
     except Exception as error:  # one bad item must not lose the rest of the run
         result.detail = f"{type(error).__name__}: {error}"
