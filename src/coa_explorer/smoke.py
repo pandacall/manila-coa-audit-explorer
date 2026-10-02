@@ -7,9 +7,10 @@ import urllib.error
 import urllib.request
 
 QUESTION = "What did COA observe about cash advances in Manila?"
+TIMEOUT_SECONDS = 120
 
 
-def check(base_url: str, question: str = QUESTION, timeout: float = 120) -> list[str]:
+def check(base_url: str, question: str = QUESTION, timeout: float = TIMEOUT_SECONDS) -> list[str]:
     """Return what is wrong with the app at `base_url`; an empty list means it works end to end."""
     base = base_url.rstrip("/")
     try:

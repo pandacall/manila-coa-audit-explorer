@@ -1,9 +1,11 @@
 # COA Audit Explorer
 
 Plain-language, cited answers to questions about the Commission on Audit's Annual Audit Reports
-on the City of Manila, 2020-2024. **Live demo: https://coa-explorer-417534361115.us-central1.run.app**
-(on Cloud Run, so the first question after a quiet spell takes a few seconds longer). See `CONTEXT.md` for the project vocabulary and `docs/adr/` for
+on the City of Manila, 2020-2024. See `CONTEXT.md` for the project vocabulary and `docs/adr/` for
 design decisions.
+
+**Live demo:** https://coa-explorer-417534361115.us-central1.run.app (on Cloud Run, so the first
+question after a quiet spell takes a few seconds longer).
 
 ## Development
 

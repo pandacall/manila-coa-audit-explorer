@@ -57,7 +57,9 @@ def main(argv: Sequence[str] | None = None, *, embedder: Embedder | None = None)
     check = steps.add_parser("smoke", help="ask a running app a question and check the answer")
     check.add_argument("--url", required=True, help="base URL of the running app")
     check.add_argument("--question", default=smoke.QUESTION)
-    check.add_argument("--timeout", type=float, default=120, help="seconds to wait per request")
+    check.add_argument(
+        "--timeout", type=float, default=smoke.TIMEOUT_SECONDS, help="seconds to wait per request"
+    )
 
     args = parser.parse_args(argv)
     if args.step == "index":

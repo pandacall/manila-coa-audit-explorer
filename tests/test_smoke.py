@@ -12,6 +12,7 @@ import uvicorn
 from coa_explorer import smoke
 from coa_explorer.answer import AnswerEngine
 from coa_explorer.api import create_app
+from coa_explorer.cli import main
 from coa_explorer.index import build_index
 from coa_explorer.search import Index
 from tests.fake_embedder import FakeEmbedder
@@ -79,8 +80,6 @@ def test_an_unreachable_app_fails_instead_of_raising():
 def test_the_smoke_command_exits_zero_when_the_app_works_and_one_when_it_does_not(
     cited_app, capsys
 ):
-    from coa_explorer.cli import main
-
     assert main(["smoke", "--url", cited_app]) == 0
     assert main(["smoke", "--url", "http://127.0.0.1:9", "--timeout", "2"]) == 1
     assert "could not reach" in capsys.readouterr().err
