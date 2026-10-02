@@ -6,6 +6,7 @@ the centavo.
 
 from decimal import Decimal
 
+import openpyxl
 import pytest
 
 from coa_explorer import financial
@@ -43,6 +44,15 @@ def test_a_sample_of_part_I_lines_equals_the_spreadsheet_values(financials):
     assert amount(financials[2022], "SFPo", "Cash and Cash Equivalents") == Decimal("8325730232.46")
     assert amount(financials[2024], "SFPo", "Cash and Cash Equivalents") == Decimal("8084227242.24")
     assert amount(financials[2023], "SFPo", "Cash and Cash Equivalents") == Decimal("9304414447.87")
+
+
+def test_2021_lines_equal_the_spreadsheet_values_too(financials):
+    assert amount(
+        financials[2021], "SFPo", "Cash and Cash Equivalents", source="Part I"
+    ) == Decimal("10864914036.53")
+    assert amount(financials[2021], "SFPo", "Investments", source="Part I") == Decimal(
+        "1423914449.91"
+    )
 
 
 def test_the_prior_year_column_is_kept_apart_from_the_current_year(financials):
@@ -118,11 +128,29 @@ def test_2024_annex_puts_the_total_column_first_but_funds_stay_right(financials)
     assert general == Decimal("916058.08")
 
 
-def test_hidden_working_sheets_are_ignored(financials):
-    # 2022's workbook hides NFS, PPE, Restatement and other working sheets.
-    sheets = {line.sheet for line in financials[2022].lines}
-    assert sheets.isdisjoint({"NFS", "PPE", "Recon_BAA-FP", "Restatement", "ExecSum", "Part2"})
-    assert "SFPo" in sheets
+def test_hidden_working_sheets_are_ignored_in_every_year(financials):
+    hidden_everywhere = set()
+    for year in YEARS:
+        folder = REPORTS / f"Manila-City-Annual-Audit-Report-{year}"
+        for path in folder.glob("**/*.xlsx"):
+            workbook = openpyxl.load_workbook(path, read_only=True)
+            hidden = {s.title for s in workbook.worksheets if s.sheet_state != "visible"}
+            used = {line.sheet for line in financials[year].lines}
+            assert used.isdisjoint(hidden), (year, hidden & used)
+            hidden_everywhere |= hidden
+    # 2022's workbooks hide NFS, PPE, Restatement and other working sheets.
+    assert {"NFS", "PPE", "Restatement", "Sheet1"} <= hidden_everywhere
+
+
+def test_a_total_line_sits_in_the_section_it_totals_not_the_last_sub_heading(financials):
+    [section] = {
+        line.section
+        for line in financials[2024].lines
+        if line.source == "Annex A"
+        and line.statement == "SFPo"
+        and line.line_item == "Total Cash and Cash Equivalents"
+    }
+    assert section == "ASSETS > CURRENT ASSETS > CASH AND CASH EQUIVALENTS"
 
 
 def test_oversized_used_ranges_add_nothing_beyond_the_tables(financials):

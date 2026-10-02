@@ -138,8 +138,10 @@ disagree; an answer can carry a "What the City said" section. Questions about am
 did Manila have at the end of 2022?", "How did actual spending compare to budget in 2023?") go to the
 `financial_lookup` tool, which returns the exact peso amount, by Fund where the Annexes give one,
 cited to the statement and line item, and works out the difference between years itself; the model
-never does the arithmetic. Each year's figure is the one printed in that year's own AAR, so a
-later AAR that restated it is not reflected. The page loads React from a CDN, so it needs
+never does the arithmetic. Where COA labelled a line differently in two years (an Annex's "Total
+Cash" becomes "Total Cash and Cash Equivalents"), the model pairs the two lines and the
+`financial_change` tool computes the difference. Each year's figure is the one printed in that
+year's own AAR, so a later AAR that restated it is not reflected. The page loads React from a CDN, so it needs
 internet.
 The answer model is `GEMINI_ANSWER_MODEL`; change it in `.env` to compare models.
 

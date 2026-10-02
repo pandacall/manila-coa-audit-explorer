@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from coa_explorer.financial import STATEMENT_NAMES
+
 FUNDS = {
     "GF": "General Fund",
     "SEF": "Special Education Fund",
@@ -24,7 +26,8 @@ def line(
     section: str = "",
     citation: str | None = None,
 ) -> dict:
-    where = f"Part I, {statement}" if source == "Part I" else f"Part IV, {source}, {statement}"
+    name = STATEMENT_NAMES[statement]
+    where = f"Part I, {name}" if source == "Part I" else f"Part IV, {source}, {name}"
     return {
         "key": f"{year}-FS-{source.replace(' ', '')}-{statement}-{row}-{CODES[fund]}",
         "source": source,
@@ -91,6 +94,9 @@ FIXTURE_FINANCIAL = {
         2023,
         [
             cash(2023, "9304414447.87"),
+            line(
+                2023, "SFPe", 30, "Total Revenue", "-100.00", fund="General Fund", source="Annex B"
+            ),
             *(
                 line(2023, "SCBAA", 11, "Tax Revenue - Property", amount, column=column)
                 for column, amount in (
@@ -117,6 +123,23 @@ FIXTURE_FINANCIAL = {
                     ("All Funds", "6001.00"),
                 )
             ),
+        ],
+    ),
+    # General Fund cash is labelled differently from 2023, so a lookup cannot pair the two years.
+    2024: record(
+        2024,
+        [
+            line(2024, "SFPo", 12, "Petty Cash", "99.99", fund="General Fund", source="Annex A"),
+            line(
+                2024,
+                "SFPo",
+                18,
+                "Total Cash and Cash Equivalents",
+                "1500.75",
+                fund="General Fund",
+                source="Annex A",
+            ),
+            line(2024, "SFPe", 30, "Total Revenue", "50.00", fund="General Fund", source="Annex B"),
         ],
     ),
 }

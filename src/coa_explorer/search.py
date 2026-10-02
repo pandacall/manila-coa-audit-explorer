@@ -18,7 +18,12 @@ from pathlib import Path
 import sqlite_vec
 
 from coa_explorer.embedder import Embedder
-from coa_explorer.financial_lookup import FinancialLookup, lookup
+from coa_explorer.financial_lookup import (
+    FinancialChange,
+    FinancialLookup,
+    change_by_keys,
+    lookup,
+)
 from coa_explorer.index import load_vec_extension
 from coa_explorer.timeline import Timeline, assemble_timeline
 
@@ -233,6 +238,14 @@ class Index:
         """Exact peso amounts for a line of the Financial Statements or Annexes in each of `years`,
         by Fund where the Annexes give one, with the differences between years worked out."""
         return lookup(self._db, line_item, years, statement=statement, fund=fund)
+
+    def financial_change(
+        self, from_key: str, to_key: str, column: str | None = None
+    ) -> list[FinancialChange]:
+        """The exact change between two financial lines (ids from `financial_lookup`) of the same
+        Fund and statement in different years, for lines COA labelled differently from year to
+        year. Raises ValueError if they cannot be compared."""
+        return change_by_keys(self._db, from_key, to_key, column)
 
     def timeline(self, origin_year: int, origin_observation: int) -> Timeline | None:
         """How COA's Status of Implementation for one Audit Observation's Recommendations changed

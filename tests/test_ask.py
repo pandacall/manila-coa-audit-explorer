@@ -260,7 +260,7 @@ def test_the_model_sees_the_timeline_with_an_id_and_citation_for_every_step(inde
     ask(index, adapter)
 
     _, messages, tools = adapter.requests[1]
-    assert {"search", "timeline", "financial_lookup", "submit_answer"} == {
+    assert {"search", "timeline", "financial_lookup", "financial_change", "submit_answer"} == {
         t.name for t in adapter.requests[0][2]
     }
     timeline = messages[-1].tool_results[0].content["timeline"]
@@ -664,7 +664,7 @@ def test_a_number_question_is_answered_from_the_lookup_with_the_exact_amount_and
     assert "Cash and Cash Equivalents" in events[0]["message"]
     answer = Answer.model_validate(final(events))
     assert [c.text for c in answer.key_points[0].citations] == [
-        "CY 2022 AAR, Part I, SFPo, Cash and Cash Equivalents"
+        "CY 2022 AAR, Part I, Statement of Financial Position, Cash and Cash Equivalents"
     ]
     assert answer.key_points[0].citations[0].title.startswith("Cash and Cash Equivalents")
 
@@ -705,8 +705,8 @@ def test_differences_between_years_come_from_the_tool_and_both_figures_can_be_ci
     assert change["ids"] == [CASH_2021, CASH_2022]
     answer = Answer.model_validate(final(events))
     assert [c.text for c in answer.key_points[0].citations] == [
-        "CY 2021 AAR, Part I, SFPo, Cash and Cash Equivalents",
-        "CY 2022 AAR, Part I, SFPo, Cash and Cash Equivalents",
+        "CY 2021 AAR, Part I, Statement of Financial Position, Cash and Cash Equivalents",
+        "CY 2022 AAR, Part I, Statement of Financial Position, Cash and Cash Equivalents",
     ]
 
 
@@ -776,5 +776,71 @@ def test_broken_down_by_fund_when_the_annexes_give_one(index):
     funds = {f["fund"] for f in content["figures"] if f["id"].startswith("2023-FS-AnnexA")}
     assert funds == {"General Fund", "Special Education Fund", "Trust Fund", "All Funds"}
     assert answer.key_points[0].citations[0].text == (
-        "CY 2023 AAR, Part IV, Annex A, SFPo, Cash and Cash Equivalents"
+        "CY 2023 AAR, Part IV, Annex A, Statement of Financial Position, Cash and Cash Equivalents"
     )
+
+
+def financial_change(from_id: str, to_id: str, **args) -> ModelTurn:
+    call = ToolCall("financial_change", {"from_id": from_id, "to_id": to_id, **args})
+    return ModelTurn(text=None, tool_calls=[call])
+
+
+def test_a_difference_between_lines_labelled_differently_is_still_computed_by_the_tool(index):
+    adapter = ScriptedAdapter(
+        financial_lookup("cash", years=[2023, 2024], fund="General Fund"),
+        financial_change("2023-FS-AnnexA-SFPo-9-GF", "2024-FS-AnnexA-SFPo-18-GF"),
+        submit(
+            "The General Fund's cash rose by ₱500.25.",
+            [point("Up 50.0%.", "2023-FS-AnnexA-SFPo-9-GF", "2024-FS-AnnexA-SFPo-18-GF")],
+        ),
+    )
+
+    events = ask(index, adapter, "How did the General Fund's cash change from 2023 to 2024?")
+
+    assert [e["type"] for e in events[:-1]] == ["status", "status"]
+    assert "2023" in events[1]["message"]
+    content = adapter.requests[2][1][-1].tool_results[0].content
+    [change] = content["changes"]
+    assert change["change"] == "500.25"
+    assert change["display_change"] == "₱500.25"
+    assert change["display_percent"] == "+50.0%"
+    assert change["ids"] == ["2023-FS-AnnexA-SFPo-9-GF", "2024-FS-AnnexA-SFPo-18-GF"]
+    answer = Answer.model_validate(final(events))
+    assert len(answer.key_points[0].citations) == 2
+
+
+def test_only_lines_the_model_was_shown_can_be_compared(index):
+    adapter = ScriptedAdapter(
+        financial_lookup("cash", years=[2023], fund="General Fund"),
+        financial_change("2023-FS-AnnexA-SFPo-9-GF", "2024-FS-AnnexA-SFPo-18-GF"),
+        submit("s", [point("p", "2023-FS-AnnexA-SFPo-9-GF")]),
+    )
+
+    ask(index, adapter)
+
+    content = adapter.requests[2][1][-1].tool_results[0].content
+    assert "error" in content
+
+
+def test_comparing_lines_that_do_not_belong_together_is_reported_to_the_model(index):
+    adapter = ScriptedAdapter(
+        financial_lookup("cash", years=[2023, 2024]),
+        financial_change("2023-FS-AnnexA-SFPo-9-GF", "2023-FS-AnnexA-SFPo-9-SEF"),
+        submit("s", [point("p", "2023-FS-AnnexA-SFPo-9-GF")]),
+    )
+
+    events = ask(index, adapter)
+
+    assert final(events)["type"] == "answer"
+    assert "error" in adapter.requests[2][1][-1].tool_results[0].content
+
+
+def test_an_unknown_statement_is_reported_to_the_model_not_treated_as_no_data(index):
+    adapter = ScriptedAdapter(
+        financial_lookup("Cash and Cash Equivalents", years=[2022], statement="balance sheet"),
+        submit("s", [point("p", CASH_2022)]),
+    )
+
+    ask(index, adapter)
+
+    assert "error" in adapter.requests[1][1][-1].tool_results[0].content

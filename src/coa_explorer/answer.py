@@ -1,12 +1,13 @@
 """The answer engine: a tool-using loop that turns a question into a cited Answer.
 
-The model may call `search`, `timeline` and `financial_lookup` over the index, then must finish
-with `submit_answer`.
+The model may call `search`, `timeline`, `financial_lookup` and `financial_change` over the index,
+then must finish with `submit_answer`.
 An answer can carry "What the City said" (Management Comment or Reported Status), cited like key
 points and shown apart from them. The model cites by piece id; the Citation text comes from the
 index, never from the model, and a key point may only cite pieces (or financial figures) the model
 actually retrieved. Figures and the differences between years come from `financial_lookup`; the
-model never does arithmetic. Key
+model never does arithmetic (`financial_change` works out a difference for two lines COA labelled
+differently in two years). Key
 points left without a Citation are removed, and an answer left with none is reported as not
 covered. A timeline shown with an answer is the one the `timeline` tool returned, not anything the
 model wrote.
@@ -21,7 +22,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from coa_explorer.financial import FUNDS, STATEMENT_NAMES
-from coa_explorer.financial_lookup import FinancialLookup
+from coa_explorer.financial_lookup import FinancialChange, FinancialLookup
 from coa_explorer.models import Message, ModelAdapter, ToolCall, ToolResult, ToolSpec, Usage
 from coa_explorer.search import DEFAULT_LIMIT, Index
 from coa_explorer.timeline import Timeline
@@ -95,8 +96,10 @@ budget statement (SCBAA) has Original budget, Final budget and Actual, and COA's
 final budget and actual" (Final minus Actual: a positive difference means the actual amount fell \
 short of the budget). Annex labels differ from year to year (a Fund's cash may be "Total Cash" \
 in one year and "Total Cash and Cash Equivalents" in another): if you need a Fund breakdown and \
-only "All Funds" came back, look up again with other words. If no figure comes back, the reports \
-have no such line: say so.
+only "All Funds" came back, look up again with other words. When you find the same line under \
+two labels in two years, pass the two figures' `id`s to `financial_change` and use what it \
+returns; never subtract them yourself. If no figure comes back, the reports have no such line: \
+say so.
 - Answer ONLY from passages `search` and `timeline` returned, and figures `financial_lookup` \
 returned. Never use outside knowledge, never \
 guess, never calculate or infer figures that the passages do not state. If the passages do not \
@@ -263,6 +266,29 @@ FINANCIAL_LOOKUP_TOOL = ToolSpec(
     },
 )
 
+FINANCIAL_CHANGE_TOOL = ToolSpec(
+    name="financial_change",
+    description=(
+        "The exact change between two lines `financial_lookup` returned, for when COA labelled "
+        "the same line differently in two years so that `changes` could not pair them. Both "
+        "must be for the same Fund and statement and from different years, and you vouch that "
+        "they are the same item. Returns the difference and percentage for each amount column "
+        "they share, computed here."
+    ),
+    parameters={
+        "type": "object",
+        "properties": {
+            "from_id": {"type": "string", "description": "The `id` of one figure."},
+            "to_id": {"type": "string", "description": "The `id` of the other figure."},
+            "column": {
+                "type": "string",
+                "description": "Only this column, e.g. 'Actual'; default every shared amount.",
+            },
+        },
+        "required": ["from_id", "to_id"],
+    },
+)
+
 SUBMIT_TOOL = ToolSpec(
     name="submit_answer",
     description="Finish: submit the final answer. Call exactly once.",
@@ -394,7 +420,13 @@ class AnswerEngine:
             tools = (
                 [SUBMIT_TOOL]
                 if last_round
-                else [SEARCH_TOOL, TIMELINE_TOOL, FINANCIAL_LOOKUP_TOOL, SUBMIT_TOOL]
+                else [
+                    SEARCH_TOOL,
+                    TIMELINE_TOOL,
+                    FINANCIAL_LOOKUP_TOOL,
+                    FINANCIAL_CHANGE_TOOL,
+                    SUBMIT_TOOL,
+                ]
             )
             turn = self._adapter.generate(SYSTEM_PROMPT, messages, tools)
             if usage is not None and turn.usage is not None:
@@ -417,9 +449,11 @@ class AnswerEngine:
                     yield Status(message=status_message(call))
                     try:
                         content = self._run_tool(call, seen, timelines)
-                    except (TypeError, ValueError, KeyError, OverflowError):
+                    except (TypeError, ValueError, KeyError, OverflowError) as error:
                         # Tell the model what was wrong so it can retry, instead of failing.
                         content = {"error": ARGUMENT_ERRORS[call.name]}
+                        if isinstance(error, ToolError):
+                            content["error"] = str(error)
                     results.append(ToolResult(call, content))
                 else:
                     results.append(ToolResult(call, {"error": f"unknown tool {call.name}"}))
@@ -433,6 +467,8 @@ class AnswerEngine:
             return self._run_search(call, seen)
         if call.name == "financial_lookup":
             return self._run_financial_lookup(call, seen)
+        if call.name == "financial_change":
+            return self._run_financial_change(call, seen)
         return self._run_timeline(call, seen, timelines)
 
     def _run_search(self, call: ToolCall, seen: dict[str, Source]) -> list[dict]:
@@ -471,11 +507,16 @@ class AnswerEngine:
             raise TypeError("years must be a list")
         fund = args.get("fund")
         if fund is not None and fund not in FUNDS:
-            raise ValueError(f"unknown fund {fund!r}")
+            raise ToolError(f"unknown fund {fund!r}; use one of {', '.join(FUNDS)}")
+        statement = args.get("statement")
+        if statement is not None and statement not in STATEMENT_NAMES:
+            raise ToolError(
+                f"unknown statement {statement!r}; use one of {', '.join(STATEMENT_NAMES)}"
+            )
         result = self._index.financial_lookup(
             str(args["line_item"]),
             years=[int(year) for year in years],
-            statement=str(args["statement"]) if args.get("statement") else None,
+            statement=statement,
             fund=fund,
         )
         for figure in result.figures:
@@ -483,6 +524,17 @@ class AnswerEngine:
                 figure.citation, f"{figure.line_item} ({STATEMENT_NAMES[figure.statement]})"
             )
         return financial_content(result)
+
+    def _run_financial_change(self, call: ToolCall, seen: dict[str, Source]) -> dict:
+        from_id, to_id = str(call.args["from_id"]), str(call.args["to_id"])
+        for key in (from_id, to_id):
+            if key not in seen:
+                raise ToolError(f"{key} was not returned by financial_lookup; look it up first")
+        try:
+            changes = self._index.financial_change(from_id, to_id, call.args.get("column"))
+        except ValueError as error:
+            raise ToolError(str(error)) from error
+        return {"units": FIGURES_UNITS, "changes": [change_content(c) for c in changes]}
 
     def _run_timeline(
         self, call: ToolCall, seen: dict[str, Source], timelines: dict[tuple[int, int], Timeline]
@@ -523,25 +575,26 @@ def financial_content(result: FinancialLookup) -> dict:
             }
             for figure in result.figures
         ],
-        "changes": [
-            {
-                "statement": change.statement,
-                "fund": change.fund,
-                "section": change.section,
-                "line_item": change.line_item,
-                "column": change.column,
-                "from_year": change.from_year,
-                "to_year": change.to_year,
-                "from": str(change.from_amount),
-                "to": str(change.to_amount),
-                "change": str(change.change),
-                "percent": None if change.percent is None else str(change.percent),
-                "display_change": change.display_change,
-                "display_percent": change.display_percent,
-                "ids": list(change.keys),
-            }
-            for change in result.changes
-        ],
+        "changes": [change_content(change) for change in result.changes],
+    }
+
+
+def change_content(change: FinancialChange) -> dict:
+    return {
+        "statement": change.statement,
+        "fund": change.fund,
+        "section": change.section,
+        "line_item": change.line_item,
+        "column": change.column,
+        "from_year": change.from_year,
+        "to_year": change.to_year,
+        "from": str(change.from_amount),
+        "to": str(change.to_amount),
+        "change": str(change.change),
+        "percent": None if change.percent is None else str(change.percent),
+        "display_change": change.display_change,
+        "display_percent": change.display_percent,
+        "ids": list(change.keys),
     }
 
 
@@ -560,10 +613,18 @@ ARGUMENT_ERRORS = {
         "line_item must be a string, years a list of integers, statement one of SFPo, SFPe, "
         "SCNAE, SCF, SCBAA, fund one of the listed Funds"
     ),
+    "financial_change": "from_id and to_id must be ids of figures financial_lookup returned",
 }
 
 
+class ToolError(ValueError):
+    """A tool call the engine can explain to the model, so that it can correct itself."""
+
+
 def status_message(call: ToolCall) -> str:
+    if call.name == "financial_change":
+        years = [str(call.args.get(key, "")).split("-")[0] for key in ("from_id", "to_id")]
+        return f"Working out the change between CY {years[0]} and CY {years[1]}"
     if call.name == "financial_lookup":
         return f"Looking up “{call.args.get('line_item', '')}” in the financial statements"
     if call.name == "timeline":

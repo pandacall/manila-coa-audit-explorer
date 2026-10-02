@@ -269,6 +269,8 @@ def read_sheet(
             sections.open(indent, label)
             previous_row = None
             continue
+        total = TOTAL_LABEL.match(label) is not None
+        sections.line(indent, total=total)
         row_lines = [
             FinancialLine(
                 key="",
@@ -288,7 +290,6 @@ def read_sheet(
             if column.index in amounts
         ]
         lines.extend(row_lines)
-        sections.line(indent, total=TOTAL_LABEL.match(label) is not None)
         previous_row, previous_number, previous_raw = row_lines, number, raw_label
     for line in lines:
         line.key = line_key(year, line)

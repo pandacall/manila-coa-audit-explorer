@@ -95,7 +95,9 @@ A separately accounted pool of City money: the General Fund (GF), the Special Ed
 
 **Financial line**:
 One amount from the Financial Statements or an Annex: its AAR year, statement, Fund, line item and column (the budget statement has Original budget, Final budget, Actual and COA's two difference columns). Amounts come from the spreadsheets and are never computed by the model; differences between years are computed by the `financial_lookup` tool.
-_Avoid_: Figure (in code and data; "figure" is fine in plain-language answers)
+
+**Figure**:
+What `financial_lookup` returns for a line item in one AAR: one printed line of a statement for one Fund, with its amount in each column (so one Figure holds several Financial lines). It has an id the model cites and a Citation. Differences between years compare Figures like for like: the same statement, printed in the same place, for the same Fund.
 
 ### Answers
 

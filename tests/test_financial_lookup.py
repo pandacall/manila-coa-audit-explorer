@@ -29,7 +29,10 @@ def test_returns_the_exact_amount_with_a_citation_to_the_statement_and_line_item
     assert figure.aar_year == 2022
     assert figure.fund == "All Funds"
     assert figure.amounts == {"Amount": Decimal("8325730232.46")}
-    assert figure.citation == "CY 2022 AAR, Part I, SFPo, Cash and Cash Equivalents"
+    assert (
+        figure.citation
+        == "CY 2022 AAR, Part I, Statement of Financial Position, Cash and Cash Equivalents"
+    )
     assert figure.key == "2022-FS-PartI-SFPo-10-ALL"
 
 
@@ -114,7 +117,10 @@ def test_asking_for_one_fund_returns_only_that_fund(index):
 
     [figure] = result.figures
     assert figure.amounts == {"Amount": Decimal("2000.25")}
-    assert figure.citation == "CY 2023 AAR, Part IV, Annex A, SFPo, Cash and Cash Equivalents"
+    assert (
+        figure.citation
+        == "CY 2023 AAR, Part IV, Annex A, Statement of Financial Position, Cash and Cash Equivalents"
+    )
 
 
 def test_the_statement_filter_keeps_only_that_statement(index):
@@ -165,3 +171,51 @@ def test_budget_and_actual_are_compared_across_years_but_not_the_difference_colu
         "Final budget": (Decimal("-60000000.00"), "-1.0%"),
         "Actual": (Decimal("-63670149.75"), "-1.2%"),
     }
+
+
+def test_a_total_is_ranked_with_the_line_it_totals_not_after_the_sub_lines(index):
+    result = index.financial_lookup("cash", years=[2024], fund="General Fund")
+
+    assert [f.line_item for f in result.figures] == [
+        "Total Cash and Cash Equivalents",
+        "Petty Cash",
+    ]
+
+
+def test_no_percentage_is_given_when_the_earlier_amount_is_not_positive(index):
+    [change] = index.financial_change("2023-FS-AnnexB-SFPe-30-GF", "2024-FS-AnnexB-SFPe-30-GF")
+
+    assert change.change == Decimal("150.00")
+    assert change.percent is None
+    assert change.display_percent is None
+
+
+def test_two_lines_labelled_differently_in_two_years_can_still_be_compared_by_the_tool(index):
+    # General Fund cash is "Cash and Cash Equivalents" in 2023 and "Total Cash and Cash
+    # Equivalents" in 2024, so a lookup alone cannot pair them.
+    assert index.financial_lookup("cash", years=[2023, 2024], fund="General Fund").changes == []
+
+    [change] = index.financial_change("2023-FS-AnnexA-SFPo-9-GF", "2024-FS-AnnexA-SFPo-18-GF")
+
+    assert (change.from_year, change.to_year) == (2023, 2024)
+    assert change.change == Decimal("500.25")
+    assert change.display_percent == "+50.0%"
+    assert change.keys == ("2023-FS-AnnexA-SFPo-9-GF", "2024-FS-AnnexA-SFPo-18-GF")
+    assert change.line_item == "Total Cash and Cash Equivalents"
+
+
+def test_a_change_is_worked_out_forwards_whichever_order_the_lines_are_given(index):
+    [change] = index.financial_change("2024-FS-AnnexA-SFPo-18-GF", "2023-FS-AnnexA-SFPo-9-GF")
+
+    assert (change.from_year, change.to_year, change.change) == (2023, 2024, Decimal("500.25"))
+
+
+def test_lines_for_different_funds_or_statements_or_one_year_are_not_compared(index):
+    with pytest.raises(ValueError, match="Fund"):
+        index.financial_change("2023-FS-AnnexA-SFPo-9-GF", "2023-FS-AnnexA-SFPo-9-SEF")
+    with pytest.raises(ValueError, match="statement"):
+        index.financial_change("2023-FS-AnnexA-SFPo-9-GF", "2024-FS-AnnexB-SFPe-30-GF")
+    with pytest.raises(ValueError, match="different years"):
+        index.financial_change("2023-FS-AnnexA-SFPo-9-GF", "2023-FS-AnnexA-SFPo-9-GF")
+    with pytest.raises(ValueError, match="no such"):
+        index.financial_change("2023-FS-AnnexA-SFPo-9-GF", "1999-nothing")

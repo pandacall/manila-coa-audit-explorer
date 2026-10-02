@@ -58,7 +58,7 @@ class FinancialChange:
     from_amount: Decimal
     to_amount: Decimal
     change: Decimal
-    percent: Decimal | None  # of the earlier amount; None when that was zero
+    percent: Decimal | None  # of the earlier amount; None unless that was positive
     display_change: str
     display_percent: str | None
     keys: tuple[str, str]  # the two figures it compares
@@ -126,6 +126,8 @@ def figures_of(
 
 def rank(row: sqlite3.Row, wanted: list[str]) -> tuple:
     label = words(row["line_item"])
+    if label[:1] == ["total"] and wanted[:1] != ["total"]:
+        label = label[1:]  # "Total Cash" is the line "Cash" adds up, not a lesser match
     exactness = 0 if label == wanted else 1 if label[: len(wanted)] == wanted else 2
     return (exactness, row["source"] != "Part I", len(label), row["sheet_row"])
 
@@ -145,6 +147,38 @@ def figure_of(rows: list[sqlite3.Row]) -> FinancialFigure:
         amounts=amounts,
         display={column: peso(amount) for column, amount in amounts.items()},
     )
+
+
+def change_by_keys(
+    db: sqlite3.Connection, from_key: str, to_key: str, column: str | None = None
+) -> list[FinancialChange]:
+    """The change from one printed line to another, for two lines the caller says are the same
+    item (their labels may differ between years). Both must be for the same Fund, the same
+    statement and different years; the earlier one is always the starting point."""
+    found = []
+    for key in (from_key, to_key):
+        rows = db.execute(
+            "SELECT * FROM financial_lines WHERE key = ? AND column_name != ? ORDER BY id",
+            (key, PRIOR_YEAR),
+        ).fetchall()
+        if not rows:
+            raise ValueError(f"no such financial line: {key}")
+        found.append(figure_of(rows))
+    earlier, later = sorted(found, key=lambda f: f.aar_year)
+    if earlier.fund != later.fund:
+        raise ValueError("the two lines are for different Funds")
+    if earlier.statement != later.statement:
+        raise ValueError("the two lines are from different statements")
+    if earlier.aar_year == later.aar_year:
+        raise ValueError("a change needs lines from two different years")
+    columns = [
+        c
+        for c in earlier.amounts
+        if c in later.amounts and not c.startswith("Difference") and column in (None, c)
+    ]
+    if not columns:
+        raise ValueError("the two lines have no column in common to compare")
+    return [change_between(earlier, later, c) for c in columns]
 
 
 def changes_of(figures: list[tuple[FinancialFigure, sqlite3.Row]]) -> list[FinancialChange]:
@@ -202,7 +236,7 @@ def change_between(
     before, after = earlier.amounts[column], later.amounts[column]
     change = after - before
     percent = None
-    if before != 0:
+    if before > 0:  # a percentage of a zero or negative amount would only mislead
         percent = (change / abs(before) * 100).quantize(ONE_PLACE, rounding=ROUND_HALF_UP)
     return FinancialChange(
         statement=later.statement,
