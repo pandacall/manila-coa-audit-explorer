@@ -15,7 +15,15 @@ from coa_explorer.search import Index
 from tests.fake_embedder import FakeEmbedder
 from tests.fixtures import write_fixture_records
 from tests.monitoring_fixtures import FIXTURE_MONITORING
-from tests.scripted import ScriptedAdapter, point, say, search, submit, submit_with_city
+from tests.scripted import (
+    ScriptedAdapter,
+    financial_lookup,
+    point,
+    say,
+    search,
+    submit,
+    submit_with_city,
+)
 
 IPSAS_5 = "2023-5-description-1"
 CITATION_5 = "CY 2023 AAR, Part II, Observation No. 5, pp. 71-73"
@@ -252,7 +260,9 @@ def test_the_model_sees_the_timeline_with_an_id_and_citation_for_every_step(inde
     ask(index, adapter)
 
     _, messages, tools = adapter.requests[1]
-    assert {"search", "timeline", "submit_answer"} == {t.name for t in adapter.requests[0][2]}
+    assert {"search", "timeline", "financial_lookup", "submit_answer"} == {
+        t.name for t in adapter.requests[0][2]
+    }
     timeline = messages[-1].tool_results[0].content["timeline"]
     assert [f["key"] for step in timeline["steps"] for f in step["follow_ups"]] == [
         CASH_ADVANCES_2023,
@@ -625,3 +635,146 @@ def test_the_model_can_search_the_aapsi_and_apmt_and_is_told_how_to_attribute_th
     results = adapter.requests[1][1][-1].tool_results[0].content
     assert [r["id"] for r in results] == ["2023-AAPSI-1"]
     assert results[0]["citation"] == "CY 2023 AAPSI, CY 2022 Observation No. 3, p. 2"
+
+
+# --- Number questions: financial_lookup ------------------------------------------------------
+
+CASH_2021 = "2021-FS-PartI-SFPo-10-ALL"
+CASH_2022 = "2022-FS-PartI-SFPo-10-ALL"
+INVESTMENTS_2022 = "2022-FS-PartI-SFPo-11-ALL"
+
+
+def test_a_number_question_is_answered_from_the_lookup_with_the_exact_amount_and_citation(index):
+    adapter = ScriptedAdapter(
+        financial_lookup("Cash and Cash Equivalents", years=[2022]),
+        submit(
+            "Manila held ₱8,325,730,232.46 in cash at the end of 2022.",
+            [
+                point(
+                    "Cash and cash equivalents were ₱8,325,730,232.46 (about ₱8.33 billion).",
+                    CASH_2022,
+                )
+            ],
+        ),
+    )
+
+    events = ask(index, adapter, "How much cash did Manila have at end of 2022?")
+
+    assert [e["type"] for e in events[:-1]] == ["status"]
+    assert "Cash and Cash Equivalents" in events[0]["message"]
+    answer = Answer.model_validate(final(events))
+    assert [c.text for c in answer.key_points[0].citations] == [
+        "CY 2022 AAR, Part I, SFPo, Cash and Cash Equivalents"
+    ]
+    assert answer.key_points[0].citations[0].title.startswith("Cash and Cash Equivalents")
+
+
+def test_the_model_is_handed_exact_amounts_in_pesos_and_ids_to_cite(index):
+    adapter = ScriptedAdapter(
+        financial_lookup("Cash and Cash Equivalents", years=[2022]),
+        submit("s", [point("p", CASH_2022)]),
+    )
+
+    ask(index, adapter)
+
+    content = adapter.requests[1][1][-1].tool_results[0].content
+    [figure] = content["figures"]
+    assert figure["id"] == CASH_2022
+    assert figure["amounts"] == {"Amount": "8325730232.46"}
+    assert figure["display"] == {"Amount": "₱8,325,730,232.46 (about ₱8.33 billion)"}
+    assert figure["fund"] == "All Funds"
+    assert "pesos" in content["units"].lower()
+
+
+def test_differences_between_years_come_from_the_tool_and_both_figures_can_be_cited(index):
+    adapter = ScriptedAdapter(
+        financial_lookup("Cash and Cash Equivalents", years=[2021, 2022]),
+        submit(
+            "Cash fell by ₱2,539,183,804.07 (23.4%) between 2021 and 2022.",
+            [point("Cash dropped from 2021 to 2022.", CASH_2021, CASH_2022)],
+        ),
+    )
+
+    events = ask(index, adapter, "How did cash change from 2021 to 2022?")
+
+    content = adapter.requests[1][1][-1].tool_results[0].content
+    [change] = content["changes"]
+    assert change["change"] == "-2539183804.07"
+    assert change["display_change"] == "-₱2,539,183,804.07 (about -₱2.54 billion)"
+    assert change["display_percent"] == "-23.4%"
+    assert change["ids"] == [CASH_2021, CASH_2022]
+    answer = Answer.model_validate(final(events))
+    assert [c.text for c in answer.key_points[0].citations] == [
+        "CY 2021 AAR, Part I, SFPo, Cash and Cash Equivalents",
+        "CY 2022 AAR, Part I, SFPo, Cash and Cash Equivalents",
+    ]
+
+
+def test_the_model_is_offered_the_tool_and_told_to_use_it_for_figures_not_to_calculate(index):
+    adapter = ScriptedAdapter(search("cash"), submit("s", [point("p", IPSAS_5)]))
+
+    ask(index, adapter)
+
+    system, _, tools = adapter.requests[0]
+    assert "financial_lookup" in {t.name for t in tools}
+    assert "financial_lookup" in system
+    assert "never calculate" in system.lower()
+
+
+def test_a_key_point_citing_a_figure_that_was_never_looked_up_is_removed(index):
+    adapter = ScriptedAdapter(
+        financial_lookup("Cash and Cash Equivalents", years=[2022]),
+        submit(
+            "s",
+            [point("Grounded.", CASH_2022), point("Invented.", INVESTMENTS_2022)],
+        ),
+    )
+
+    answer = Answer.model_validate(final(ask(index, adapter)))
+
+    assert [kp.text for kp in answer.key_points] == ["Grounded."]
+
+
+def test_a_line_item_the_reports_do_not_have_gives_the_model_nothing_to_cite(index):
+    adapter = ScriptedAdapter(
+        financial_lookup("Quezon City bridge loan", years=[2022]),
+        submit("", [], covered=False, message="The statements have no such line."),
+    )
+
+    result = NotCovered.model_validate(final(ask(index, adapter)))
+
+    content = adapter.requests[1][1][-1].tool_results[0].content
+    assert content["figures"] == []
+    assert result.message == "The statements have no such line."
+
+
+def test_malformed_financial_lookup_arguments_are_reported_to_the_model_not_fatal(index):
+    adapter = ScriptedAdapter(
+        financial_lookup("Cash and Cash Equivalents", years=["not a year"]),
+        financial_lookup("Cash and Cash Equivalents", years=[2022]),
+        submit("s", [point("p", CASH_2022)]),
+    )
+
+    events = ask(index, adapter)
+
+    assert final(events)["type"] == "answer"
+    assert "error" in adapter.requests[1][1][-1].tool_results[0].content
+
+
+def test_broken_down_by_fund_when_the_annexes_give_one(index):
+    adapter = ScriptedAdapter(
+        financial_lookup("Cash and Cash Equivalents", years=[2023]),
+        submit(
+            "s",
+            [point("The Special Education Fund held ₱2,000.25.", "2023-FS-AnnexA-SFPo-9-SEF")],
+        ),
+    )
+
+    answer = Answer.model_validate(final(ask(index, adapter)))
+
+    content = adapter.requests[1][1][-1].tool_results[0].content
+    funds = {f["fund"] for f in content["figures"] if f["id"].startswith("2023-FS-AnnexA")}
+    assert funds == {"General Fund", "Special Education Fund", "Trust Fund", "All Funds"}
+    assert answer.key_points[0].citations[0].text == (
+        "CY 2023 AAR, Part IV, Annex A, SFPo, Cash and Cash Equivalents"
+    )

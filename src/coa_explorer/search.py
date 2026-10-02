@@ -1,4 +1,5 @@
-"""The retrieval tools: hybrid keyword + vector `search` over the AARs, and `timeline`.
+"""The retrieval tools: hybrid keyword + vector `search` over the AARs, `timeline` and
+`financial_lookup`.
 
 Every result carries a complete Citation. Keyword (FTS5) and vector (sqlite-vec) matches are merged
 into one ranking; a hit on any piece of an Audit Observation can be expanded to the whole
@@ -17,6 +18,7 @@ from pathlib import Path
 import sqlite_vec
 
 from coa_explorer.embedder import Embedder
+from coa_explorer.financial_lookup import FinancialLookup, lookup
 from coa_explorer.index import load_vec_extension
 from coa_explorer.timeline import Timeline, assemble_timeline
 
@@ -220,6 +222,17 @@ class Index:
     def piece(self, key: str) -> Piece | None:
         row = self._db.execute("SELECT * FROM pieces WHERE key = ?", (key,)).fetchone()
         return piece_from(row) if row else None
+
+    def financial_lookup(
+        self,
+        line_item: str,
+        years: list[int],
+        statement: str | None = None,
+        fund: str | None = None,
+    ) -> FinancialLookup:
+        """Exact peso amounts for a line of the Financial Statements or Annexes in each of `years`,
+        by Fund where the Annexes give one, with the differences between years worked out."""
+        return lookup(self._db, line_item, years, statement=statement, fund=fund)
 
     def timeline(self, origin_year: int, origin_observation: int) -> Timeline | None:
         """How COA's Status of Implementation for one Audit Observation's Recommendations changed
