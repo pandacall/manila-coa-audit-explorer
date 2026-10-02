@@ -271,7 +271,7 @@ class AnswerEngine:
                             if call.name == "search"
                             else self._run_timeline(call, seen, timelines)
                         )
-                    except (TypeError, ValueError, KeyError):
+                    except (TypeError, ValueError, KeyError, OverflowError):
                         # Tell the model what was wrong so it can retry, instead of failing.
                         content = {"error": ARGUMENT_ERRORS[call.name]}
                     results.append(ToolResult(call, content))

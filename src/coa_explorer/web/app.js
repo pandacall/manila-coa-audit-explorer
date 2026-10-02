@@ -64,8 +64,9 @@ function Timeline({ timeline }) {
         <h3>Raised</h3>
         ${timeline.raised
           ? html`<p class="citations"><${Chip} text=${timeline.raised.citation} title=${timeline.raised.title} /></p>`
-          : html`<p>${label}: before the 2020–2024 reports, so not available here. COA tracks it
-              in the reports below.</p>`}
+          : html`<p>${timeline.origin_year < 2020
+              ? `${label}: raised before the 2020–2024 reports, so not available here. COA tracks it in the reports below.`
+              : `${label}: its Part II entry was not found among the 2020–2024 reports.`}</p>`}
       </li>
       ${timeline.steps.map(
         (step) => html`<li class="step" key=${step.aar_year}>
