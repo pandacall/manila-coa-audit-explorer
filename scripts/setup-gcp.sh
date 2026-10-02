@@ -88,6 +88,14 @@ confirm() {
   [[ "$reply" =~ ^[Yy] ]]
 }
 
+# _trim VALUE prints VALUE without a stray carriage return (some Windows terminals end typed or
+# pasted lines with CR+LF, which read keeps) or surrounding whitespace.
+_trim() {
+  local v="${1//$''/}"
+  v="${v#"${v%%[![:space:]]*}"}"
+  printf '%s' "${v%"${v##*[![:space:]]}"}"
+}
+
 # _existing KEY: current value of KEY in ENV_FILE, if any.
 _existing() {
   [[ -f "$ENV_FILE" ]] || return 1
@@ -106,6 +114,7 @@ ask() {
     printf '  %s%s%s ' "$BOLD" "$prompt" "$RESET"
   fi
   read -r input || true
+  input=$(_trim "$input")
   [[ -z "$input" && -n "$current" ]] && input="$current"
   printf -v "$key" '%s' "$input"
 }
@@ -120,6 +129,7 @@ ask_secret() {
     printf '  %s%s%s ' "$BOLD" "$prompt" "$RESET"
   fi
   read -rs input || true
+  input=$(_trim "$input")
   printf '\n'
   [[ -z "$input" && -n "$current" ]] && input="$current"
   printf -v "$key" '%s' "$input"
@@ -189,22 +199,50 @@ finish() {
 #   .env (git-ignored)  GCP_PROJECT_ID, GCP_REGION, GEMINI_LOCATION,
 #                       GEMINI_ANSWER_MODEL, GEMINI_JUDGE_MODEL,
 #                       GEMINI_EMBEDDING_MODEL, FIRESTORE_DATABASE, FIRESTORE_LOG_COLLECTION,
-#                       FIRESTORE_TTL_FIELD, ARTIFACT_REPOSITORY (see .env.example)
+#                       FIRESTORE_TTL_FIELD, ARTIFACT_REPOSITORY, EVAL_BATCH_BUCKET
+#                       (see .env.example)
 #   GitHub Actions variables (no secrets, no JSON keys):
 #                       GCP_PROJECT_ID, GCP_REGION,
 #                       GCP_WORKLOAD_IDENTITY_PROVIDER,
 #                       GCP_DEPLOYER_SERVICE_ACCOUNT,
 #                       GCP_RUNTIME_SERVICE_ACCOUNT, GCP_ARTIFACT_REPOSITORY,
-#                       GEMINI_LOCATION, GEMINI_ANSWER_MODEL, GEMINI_EMBEDDING_MODEL
+#                       GCP_EVAL_SERVICE_ACCOUNT, GCP_EVAL_BATCH_BUCKET,
+#                       GEMINI_LOCATION, GEMINI_ANSWER_MODEL, GEMINI_JUDGE_MODEL,
+#                       GEMINI_EMBEDDING_MODEL
 # ──────────────────────────────────────────────────────────────────────────
 
 # Git Bash on Windows rewrites arguments that look like POSIX paths
 # (e.g. principalSet://iam.googleapis.com/...); switch that off.
 export MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL='*'
 
+# On Windows, Git Bash finds gcloud's sh launcher, which can pick a Python that lacks gcloud's
+# bundled libraries ("No module named six") or hand Windows Python a /c/... path that the setting
+# above stops MSYS converting; gcloud.cmd goes through cmd.exe, which mangles arguments containing
+# spaces. So run the SDK's own bundled Python on gcloud.py directly, as the launchers do.
+if command -v gcloud.cmd >/dev/null 2>&1 && command -v cygpath >/dev/null 2>&1; then
+  _sdk_root=$(cd "$(dirname "$(command -v gcloud.cmd)")/.." && pwd)
+  _sdk_py="$_sdk_root/platform/bundledpython/python.exe"
+  [[ -x "$_sdk_py" ]] || _sdk_py=python
+  _sdk_win=$(cygpath -w "$_sdk_root")
+  gcloud() {
+    CLOUDSDK_ROOT_DIR="$_sdk_win" CLOUDSDK_PYTHON="$(cygpath -w "$_sdk_py")"       "$_sdk_py" "$_sdk_win\lib\gcloud.py" "$@"
+  }
+fi
+
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
-TOTAL_STAGES=10
+TOTAL_STAGES=11
+
+# A git worktree has no .env of its own (it is git-ignored). Start from the main checkout's, so
+# answers given on earlier runs are remembered here too.
+if [[ ! -f "$ENV_FILE" ]]; then
+  _common=$(git rev-parse --git-common-dir 2>/dev/null || true)
+  _main_env="$(cd "$_common/.." 2>/dev/null && pwd)/.env"
+  if [[ -n "$_common" && -f "$_main_env" && "$(cd "$_common/.." && pwd)" != "$(pwd)" ]]; then
+    cp "$_main_env" "$ENV_FILE" && printf '  Using saved settings from %s
+' "$_main_env"
+  fi
+fi
 
 REGION="us-central1"
 RUNTIME_SA_ID="coa-runtime"
@@ -282,9 +320,20 @@ pause "Press Enter to continue."
 stage "Choose the Google Cloud project"
 say "Use the project that holds your \$300 Free Trial credit. If you don't have"
 say "one yet, create it first (any ID, e.g. coa-audit-explorer)."
-open_url "https://console.cloud.google.com/projectcreate"
-step "Create the project (or skip if it exists) and note its Project ID."
-ask GCP_PROJECT_ID "Project ID:"
+# Offer the saved project (from .env), else the one gcloud is already set to, as the default.
+DEFAULT_PROJECT=$(_existing GCP_PROJECT_ID || true)
+if [[ -z "$DEFAULT_PROJECT" ]]; then
+  DEFAULT_PROJECT=$(gcloud config get-value project 2>/dev/null | tr -d '' || true)
+  [[ "$DEFAULT_PROJECT" == "(unset)" ]] && DEFAULT_PROJECT=""
+fi
+if [[ -n "$DEFAULT_PROJECT" ]]; then
+  say "Using project $DEFAULT_PROJECT. Type a different Project ID to change it."
+  ask_default GCP_PROJECT_ID "Project ID:" "$DEFAULT_PROJECT"
+else
+  open_url "https://console.cloud.google.com/projectcreate"
+  step "Create the project (or skip if it exists) and note its Project ID."
+  ask GCP_PROJECT_ID "Project ID:"
+fi
 [[ -n "$GCP_PROJECT_ID" ]] || die "A project ID is required."
 gcloud projects describe "$GCP_PROJECT_ID" >/dev/null 2>&1 \
   || die "Can't see project '$GCP_PROJECT_ID'. Check the ID and that you're signed in to the right account."
@@ -394,6 +443,42 @@ note "Storage beyond 0.5 GB is billed (about \$0.10/GB-month); the image is smal
 set_var GCP_ARTIFACT_REPOSITORY "$AR_REPO"
 pause "Press Enter to continue."
 
+# ── 5b. Evaluation batch bucket ───────────────────────────────────────────
+stage "Create the evaluation batch bucket"
+say "The evaluation's judge model (Gemini Pro) runs as a Vertex AI batch job, and batch jobs read"
+say "their requests from, and write their replies to, Cloud Storage."
+EVAL_BUCKET="$GCP_PROJECT_ID-coa-eval"
+if gcloud storage buckets describe "gs://$EVAL_BUCKET" --project "$GCP_PROJECT_ID" >/dev/null 2>&1; then
+  say "✓ bucket gs://$EVAL_BUCKET already exists"
+else
+  gcloud storage buckets create "gs://$EVAL_BUCKET" --location="$REGION" \
+    --uniform-bucket-level-access --project "$GCP_PROJECT_ID" \
+    || die "Couldn't create the evaluation bucket."
+  say "✓ created gs://$EVAL_BUCKET in $REGION"
+fi
+# The files are scratch: each run writes new ones, so old ones expire after a week.
+EVAL_LIFECYCLE=$(mktemp)
+printf '{"rule":[{"action":{"type":"Delete"},"condition":{"age":7}}]}' > "$EVAL_LIFECYCLE"
+gcloud storage buckets update "gs://$EVAL_BUCKET" --lifecycle-file="$EVAL_LIFECYCLE" \
+  --project "$GCP_PROJECT_ID" >/dev/null \
+  && say "✓ objects expire after 7 days" \
+  || SKIPPED+=("Expiry for gs://$EVAL_BUCKET (set a 7-day delete rule in the console)")
+rm -f "$EVAL_LIFECYCLE"
+say "CI runs a small evaluation on pull requests. It gets its own account, separate from the deployer,"
+say "so code in a pull request can call Gemini and use this bucket but can't deploy anything."
+EVAL_SA_ID="coa-evaluator"
+EVAL_SA="$EVAL_SA_ID@$GCP_PROJECT_ID.iam.gserviceaccount.com"
+ensure_sa "$EVAL_SA_ID" "$EVAL_SA" "COA Explorer CI evaluator"
+grant_project_role "$EVAL_SA" roles/aiplatform.user
+retry 5 gcloud storage buckets add-iam-policy-binding "gs://$EVAL_BUCKET" \
+  --member="serviceAccount:$EVAL_SA" --role=roles/storage.objectAdmin \
+  --project "$GCP_PROJECT_ID" >/dev/null \
+  || die "Couldn't grant $EVAL_SA access to the evaluation bucket."
+say "✓ $EVAL_SA → roles/storage.objectAdmin on gs://$EVAL_BUCKET only"
+note "Vertex AI's own service agent reads and writes the bucket for the batch job."
+set_var GCP_EVAL_BATCH_BUCKET "$EVAL_BUCKET"
+pause "Press Enter to continue."
+
 # ── 6. Workload Identity Federation ───────────────────────────────────────
 stage "Let GitHub Actions authenticate without keys"
 say "Workload Identity Federation: GitHub proves who it is with a short-lived token,"
@@ -438,6 +523,12 @@ retry 5 gcloud iam service-accounts add-iam-policy-binding "$DEPLOYER_SA" \
   || die "Couldn't allow GitHub to impersonate $DEPLOYER_SA."
 say "✓ $GITHUB_REPO may impersonate $DEPLOYER_SA"
 
+retry 5 gcloud iam service-accounts add-iam-policy-binding "$EVAL_SA" \
+  --member="$WIF_PRINCIPAL" --role=roles/iam.workloadIdentityUser \
+  --project "$GCP_PROJECT_ID" >/dev/null \
+  || die "Couldn't allow GitHub to impersonate $EVAL_SA."
+say "✓ $GITHUB_REPO may impersonate $EVAL_SA"
+
 printf '\n'
 say "Saving the identifiers as GitHub Actions variables (they are not secrets):"
 set_var GCP_PROJECT_ID "$GCP_PROJECT_ID"
@@ -445,6 +536,7 @@ set_var GCP_REGION "$REGION"
 set_var GCP_WORKLOAD_IDENTITY_PROVIDER "$WIF_PROVIDER_NAME"
 set_var GCP_DEPLOYER_SERVICE_ACCOUNT "$DEPLOYER_SA"
 set_var GCP_RUNTIME_SERVICE_ACCOUNT "$RUNTIME_SA"
+set_var GCP_EVAL_SERVICE_ACCOUNT "$EVAL_SA"
 pause "Press Enter to continue."
 
 # ── 7. Firestore ──────────────────────────────────────────────────────────
@@ -551,6 +643,7 @@ pick_model() {
     warn "That doesn't look like a model ID (expected e.g. $default). Don't paste API keys here."
     printf '  %sModel ID: %s' "$BOLD" "$RESET"
     read -r input || true
+    input=$(_trim "$input")
     printf -v "$key" '%s' "${input:-$default}"
   done
   while :; do
@@ -562,6 +655,7 @@ pick_model() {
       [[ -n "$models" ]] && note "Gemini models Vertex lists for your project: $models"
       printf '  %sType another model ID to try, or press Enter to keep %s: %s' "$BOLD" "${!key}" "$RESET"
       read -r input || true
+      input=$(_trim "$input")
       if [[ -n "$input" ]]; then printf -v "$key" '%s' "$input"; continue; fi
     else
       warn "Not a missing model; if it's 403, wait a minute for the API enablement to propagate."
@@ -586,6 +680,7 @@ write_env FIRESTORE_DATABASE "$FIRESTORE_DB"
 write_env FIRESTORE_LOG_COLLECTION "$LOG_COLLECTION"
 write_env FIRESTORE_TTL_FIELD "$TTL_FIELD"
 write_env ARTIFACT_REPOSITORY "$AR_REPO"
+write_env EVAL_BATCH_BUCKET "$EVAL_BUCKET"
 
 # CI needs the same non-secret model settings: the embedding model to build the index and the
 # answer model to configure the deployed service.
@@ -593,6 +688,7 @@ say "Saving the model settings as GitHub Actions variables too (not secrets):"
 set_var GEMINI_LOCATION "global"
 set_var GEMINI_ANSWER_MODEL "$GEMINI_ANSWER_MODEL"
 set_var GEMINI_EMBEDDING_MODEL "$GEMINI_EMBEDDING_MODEL"
+set_var GEMINI_JUDGE_MODEL "$GEMINI_JUDGE_MODEL"   # the evaluation judge, read by CI
 
 pause "Press Enter to continue."
 

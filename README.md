@@ -189,3 +189,47 @@ repository and the Gemini model names). Re-run the script after pulling this cha
 repeat, grants the deployer account Vertex AI access for the index build, and sets the model
 variables. To switch the answer model without code changes, change the `GEMINI_ANSWER_MODEL`
 variable and re-run the workflow (Actions, "CI/CD", Run workflow, on `main`).
+
+## Measuring quality
+
+```bash
+uv run coa-explorer eval                     # every approved item in data/eval/reference.json
+uv run coa-explorer eval --limit 5           # the small subset CI runs on pull requests
+uv run coa-explorer eval --answer-model gemini-3.8-flash --judge-model gemini-3.1-pro-preview
+```
+
+`eval` runs each **approved** reference item through the real answer engine and writes
+`build/eval/results.json` (every score and every item's outcome, for machines) and
+`build/eval/summary.md` (the same as tables, for people). It needs the index, the settings above and
+`GEMINI_JUDGE_MODEL`; the answer and judge models come from `.env` and can be overridden per run
+with `--answer-model` and `--judge-model`, so models are compared without code changes.
+
+A reference item in `data/eval/reference.json` has an `id`, the `question`, its `language` (`en`,
+`fil` or `taglish`), `question_type` (`observation`, `follow_up` or `financial`), the
+`expected_citations` (COA's format) and `key_facts` a good answer states, an `unanswerable` flag
+(then the app must refuse, and the item has neither citations nor facts) and an `approved` flag.
+Agents draft items; the owner checks each against the AAR and sets `"approved": true`. Items
+without it are never scored. The ten Part II items and two unanswerable ones there now are drafts:
+their expected pages are the ones the index derives, so check them against the Word file (or COA's
+own later citation in the next year's Part III) when approving.
+
+Scores, pooled over items:
+
+- **Retrieval hit rate**: answerable items for which the passages the model was shown include an
+  expected source (same AAR year, Part and observation, any page).
+- **Citation correctness**: expected Citations the answer cites (same source), out of all expected
+  Citations. **Page drift** is reported apart: for sources cited correctly, how many pages the cited
+  starting page is from the expected one (ADR-0001 makes pages best-effort, so this is measured, not
+  assumed).
+- **Faithfulness** and **key-fact coverage**: Gemini Pro judges, in one Vertex AI batch job over all
+  answers, whether each key point is supported by the passages the answer cites and whether each
+  key fact appears in the answer. A judge reply that can't be used is counted as `unjudged`, not as a pass.
+- **Correct refusal**: unanswerable items the app refused. **False refusal**: answerable items it
+  refused (they also score no Citations and no facts).
+
+The judge runs as a batch job because it is cheaper and nobody waits on it; batch jobs exchange
+files through Cloud Storage, so `EVAL_BATCH_BUCKET` must name a bucket (`scripts/setup-gcp.sh`
+creates one, plus a separate CI evaluator account that may only call Vertex AI and use the
+bucket, and sets the variables CI reads). Re-run the wizard once to get those.
+`.github/workflows/eval.yml` runs the first five approved items on every pull request from this
+repository and posts the summary on the run page; it reports and does not block the merge.
