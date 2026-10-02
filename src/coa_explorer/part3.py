@@ -180,19 +180,19 @@ def _tracked_observation(year: int, group: _Group, already: int) -> TrackedObser
     )
     offset = 0  # statuses in earlier rows of the group, to index into group_items
     for row, recs, statuses in zip(group.rows, recs_by_row, statuses_by_row, strict=True):
-        k = len(statuses)
-        if not k:
+        count = len(statuses)
+        if not count:
             continue
         shared: list[str] = []
         items = _items(recs)
-        if len(items) == k:
+        if len(items) == count:
             texts = items
         elif group_aligned:
-            texts = group_items[offset : offset + k]
+            texts = group_items[offset : offset + count]
         else:
-            texts = [" ".join(recs)] * k
+            texts = [" ".join(recs)] * count
             shared.append("recommendation")
-        offset += k
+        offset += count
 
         actions = _spread(_cell(row, 3), statuses, shared, "management_action", open_only=False)
         reasons = _spread(_cell(row, 4), statuses, shared, "reason", open_only=True)
@@ -284,22 +284,22 @@ def _spread(
     A Reason is printed only for Partially or Not Implemented recommendations, so a Reason column
     with one paragraph per such status is matched against those.
     """
-    k = len(statuses)
+    count = len(statuses)
     if not paragraphs:
-        return [None] * k
-    if k == 1:
+        return [None] * count
+    if count == 1:
         return [" ".join(paragraphs)]
-    if len(paragraphs) == k:
+    if len(paragraphs) == count:
         return list(paragraphs)
     if open_only:
         open_ones = [i for i, (s, _) in enumerate(statuses) if _normalise(s) != IMPLEMENTED]
         if len(paragraphs) == len(open_ones):
-            spread: list[str | None] = [None] * k
+            spread: list[str | None] = [None] * count
             for i, paragraph in zip(open_ones, paragraphs, strict=True):
                 spread[i] = paragraph
             return spread
     shared.append(name)
-    return [" ".join(paragraphs)] * k
+    return [" ".join(paragraphs)] * count
 
 
 def _citation(year: int, ref: Reference, page_start: int, page_end: int) -> str:

@@ -18,15 +18,15 @@ def links(part2, part3):
 
 def test_every_tracked_observation_gets_a_link_and_none_is_unmatched(links, part3):
     assert len(links) == sum(len(p.observations) for p in part3.values())
-    assert Counter(link.status for link in links) == {LINKED: 35, OUT_OF_COLLECTION: 95}
+    assert Counter(link.outcome for link in links) == {LINKED: 35, OUT_OF_COLLECTION: 95}
 
 
 def test_references_to_observations_before_2020_are_out_of_the_collection(links):
-    out = [link for link in links if link.status == OUT_OF_COLLECTION]
+    out = [link for link in links if link.outcome == OUT_OF_COLLECTION]
     assert {link.origin_year for link in out} == {2017, 2018, 2019}
     assert all(link.origin_citation is None for link in out)
     # CY 2020's own Part III follows up nothing inside the collection.
-    assert {link.status for link in links if link.tracked_in == 2020} == {OUT_OF_COLLECTION}
+    assert {link.outcome for link in links if link.tracked_in == 2020} == {OUT_OF_COLLECTION}
 
 
 def test_a_linked_reference_points_at_the_part_II_citation(links):
@@ -35,7 +35,7 @@ def test_a_linked_reference_points_at_the_part_II_citation(links):
         for link in links
         if (link.tracked_in, link.origin_year, link.origin_observation) == (2022, 2021, 3)
     )
-    assert link.status == LINKED
+    assert link.outcome == LINKED
     assert link.origin_citation == "CY 2021 AAR, Part II, Observation No. 3, pp. 80-83"
 
 
@@ -45,7 +45,7 @@ def test_derived_pages_agree_exactly_with_the_following_years_part_III(links, or
     following = [
         link
         for link in links
-        if link.status == LINKED
+        if link.outcome == LINKED
         and link.origin_year == origin_year
         and link.tracked_in == origin_year + 1
     ]
@@ -57,7 +57,7 @@ def test_derived_pages_are_within_two_pages_of_the_following_years_part_III_for_
     following = [
         link
         for link in links
-        if link.status == LINKED and link.origin_year == 2023 and link.tracked_in == 2024
+        if link.outcome == LINKED and link.origin_year == 2023 and link.tracked_in == 2024
     ]
     assert len(following) == 6
     assert all(abs(link.drift) <= 2 for link in following), [link.drift for link in following]
@@ -88,7 +88,7 @@ def test_unmatched_references_are_reported_with_a_reason_and_never_dropped():
 
     links = build_links(part2_records, part3_records)
 
-    assert [link.status for link in links] == [
+    assert [link.outcome for link in links] == [
         LINKED,
         UNMATCHED,
         UNMATCHED,
@@ -104,3 +104,14 @@ def test_unmatched_references_are_reported_with_a_reason_and_never_dropped():
     assert "no Audit Observation No. 9" in unmatched[0]["reason"]
     assert "does not give" in unmatched[1]["reason"]
     assert report(links)["counts"] == {LINKED: 1, OUT_OF_COLLECTION: 1, UNMATCHED: 3}
+
+
+def test_where_COA_cites_a_range_the_derived_end_page_agrees_too(links):
+    # CY 2021's Part III cites "Pages 69-71"; later AARs cite the starting page only.
+    ranged = [
+        link
+        for link in links
+        if link.outcome == LINKED and link.cited_pages[0] != link.cited_pages[1]
+    ]
+    assert {link.tracked_in for link in ranged} == {2021}
+    assert all(link.cited_pages == link.derived_pages for link in ranged)

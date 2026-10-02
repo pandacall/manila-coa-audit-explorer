@@ -63,17 +63,23 @@ def main(argv: Sequence[str] | None = None, *, embedder: Embedder | None = None)
 
 
 def extract_step(reports: Path, out: Path, *, check: bool = False) -> int:
-    extracted2 = {year: part2.extract_year(reports, year) for year in YEARS}
-    extracted3 = {year: part3.extract_year(reports, year) for year in YEARS}
+    part2_records = {year: part2.extract_year(reports, year) for year in YEARS}
+    part3_records = {year: part3.extract_year(reports, year) for year in YEARS}
     link_report = links.report(
         links.build_links(
-            {year: record.to_dict() for year, record in extracted2.items()},
-            {year: record.to_dict() for year, record in extracted3.items()},
+            {year: record.to_dict() for year, record in part2_records.items()},
+            {year: record.to_dict() for year, record in part3_records.items()},
         )
     )
     outputs = {
-        **{Path("part2") / f"{year}.json": record.to_dict() for year, record in extracted2.items()},
-        **{Path("part3") / f"{year}.json": record.to_dict() for year, record in extracted3.items()},
+        **{
+            Path("part2") / f"{year}.json": record.to_dict()
+            for year, record in part2_records.items()
+        },
+        **{
+            Path("part3") / f"{year}.json": record.to_dict()
+            for year, record in part3_records.items()
+        },
         Path(LINK_REPORT): link_report,
     }
     stale: list[str] = []

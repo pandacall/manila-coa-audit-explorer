@@ -349,7 +349,7 @@ def status_message(call: ToolCall) -> str:
 
 
 def finalise(
-    args: dict, seen: dict[str, Piece], timelines: dict[tuple[int, int], Timeline] | None = None
+    args: dict, seen: dict[str, Piece], timelines: dict[tuple[int, int], Timeline]
 ) -> Answer | NotCovered:
     """Validate the model's submitted answer against what it retrieved."""
     if args.get("covered") is not True:
@@ -374,7 +374,7 @@ def finalise(
     return Answer(
         summary=summary,
         key_points=key_points[:MAX_KEY_POINTS],
-        timelines=chosen_timelines(args.get("timelines"), timelines or {}),
+        timelines=chosen_timelines(args.get("timelines"), timelines),
     )
 
 

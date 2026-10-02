@@ -25,7 +25,7 @@ class Link:
     reference: str  # as printed in Part III
     origin_year: int | None
     origin_observation: int | None
-    status: str  # linked | out_of_collection | unmatched
+    outcome: str  # linked | out_of_collection | unmatched (not a Status of Implementation)
     reason: str | None  # why it is unmatched or out of the collection
     origin_citation: str | None  # the Part II Citation, when linked
     cited_pages: tuple[int, int] | None  # pages COA cites in Part III
@@ -70,13 +70,13 @@ def _link(
     start, end = tracked["origin_page_start"], tracked["origin_page_end"]
     cited = (start, end if end is not None else start) if start is not None else None
 
-    def link(status: str, reason: str | None = None, observation: dict | None = None) -> Link:
+    def link(outcome: str, reason: str | None = None, observation: dict | None = None) -> Link:
         return Link(
             tracked_in=tracked_in,
             reference=tracked["reference"],
             origin_year=year,
             origin_observation=number,
-            status=status,
+            outcome=outcome,
             reason=reason,
             origin_citation=observation["citation"] if observation else None,
             cited_pages=cited,
@@ -101,13 +101,13 @@ def _link(
 
 def report(links: list[Link]) -> dict:
     """The link report: counts, every unmatched reference, and the observed page drift."""
-    by_status = {
-        s: [link for link in links if link.status == s]
+    by_outcome = {
+        s: [link for link in links if link.outcome == s]
         for s in (LINKED, OUT_OF_COLLECTION, UNMATCHED)
     }
     return {
-        "counts": {status: len(items) for status, items in by_status.items()},
-        "unmatched": [_flat(link) for link in by_status[UNMATCHED]],
+        "counts": {outcome: len(items) for outcome, items in by_outcome.items()},
+        "unmatched": [_without_pages(link) for link in by_outcome[UNMATCHED]],
         "page_drift": [
             {
                 "tracked_in": link.tracked_in,
@@ -116,11 +116,11 @@ def report(links: list[Link]) -> dict:
                 "derived_pages": list(link.derived_pages),
                 "drift": link.drift,
             }
-            for link in by_status[LINKED]
+            for link in by_outcome[LINKED]
             if link.drift is not None
         ],
     }
 
 
-def _flat(link: Link) -> dict:
+def _without_pages(link: Link) -> dict:
     return {k: v for k, v in asdict(link).items() if k not in ("cited_pages", "derived_pages")}
