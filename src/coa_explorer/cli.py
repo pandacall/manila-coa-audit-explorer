@@ -10,7 +10,7 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from coa_explorer import aapsi, front_matter, links, part2, part3, smoke
+from coa_explorer import aapsi, front_matter, links, ocr, part2, part3, smoke
 from coa_explorer.config import (
     DEFAULT_INDEX,
     DEFAULT_REVIEWED,
@@ -31,6 +31,10 @@ DEFAULT_OUT = REPO_ROOT / "data" / "extracted"
 LINK_REPORT = "link-report.json"
 MONITORING_LINK_REPORT = "monitoring-link-report.json"
 YEARS = (2020, 2021, 2022, 2023, 2024)
+OCR_DOCUMENTS = {
+    "transmittal-letter": front_matter.TRANSMITTAL_LETTER,
+    "management-responsibility": front_matter.MANAGEMENT_RESPONSIBILITY,
+}
 MONITORING_YEARS = (2023, 2024)  # the years COA published an AAPSI and an APMT for
 
 
@@ -39,16 +43,18 @@ def main(
     *,
     embedder: Embedder | None = None,
     page_reader: aapsi.PageReader | None = None,
+    ocr_reader: ocr.OcrReader | None = None,
 ) -> int:
-    """Run a step. `embedder` replaces Gemini for `index` and `page_reader` replaces it for
-    `extract-aapsi` (tests pass fakes)."""
+    """Run a step. `embedder` replaces Gemini for `index`, `page_reader` replaces it for
+    `extract-aapsi` and `ocr_reader` replaces Document AI for `ocr` (tests pass fakes)."""
     parser = argparse.ArgumentParser(prog="coa-explorer", description=__doc__)
     steps = parser.add_subparsers(dest="step", required=True)
 
     extract = steps.add_parser(
         "extract",
-        help="extract the Executive Summary, Auditor's Report, Part II and Part III into JSON"
-        " records, and report the links of Part III",
+        help="extract the front matter (Executive Summary, Auditor's Report, transmittal letter,"
+        " Management Responsibility statement), Part II and Part III into JSON records, and report"
+        " the links of Part III",
     )
     extract.add_argument("--reports", type=Path, default=DEFAULT_REPORTS, help="raw AAR folder")
     extract.add_argument(
@@ -85,6 +91,29 @@ def main(
         "--overwrite",
         action="store_true",
         help="replace records that exist (they may hold a human review's corrections)",
+    )
+
+    scanned = steps.add_parser(
+        "ocr",
+        help="read the scanned transmittal letters and Management Responsibility statements with"
+        " Document AI into reviewed transcriptions (costs a few cents; proofread the output"
+        " before committing it)",
+    )
+    scanned.add_argument("--reports", type=Path, default=DEFAULT_REPORTS, help="raw AAR folder")
+    scanned.add_argument(
+        "--reviewed", type=Path, default=DEFAULT_REVIEWED, help="where the transcriptions go"
+    )
+    scanned.add_argument("--years", type=int, nargs="+", default=list(YEARS))
+    scanned.add_argument(
+        "--documents",
+        nargs="+",
+        choices=sorted(OCR_DOCUMENTS),
+        default=sorted(OCR_DOCUMENTS),
+    )
+    scanned.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="replace transcriptions that exist (they may hold a human review's corrections)",
     )
 
     index = steps.add_parser(
@@ -133,6 +162,8 @@ def main(
         return links_step(args.records)
     if args.step == "extract-aapsi":
         return extract_aapsi_step(args, page_reader)
+    if args.step == "ocr":
+        return ocr_step(args, ocr_reader)
     if args.step == "smoke":
         return smoke_step(args.url, args.question, args.timeout)
     return extract_step(args.reports, args.out, check=args.check, reviewed=args.reviewed)
@@ -146,6 +177,13 @@ def extract_step(
     }
     auditors_reports = {
         year: front_matter.extract_auditors_report(reports, year, reviewed) for year in YEARS
+    }
+    letters = {
+        year: front_matter.extract_transmittal_letter(reports, year, reviewed) for year in YEARS
+    }
+    statements = {
+        year: front_matter.extract_management_responsibility(reports, year, reviewed)
+        for year in YEARS
     }
     part2_records = {year: part2.extract_year(reports, year) for year in YEARS}
     part3_records = {year: part3.extract_year(reports, year) for year in YEARS}
@@ -163,6 +201,14 @@ def extract_step(
         **{
             Path("auditors_report") / f"{year}.json": record.to_dict()
             for year, record in auditors_reports.items()
+        },
+        **{
+            Path("transmittal_letter") / f"{year}.json": record.to_dict()
+            for year, record in letters.items()
+        },
+        **{
+            Path("management_responsibility") / f"{year}.json": record.to_dict()
+            for year, record in statements.items()
         },
         **{
             Path("part2") / f"{year}.json": record.to_dict()
@@ -191,6 +237,35 @@ def extract_step(
         print(f"stale records: {', '.join(stale)}; run `coa-explorer extract`", file=sys.stderr)
         return 1
     return 0
+
+
+def ocr_step(args: argparse.Namespace, reader: ocr.OcrReader | None) -> int:
+    targets = ocr.scans(args.reports, args.years, [OCR_DOCUMENTS[d] for d in args.documents])
+    existing = [
+        t for t in (ocr.transcription_path(s, args.reviewed) for s in targets) if t.exists()
+    ]
+    if existing and not args.overwrite:
+        names = ", ".join(str(p) for p in existing)
+        print(f"{names} already exist; pass --overwrite to replace them", file=sys.stderr)
+        return 1
+    reader = reader or document_ai_ocr()
+    for scan in targets:
+        pages = ocr.read_scan(scan, reader)
+        target = ocr.transcription_path(scan, args.reviewed)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with target.open("w", encoding="utf-8", newline="") as f:
+            f.write(ocr.render(pages))
+        print(f"wrote {target}: {len(pages)} page(s)")
+    return 0
+
+
+def document_ai_ocr() -> ocr.DocumentAiOcr:
+    settings = load_settings()
+    return ocr.DocumentAiOcr(
+        project=settings.gcp_project_id,
+        location=settings.document_ai_location,
+        processor=settings.document_ai_processor,
+    )
 
 
 def extract_aapsi_step(args: argparse.Namespace, reader: aapsi.PageReader | None) -> int:

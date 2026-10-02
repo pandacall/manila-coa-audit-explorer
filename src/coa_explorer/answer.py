@@ -42,7 +42,11 @@ The Executive Summary (search it with `parts` ["ES"]) is COA's own overview of t
 City's financial and operational highlights, the scope of the audit, a summary of the audit \
 opinion and significant observations, and the status of prior years' recommendations. The \
 Auditor's Report (Part I; search it with `parts` ["I"]) is COA's formal opinion on whether the \
-Financial Statements are fairly presented.
+Financial Statements are fairly presented. Two short documents open each AAR: the transmittal \
+letter (part "TL"), in which COA sends the AAR to the Mayor, restating the opinion and, for most \
+years, the significant observations; and the Management Responsibility statement (part "MR"), in \
+which the City's own officials state that Management is responsible for the Financial Statements \
+and for the internal controls behind them. The statement is Management's, not COA's: attribute it.
 For 2023 and 2024 there are two more documents: the AAPSI (part "AAPSI") is Management's own \
 report of its Action Plan for each Recommendation, with the person or department responsible, \
 target dates and the Reported Status Management claims; the APMT (part "APMT") is COA's \
@@ -118,7 +122,8 @@ SEARCH_TOOL = ToolSpec(
     description=(
         "Search COA's Annual Audit Reports on the City of Manila, by exact words or by meaning: "
         "Part II Audit Observations, Part III follow-up of Prior Years' Recommendations, the "
-        "Executive Summary, the Auditor's Report, and the 2023-2024 AAPSI (Management's Action "
+        "Executive Summary, the Auditor's Report, the transmittal letter, the Management "
+        "Responsibility statement, and the 2023-2024 AAPSI (Management's Action "
         "Plans) and APMT (COA's validation of them). "
         "Returns passages, each with an `id`, its `citation` and the observation it is about "
         "(`origin_year`, `origin_observation`, for the `timeline` tool); with no `years` filter "
@@ -138,11 +143,15 @@ SEARCH_TOOL = ToolSpec(
             },
             "parts": {
                 "type": "array",
-                "items": {"type": "string", "enum": ["ES", "I", "II", "III", "AAPSI", "APMT"]},
+                "items": {
+                    "type": "string",
+                    "enum": ["ES", "I", "TL", "MR", "II", "III", "AAPSI", "APMT"],
+                },
                 "description": (
-                    "Restrict to the Executive Summary (ES), the Auditor's Report (I), Part II "
-                    "(observations), Part III (follow-up), the AAPSI (Management's Action Plans) "
-                    "and/or the APMT (COA's validation)."
+                    "Restrict to the Executive Summary (ES), the Auditor's Report (I), the "
+                    "transmittal letter (TL), the Management Responsibility statement (MR), "
+                    "Part II (observations), Part III (follow-up), the AAPSI (Management's "
+                    "Action Plans) and/or the APMT (COA's validation)."
                 ),
             },
             "observation": {

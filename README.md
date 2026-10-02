@@ -21,10 +21,12 @@ uv run ruff check .
 uv run coa-explorer extract
 ```
 
-Reads each year's Executive Summary, Auditor's Report, Part II (Audit Observations and
-Recommendations) and Part III (Status of Implementation of Prior Years' Recommendations) under
-`coa-audit-reports/` and writes committed, human-readable JSON to `data/extracted/`:
+Reads each year's transmittal letter, Management Responsibility statement, Executive Summary,
+Auditor's Report, Part II (Audit Observations and Recommendations) and Part III (Status of
+Implementation of Prior Years' Recommendations) under `coa-audit-reports/` and writes committed,
+human-readable JSON to `data/extracted/`:
 `executive_summary/<year>.json`, `auditors_report/<year>.json` (one record per section),
+`transmittal_letter/<year>.json`, `management_responsibility/<year>.json` (one section each),
 `part2/<year>.json`, `part3/<year>.json` (one record per Prior Years' Recommendation, with COA's
 Status of Implementation, Management's action and the reason given) and `link-report.json`.
 Re-running produces no diff. To check that the committed
@@ -72,6 +74,25 @@ Where a Word cell's paragraphs cannot be matched one-to-one with the recommendat
 whole cell text is attached to each recommendation it covers and the column is named in the record's
 `shared` list, so nothing is dropped and nothing is guessed.
 
+### Transmittal letters and Management Responsibility statements (scanned)
+
+```bash
+uv run coa-explorer ocr   # explicit only: Document AI, a few cents, needs GCP access
+```
+
+These short documents are each one section, cited by their pages ("CY 2023 AAR, Transmittal Letter,
+pp. 1-3"; "CY 2022 AAR, Part I, Management Responsibility for Financial Statements, p. 1"). All of
+them but CY 2024's transmittal letter (a native-text PDF, read as it is) are pictures of paper: the
+2022 and 2023 letters and every year's statement are PDF scans, CY 2020's letter is a scan with a
+junk text layer, and CY 2021's letter is a picture inside a Word file. `ocr` reads them with
+Document AI Enterprise OCR (`DOCUMENT_AI_LOCATION`, and the project's `OCR_PROCESSOR`) into
+`data/reviewed/<file name>.txt`, one `=== page N ===` heading per page. The OCR is proofread against
+the scan (stamps, seals and signatures out, bodies word for word) and committed; `extract` and
+`index` read only that committed text and need no GCP access. `ocr` refuses to replace a
+transcription unless you pass `--overwrite`, because it may hold a reviewer's corrections. Pages are
+the PDF's real pages; the CY 2021 picture is page 1 and the "Copy furnished" list Word holds as text
+is page 2 (derived, ADR-0001). See `data/reviewed/README.md` and ADR-0004.
+
 ## Extracting the AAPSI and APMT (scanned)
 
 The 2023 and 2024 AAPSI (Management's Action Plans and Reported Status) and APMT (COA's validation
@@ -106,7 +127,8 @@ uv run coa-explorer serve   # http://127.0.0.1:8000
 Vertex AI, so it needs the same GCP access as `serve` and takes about half a minute; rebuild it
 whenever the extracted records or the embedding model change. Search merges keyword (FTS5) and
 vector (sqlite-vec) matches into one ranking, can be narrowed by year, part (`ES` Executive
-Summary, `I` Auditor's Report, `II`, `III`) or observation number, and with no year named returns
+Summary, `I` Auditor's Report, `TL` transmittal letter, `MR` Management Responsibility statement,
+`II`, `III`, `AAPSI`, `APMT`) or observation number, and with no year named returns
 the newest year first. Open http://127.0.0.1:8000, ask a question
 about Part II or about whether the City acted on COA's recommendations, and the page shows the
 summary and key points, each with Citation chips in COA's format. A follow-up question also shows a

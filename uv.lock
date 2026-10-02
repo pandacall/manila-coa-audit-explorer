@@ -122,6 +122,7 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "fastapi" },
+    { name = "google-cloud-documentai" },
     { name = "google-cloud-firestore" },
     { name = "google-genai" },
     { name = "pillow" },
@@ -141,6 +142,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "fastapi", specifier = ">=0.142.2" },
+    { name = "google-cloud-documentai", specifier = ">=3.16.0" },
     { name = "google-cloud-firestore", specifier = ">=2.34.0" },
     { name = "google-genai", specifier = ">=2.26" },
     { name = "pillow", specifier = ">=12.3.0" },
@@ -300,6 +302,22 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/55/71/d6081acadf55d4233271c39860f0d140ef61fbdb4bceb2075e9c2905d947/google_cloud_core-2.8.0.tar.gz", hash = "sha256:365f8e4518ae81c8101b8dea5fc1c32a960badedb8b511f19db2843cbbd285d2", size = 36605, upload-time = "2026-09-29T19:25:59.275Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/12/ed/1b09640a565e5d34d4e517463f65a67a11f9dcdeb6b6e8220f2d06aaf489/google_cloud_core-2.8.0-py3-none-any.whl", hash = "sha256:e235b0952f7ffe7b9c71a4cf96b506d9cfb557e22557c412f0df9b7068b5d007", size = 31048, upload-time = "2026-09-29T19:25:35.361Z" },
+]
+
+[[package]]
+name = "google-cloud-documentai"
+version = "3.16.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "google-api-core", extra = ["grpc"] },
+    { name = "google-auth" },
+    { name = "grpcio" },
+    { name = "proto-plus" },
+    { name = "protobuf" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/77/57/fcb7cb904c9d4a39953ccc798e2bce5d260171142ba41467fdf2cb29e090/google_cloud_documentai-3.16.0.tar.gz", hash = "sha256:b9988746f8eb95aa7fee13c5812a9e3573d1b9322bc7f54b40efe9ab7a9281fd", size = 360531, upload-time = "2026-10-01T18:16:21.535Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5c/a4/6c9236d57b8bda960dee6d7f809f80f89039f075bde1d9be66b887a09397/google_cloud_documentai-3.16.0-py3-none-any.whl", hash = "sha256:8b2feabd8ea266e68d9a32e60f3d6cc48d940b8c8150215e6ee5f409264bd12a", size = 309115, upload-time = "2026-10-01T18:10:01.246Z" },
 ]
 
 [[package]]

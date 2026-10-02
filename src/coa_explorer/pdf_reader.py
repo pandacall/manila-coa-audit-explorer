@@ -44,7 +44,7 @@ def read_pages(pdf: Path, reviewed_dir: Path | None = None) -> list[PdfPage]:
     transcription = reviewed_path(pdf, reviewed_dir)
     reader = PdfReader(pdf)
     if transcription is not None:
-        pages = _read_transcription(transcription)
+        pages = read_transcription(transcription)
         if len(pages) != len(reader.pages):
             raise ValueError(
                 f"{transcription.name} has {len(pages)} pages"
@@ -57,7 +57,8 @@ def read_pages(pdf: Path, reviewed_dir: Path | None = None) -> list[PdfPage]:
     ]
 
 
-def _read_transcription(path: Path) -> list[PdfPage]:
+def read_transcription(path: Path) -> list[PdfPage]:
+    """The pages of a reviewed transcription file, in order."""
     pages: list[list[str]] = []
     for line in path.read_text(encoding="utf-8").splitlines():
         marker = PAGE_MARKER.match(line.strip())

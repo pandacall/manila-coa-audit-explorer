@@ -111,7 +111,8 @@ class Index:
         Executive Summary / Auditor's Report documents), grouped together.
 
         Keyword and vector matches are merged into one ranking (reciprocal rank fusion). `years`,
-        `parts` ("ES" Executive Summary, "I" Auditor's Report, "II", "III", "AAPSI", "APMT";
+        `parts` ("ES" Executive Summary, "I" Auditor's Report, "TL" transmittal letter, "MR"
+        Management Responsibility statement, "II", "III", "AAPSI", "APMT";
         document codes, not all of them COA Parts), `observation` (a Part II number; the other
         Parts have none) and `status` (COA's Status of Implementation, for Part III and APMT)
         narrow the search; with no query words, the filters alone are a direct lookup, an

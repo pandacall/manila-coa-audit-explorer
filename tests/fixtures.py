@@ -243,11 +243,10 @@ def front_matter_section(
     printed = (lambda n: roman[n]) if summary else str
     span = printed(start) if start == end else f"{printed(start)}-{printed(end)}"
     where = f"p. {span}" if start == end else f"pp. {span}"
-    citation = (
-        f"CY {year} AAR, Executive Summary, Section {label}, {where}"
-        if summary
-        else f"CY {year} AAR, Part I, Auditor's Report, {where}"
-    )
+    citation = {
+        "Executive Summary": f"CY {year} AAR, Executive Summary, Section {label}, {where}",
+        "Transmittal Letter": f"CY {year} AAR, Transmittal Letter, {where}",
+    }.get(document, f"CY {year} AAR, Part I, {document}, {where}")
     return {
         "label": label,
         "heading": heading,
@@ -360,17 +359,55 @@ FIXTURE_AUDITORS_REPORTS = {
 }
 
 
+def short_document(year: int, document: str, text: str, pages: tuple[int, int]) -> dict:
+    """A transmittal letter or Management Responsibility statement: one section, no letter."""
+    section = front_matter_section(year, document, document, text, pages)
+    record = front_matter_record(year, document, [section])
+    record["text_source"] = "reviewed transcription: fixture"
+    return record
+
+
+FIXTURE_TRANSMITTAL_LETTERS = {
+    2022: short_document(
+        2022,
+        "Transmittal Letter",
+        "We are pleased to transmit the Annual Audit Report. The Auditor rendered a Qualified "
+        "Opinion on the fairness of the presentation of the City's financial statements.",
+        (1, 2),
+    ),
+    2023: short_document(
+        2023,
+        "Transmittal Letter",
+        "We request that the recommendations be immediately implemented within 60 days.",
+        (1, 3),
+    ),
+}
+
+FIXTURE_MANAGEMENT_RESPONSIBILITIES = {
+    2023: short_document(
+        2023,
+        "Management Responsibility for Financial Statements",
+        "The Management of the City Government of Manila is responsible for all information "
+        "and representation contained in the Statement of Financial Position.",
+        (1, 1),
+    ),
+}
+
+
 def write_fixture_records(
     directory: Path,
     years: dict[int, dict] | None = None,
     part3: dict[int, dict] | None = None,
     summaries: dict[int, dict] | None = None,
     auditors_reports: dict[int, dict] | None = None,
+    letters: dict[int, dict] | None = None,
+    statements: dict[int, dict] | None = None,
     monitoring: dict[str, dict[int, dict]] | None = None,
 ) -> Path:
-    """Write Part II, Part III, the Executive Summary, the Auditor's Report and (when given)
+    """Write Part II, Part III, the Executive Summary, the Auditor's Report, the transmittal letter,
+    the Management Responsibility statement and (when given)
     AAPSI/APMT records in the layout `coa-explorer extract` and `extract-aapsi` write. Only the
-    default fixtures include the Executive Summary and Auditor's Report. `monitoring` maps "AAPSI"
+    default fixtures include the front matter. `monitoring` maps "AAPSI"
     and "APMT" to their records by AAR year."""
     if part3 is None:
         part3 = FIXTURE_PART3 if years is None else {}
@@ -378,11 +415,17 @@ def write_fixture_records(
         summaries = FIXTURE_EXECUTIVE_SUMMARIES if years is None else {}
     if auditors_reports is None:
         auditors_reports = FIXTURE_AUDITORS_REPORTS if years is None else {}
+    if letters is None:
+        letters = FIXTURE_TRANSMITTAL_LETTERS if years is None else {}
+    if statements is None:
+        statements = FIXTURE_MANAGEMENT_RESPONSIBILITIES if years is None else {}
     for part, records in (
         ("part2", years or FIXTURE_YEARS),
         ("part3", part3),
         ("executive_summary", summaries),
         ("auditors_report", auditors_reports),
+        ("transmittal_letter", letters),
+        ("management_responsibility", statements),
         *((document.lower(), by_year) for document, by_year in (monitoring or {}).items()),
     ):
         (directory / part).mkdir(parents=True, exist_ok=True)

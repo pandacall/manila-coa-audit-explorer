@@ -20,6 +20,14 @@ COA's front-matter overview of an AAR, numbered in lowercase Roman pages.
 COA's formal opinion on whether the Financial Statements are fairly presented.
 _Avoid_: Audit opinion letter
 
+**Transmittal Letter**:
+COA's cover letter sending an AAR to the Mayor. It restates the opinion and, in most years, the significant observations; it is not part of any Part.
+_Avoid_: Cover letter (the "Cover" file is a different, excluded document)
+
+**Management Responsibility statement**:
+The City's own Statement of Management's Responsibility for Financial Statements, signed by the City Accountant and the Mayor and carried in Part I. It is Management's words, never COA's.
+_Avoid_: Management representation letter
+
 **Management**:
 The audited agency: the City Government of Manila, as COA addresses it. In plain-language answers, say "the City of Manila".
 _Avoid_: LGU, the city (in document-facing contexts)

@@ -463,6 +463,45 @@ def test_a_question_about_the_audit_opinion_is_answered_from_the_auditors_report
     assert citation.title == "Auditor's Report: Qualified Opinion"
 
 
+def test_the_management_responsibility_statement_is_cited_as_Managements_own_words(index):
+    adapter = ScriptedAdapter(
+        search("responsible for the financial statements", years=[2023], parts=["MR"]),
+        submit(
+            "Management said it is responsible for the 2023 financial statements.",
+            [point("Management stated its responsibility.", "2023-MR-1-1")],
+        ),
+    )
+
+    events = ask(index, adapter, "Who says the City is responsible for its financial statements?")
+
+    system, messages, tools = adapter.requests[0][0], adapter.requests[1][1], adapter.requests[0][2]
+    assert "Management Responsibility statement" in system
+    assert {"TL", "MR"} <= set(tools[0].parameters["properties"]["parts"]["items"]["enum"])
+    passages = messages[-1].tool_results[0].content
+    assert [(p["id"], p["kind"]) for p in passages] == [
+        ("2023-MR-1-1", "management_responsibility")
+    ]
+    citation = Answer.model_validate(final(events)).key_points[0].citations[0]
+    assert citation.text == (
+        "CY 2023 AAR, Part I, Management Responsibility for Financial Statements, p. 1"
+    )
+
+
+def test_a_transmittal_letter_passage_is_cited_to_its_pages(index):
+    adapter = ScriptedAdapter(
+        search("recommendations implemented", years=[2023], parts=["TL"]),
+        submit(
+            "COA's 2023 transmittal letter asks that the recommendations be implemented.",
+            [point("COA asked for prompt implementation.", "2023-TL-1-1")],
+        ),
+    )
+
+    events = ask(index, adapter, "What did COA ask the Mayor to do in its 2023 letter?")
+
+    citation = Answer.model_validate(final(events)).key_points[0].citations[0]
+    assert citation.text == "CY 2023 AAR, Transmittal Letter, pp. 1-3"
+
+
 def test_a_years_highlights_are_answered_from_the_executive_summary(index):
     adapter = ScriptedAdapter(
         search("", years=[2023], parts=["ES"]),
@@ -498,6 +537,8 @@ def test_the_model_is_told_about_the_executive_summary_and_the_auditors_report(i
     assert search_tool.parameters["properties"]["parts"]["items"]["enum"] == [
         "ES",
         "I",
+        "TL",
+        "MR",
         "II",
         "III",
         "AAPSI",
@@ -618,7 +659,7 @@ def test_the_model_can_search_the_aapsi_and_apmt_and_is_told_how_to_attribute_th
 
     system, messages, tools = adapter.requests[0]
     parts = next(t for t in tools if t.name == "search").parameters["properties"]["parts"]
-    assert parts["items"]["enum"] == ["ES", "I", "II", "III", "AAPSI", "APMT"]
+    assert parts["items"]["enum"] == ["ES", "I", "TL", "MR", "II", "III", "AAPSI", "APMT"]
     assert "Reported Status" in system
     assert "never merge" in system.lower()
     assert "disagree" in system
