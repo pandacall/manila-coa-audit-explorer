@@ -1,0 +1,27 @@
+{
+  "seconds": 8.6,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1716,
+    "output_tokens": 362,
+    "thought_tokens": 832
+  },
+  "rows": [
+    {
+      "reference": "CY 2018 AAR, Observation No. 16, Page 92",
+      "observations": "10. The excess amount of collections/proceeds from sale of bid documents and other related fees amounting to P13.958 million as of December 31, 2018 was still being maintained under the trust fund (TF) instead of transferring the same to the general fund (GF) pursuant to Item 6.2 of Department of Budget and Management (DBM) Circular No. 2004-5A. Pursuant to Paragraph 10 of the Joint Venture Agreement JVA, we recommended that Management come up with JVA addendum/ amendments or similar binding document to correct the provisions and deficiencies therein that work against the interest of the City (Paragraphs 3.3, 3.10 and 3.11) with the end view of, among others:",
+      "recommendations": "We recommended that Management direct the City Treasurer to cause the immediate transfer of the unutilized amount of the proceeds from the collection of bid documents and related fees from the TF to the GF by the City.",
+      "action_plan": "The OCAT is still in the process of determining the excess collections/ proceeds. Once completed, a DV will be prepared for the fund transfer to the GF.",
+      "person_responsible": "OCAT",
+      "target_from": "",
+      "target_to": "",
+      "status": "Not Implemented",
+      "reason_for_delay": "",
+      "action_taken": ""
+    }
+  ],
+  "year": 2024,
+  "doc": "AAPSI",
+  "page": 25,
+  "model": "gemini-3.8-flash"
+}

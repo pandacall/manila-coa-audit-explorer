@@ -1,0 +1,39 @@
+{
+  "seconds": 4.9,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1716,
+    "output_tokens": 753,
+    "thought_tokens": 0
+  },
+  "rows": [
+    {
+      "reference": "AAR 2024 Observation No. 26 Page 166",
+      "observations": "26. The City's Implementation of the Local Climat Change Action Plan (LCCAP) cannot be ascertained due to the following conditions: a. The PPAs under the LCCAP were not properly specified and appropriated in the City's Investment Plan for CY 2024; b. An LCCAP Core Team responsible for implementing, regularly monitoring and updating the LCCAP was not established; c. The LCCAP was not regularly updated to address emerging/changing social, economic and environmental conditions and issues; and d. An Annual Progress Report was not submitted to the Climate Change Commission. These circumstances are contrary to RA No. 9729, otherwise known as the Climate Change Act of 2009 and DILG MC No. 2014-135 dated October 21, 2014, thereby resulting into lapses in monitoring of implementation of PPAs under the approved LCCAP.",
+      "recommendations": "26.14.We recommended that Management: a. Ensure that approved climate change PPAs are aligned with the City's LCCAP and funded from the City's NTA in accordance with Section 14 of RA No. 9729; b. Promptly create the City's LCCAP Core Team in accordance with paragraph 3.1.1 of DILG-MC No. 2014-135 and Section 7 of the City's LCCAP to facilitate proper planning, prioritization, funding, implementation and monitoring/assessment of proposed climate change PPAs; c. Regularly update the LCCAP to ensure its alignment with evolving social, economic, and environmental challenges of the City and Barangays; and d. Prepare an Annual Progress Report of the identified PPAs In the LCCAP, submitted to the Climate Change Commission, and furnish a copy to this Office.",
+      "action_plan": "Updating the LCCAP of the City as well as its proper process and monitoring is currently underway. They committed that, In coordination with the City Planning and Development Office and the other members of the MDDRM Council, they will properly address the recommendations in CY 2025",
+      "person_responsible": "MDRRMO, City Planning and Development Office",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    },
+    {
+      "reference": "AAR 2024 Observation No. 29 Page 169",
+      "observations": "29.Audit suspensions, disallowances and charges amounting to P42,538,364.47, P67,199,797.90 and P33,046,763,.65, respectively, were not settled at the end of the year.",
+      "recommendations": "29.2. We reiterated our recommendation that the City Accountant immediately enforce the settlement of all audit suspensions, disallowances, and charges in compliance with Sections 5.4 and 7.1.1, Chapter II of COA Circular No. 2009-006 dated September 15, 2009, and Management be more vigilant in the implementation of the existing accounting and auditing rules and regulations In the processing of claims to avoid possible audit suspensions and disallowances.",
+      "action_plan": "",
+      "person_responsible": "",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    }
+  ],
+  "year": 2024,
+  "doc": "AAPSI",
+  "page": 23,
+  "model": "gemini-3.8-flash"
+}

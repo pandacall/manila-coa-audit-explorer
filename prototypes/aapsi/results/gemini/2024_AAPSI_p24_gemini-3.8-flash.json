@@ -1,0 +1,51 @@
+{
+  "seconds": 23.7,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1716,
+    "output_tokens": 765,
+    "thought_tokens": 3083
+  },
+  "rows": [
+    {
+      "reference": "CY 2021 AAR, Observation No. 4, page 83",
+      "observations": "7.Seven hundred twenty-three (723) cases of double payment of emergency subsidy/financial assistance (FA) to beneficiaries in COVID-19 lockdown translated to a total payment of P8.424 million in excess of the amounts legally authorized.",
+      "recommendations": "We recommended that Management: a. Establish the accountability for and recover the excess payment of emergency subsidy and FA; and b. In coordination with the DSWD, supply the missing beneficiary information necessary in the full validation of the payments of the subject emergency subsidy/FA.",
+      "action_plan": "Management sent letters/notices through registered mails (with registry receipts) to 308 Social Amelioration Program (SAP) beneficiaries",
+      "person_responsible": "",
+      "target_from": "",
+      "target_to": "",
+      "status": "Not Implemented",
+      "reason_for_delay": "",
+      "action_taken": ""
+    },
+    {
+      "reference": "CY 2019 AAR, Observation No. 1, page 63",
+      "observations": "8. The City has not submitted 1,684 disbursement vouchers (DVs) and their supporting documents involving P2.275 billion, thereby limiting the extent of audit, preventing us to establish fully the validity of the underlying transactions, and forfeiting the benefit of, among others, timely detecting errors and deficiencies; identifying areas for improvement; and having input to assessments of accountability and decisions that need to be made. One thousand four hundred thirty-five (1,435) of these unsubmitted DVs in the amount of P2.142 billion pertain to the disbursements from CY 2015 to June 30, 2019 and are the accountabilities of the previous City Administrations.",
+      "recommendations": "We recommended that Management: a. Direct the CTO to: • Produce and submit to the OCAT without further delay all the 288 DVs in Paragraph 1.7 of Observation No. 1; • Submit to the OCAT within the prescribed period all the DVs supporting the Reports of Checks Issued (RCI); and b. Require the OCAT to: • Submit to the City Auditor's Office (CAO) without further delay all the 1,684 DVs specified in Paragraph 1.5 of Observation No. 1; and",
+      "action_plan": "",
+      "person_responsible": "",
+      "target_from": "",
+      "target_to": "",
+      "status": "Not Implemented",
+      "reason_for_delay": "",
+      "action_taken": ""
+    },
+    {
+      "reference": "",
+      "observations": "",
+      "recommendations": "• Henceforth, submit to the CAO within the prescribed period all the DVs supporting the checks issued in the RCI with the list of original DVs still with the CTO, in the proper case, and stop the preparation of a separate schedule of DVs.",
+      "action_plan": "",
+      "person_responsible": "",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    }
+  ],
+  "year": 2024,
+  "doc": "AAPSI",
+  "page": 24,
+  "model": "gemini-3.8-flash"
+}

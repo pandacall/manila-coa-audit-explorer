@@ -1,0 +1,63 @@
+{
+  "seconds": 6.6,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1711,
+    "output_tokens": 761,
+    "thought_tokens": 0
+  },
+  "rows": [
+    {
+      "reference": "AAR 2023 Observation No. 4 Page 90",
+      "observations": "4. Out of 222 Gender and Development (GAD) Programs/Projects/Activities (PPAs), 22 were unimplemented and 84 were not reported in the GAD Accomplishment Report (AR) or have no status contrary to, RA No. 9710 Thus, the City's objective of ensuring awareness and sustaining support for gender and development, women's empowerment and response to gender issues were not fully realized.",
+      "recommendations": "We recommended that Management direct/instruct the GFPS to: 4.12.1 Regularly monitor and evaluate the utilization of the GPB to ensure that PPAs are fully implemented as planned and challenges that cause non-implementation, if any, are identified and addressed;",
+      "action_plan": "",
+      "person_responsible": "Office of the City Mayor",
+      "target_from": "2024",
+      "target_to": "2024",
+      "status": "Ongoing",
+      "reason_for_delay": "",
+      "action_taken": "The GFPS directed the GAD Focal Persons to carry over the unimplemented 2023 PPAs to the 2024 GAD PPAS. As a remedial measure for the unimplemented CAP DEV or Trainings on GAD, the City Personnel Office would be conducting Seminar-Workshop on GAD Mainstreaming on September 16-17,2024 which would be participated by employees/representatives from the 44 Departments. Further, in our 3rd and 4th GAD TWG Meetings we included in the Agenda GAD Planning & Budgeting to empower the newly appointed GAD Focal Persons to"
+    },
+    {
+      "reference": "",
+      "observations": "",
+      "recommendations": "4.12.2. Ensure that only PPAs listed in the approved GPB will be charged against the GAD Fund; and",
+      "action_plan": "",
+      "person_responsible": "Office of the City Mayor",
+      "target_from": "2024",
+      "target_to": "2024",
+      "status": "Ongoing",
+      "reason_for_delay": "",
+      "action_taken": "See above"
+    },
+    {
+      "reference": "",
+      "observations": "",
+      "recommendations": "4.12.3. Comply with the provisions of the JMCs discussed and RA No. 9710 and its IRR.",
+      "action_plan": "",
+      "person_responsible": "Office of the City Mayor",
+      "target_from": "2024",
+      "target_to": "2024",
+      "status": "Ongoing",
+      "reason_for_delay": "",
+      "action_taken": "See above"
+    },
+    {
+      "reference": "AAR 2023 Observation No. 5 Page 93",
+      "observations": "5. A total of P472.416 million withheld for CY 2023 remittances to the BIR, GSIS, Pag-IBIG and PhilHealth have not been remitted by the City contrary to existing rules and regulations.",
+      "recommendations": "5.11. We recommended and Management agreed to ensure prompt and full remittance of all withholding taxes, contributions, premium payments, loan amortization and other amounts due to the BIR, GSIS, Pag-IBIG and PhilHealth pursuant to the above-mentioned regulations.",
+      "action_plan": "",
+      "person_responsible": "OCAT and CTO",
+      "target_from": "2024",
+      "target_to": "2024",
+      "status": "Ongoing",
+      "reason_for_delay": "Issues related to employees details and information (for Clarif items) for GSIS, On the other hand the amount payable to BIR reflects the withholding taxes related to unpaid payable to different suppliers.",
+      "action_taken": "The OCAT in coordination with CTO is continuously remitting the remaining unremitted amount to date."
+    }
+  ],
+  "year": 2023,
+  "doc": "AAPSI",
+  "page": 5,
+  "model": "gemini-3.8-flash"
+}

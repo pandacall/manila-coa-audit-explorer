@@ -1,0 +1,39 @@
+{
+  "seconds": 22.1,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1716,
+    "output_tokens": 696,
+    "thought_tokens": 2994
+  },
+  "rows": [
+    {
+      "reference": "AAR 2024 Observation No. 21 Page 150",
+      "observations": "21. The 2,407 DVs, totaling P132.347 million for CY 2024 have not been forwarded by the OCAT to the Office of the City Auditor, contrary to Sections 7.1.1(a), 7.2.1(a), and 7.3.1 of COA Circular No. 2009-006 dated September 15, 2009, and Section 44 (l-k), Chapter 3, Volume I of the MNGAS for LGUs. Thus, the non-recording of paid transactions resulted in the overstatement of the CIB and AP accounts by P227.498 million, and the validity of the claims could not be ascertained.",
+      "recommendations": "21.8. We recommended and Management agreed to: a. Require the CTO to coordinate with and update the OCAT on the status of these checks for proper recording in the books at year-end; b. Require the OCAT to submit the 3766 DVs and related supporting documents to this Office for review and post-audit, upon payment; and c. Henceforth, ensure strict compliance with the provisions of COA Circular No. 2009-006 and Chapter 3, Volume I of the MNGAS for LGUs relative to the submission of reports.",
+      "action_plan": "The OCAT has partially submitted the DVs leaving a balance of P194.237 million for the 3,404 DVs.",
+      "person_responsible": "OCAT, CTO",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    },
+    {
+      "reference": "AAR 2024 Observation No. 23 Page 157",
+      "observations": "23. The utilization of the Local Council for the Protection of Children (LCPC) fund of P259.910 million was not maximized due to non-implementation of 10 PPAs with an appropriation of P117.591 million. Thus, the objectives of the City Council for the Protection of Children (CCPC) to promote the welfare and protect the rights of children in their jurisdiction were not fully attained, contrary to DILG MC No. 2021-039.",
+      "recommendations": "23.7. We recommended that Management require the CCPC to: a. Revisit the existing planning and monitoring procedures currently in place for LCPC PPAs to determine and improve on weak areas that hinder the efficient implementation of programs/projects to enable the CCPC attain the Council's objective of protecting the rights and welfare of disadvantaged children; and b. Adopt the provisions of the DILG MC Nos. 2021-039 and 2008-126.",
+      "action_plan": "Management is committed in implementing procedures and coordinating with concerned offices to ensure the implementation of the Programs for Children as well as compliance with relevant LCPC guidelines.",
+      "person_responsible": "",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    }
+  ],
+  "year": 2024,
+  "doc": "AAPSI",
+  "page": 21,
+  "model": "gemini-3.8-flash"
+}

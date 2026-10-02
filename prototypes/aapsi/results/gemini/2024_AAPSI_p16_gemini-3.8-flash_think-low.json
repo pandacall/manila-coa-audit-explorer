@@ -1,0 +1,27 @@
+{
+  "seconds": 2.6,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1716,
+    "output_tokens": 198,
+    "thought_tokens": 0
+  },
+  "rows": [
+    {
+      "reference": "",
+      "observations": "",
+      "recommendations": "d. Strengthen coordination among departments, streamline the remittance process, and implement more effective monitoring and reconciliation procedures; e. Provide uniform policy/guidelines to all personnel involved from OCAT, CPO, DPOs, and AAOs on the proper procedures for handling GSIS contributions, loan repayments, and member updates to ensure that all employees are aware of their responsibilities and that there is a consistent approach to managing GSIS-related tasks across departments; and f. Henceforth, strictly comply with Sections 14, 15 and 16 of RA No. 8291 and its RIRR and GSIS Memorandum Circular No. 027, s. 2021, dated May 19, 2021.",
+      "action_plan": "",
+      "person_responsible": "",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    }
+  ],
+  "year": 2024,
+  "doc": "AAPSI",
+  "page": 16,
+  "model": "gemini-3.8-flash"
+}

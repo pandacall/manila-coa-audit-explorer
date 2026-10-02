@@ -1,0 +1,27 @@
+{
+  "seconds": 6.3,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1716,
+    "output_tokens": 624,
+    "thought_tokens": 0
+  },
+  "rows": [
+    {
+      "reference": "AAR 2024 Observation No. 20 Page 150",
+      "observations": "20. The City fell short of its overall revenue projections by P6.783 billion or 36.67 percent primarily due to insufficient periodic monitoring and review of underperforming income accounts, contrary to Section 316 of RA No. 7160 or the LGC of 1991, LBC No. 152 dated August 2, 2023, and Budget Operations Manual (BOM) for LGUs 2023 Edition. This revenue shortfall hindered the City's ability to fulfill its obligations to creditors and implement its PPAS.",
+      "recommendations": "20.13. We recommended and Management agreed that through the LFC: a. Consider revisiting its forecast methodologies to contemplate prior period data, experiences, and relevant events that continue to challenge the City in attaining its revenue targets, and involve Department Heads in the formulation of policy amendments; b. Re-evaluate the 2013 Omnibus Revenue Code of the City, enacted through City Ordinance No. 8331, to explore potential amendments to provisions on tax rates, fees, and related regulations; c. Require the City Treasurer to accomplish the Quarterly Report of Receipts (LBAC Form No. 1), certified as correct by the City Accountant, to keep track of the revenue generation status; d. Engage Department Heads in the conduct of periodic reviews of the Quarterly Report of Receipts to determine whether collection targets are attainable, and to formulate measures that intensify efforts for underperforming income accounts; and e. Ensure compliance with Section 316 of RA No. 7160 or LGC of 1991 and LBC No. 152 dated August 2, 2023, or the BOM for LGUs 2023 Edition on the duties and functions of the LFC.",
+      "action_plan": "The LFC will further review and improve the City's forecast of revenue targets by utilizing past data, experiences and events that have relevant effects to meet the revenue targets. A review of the Omnibus Revenue Code of the City will be undertaken to determine whether or not there is a need to update the aforementioned measure. The LFC will coordinate with the CTO and OCAT regarding the Quarterly Report of Receipts as a measure to improve collection in the areas that may be falling behind. The LFC, to intensify efforts to attain collection targets, revealed that the City stands to collect P9.8 billion from SMC Skyway 3 O&M Corp. and SMC Skyway Stage 3 Corporation, P7 billion RPT; and Meralco for P2.8 billion. Both cases however are subject to litigation as both cases the companies involve questions the RPT assessment imposed.",
+      "person_responsible": "Department heads, CTO, OCAT",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    }
+  ],
+  "year": 2024,
+  "doc": "AAPSI",
+  "page": 20,
+  "model": "gemini-3.8-flash"
+}

@@ -1,0 +1,39 @@
+{
+  "seconds": 5.6,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1716,
+    "output_tokens": 752,
+    "thought_tokens": 0
+  },
+  "rows": [
+    {
+      "reference": "AAR 2024 Observation No. 24 Page 159",
+      "observations": "24. The following challenges in the Implementation of the Ecological Solid Waste Management (ESWM) Act of 2000 or RA No. 9003 continue to burden the City's effective realization of the benefits of said law, to wit: a. Insufficient updating of pertinent ordinances and the SWM Plan to address the evolving conditions in the City; b. Program goals to promote awareness through Information Education Campaign (IEC) for commercial establishments were not accomplished, and targets for growth were not adjusted to consider demographic shifts; c. The Manila City Environment and Natural Resources Office (CENRO) has yet to be established. The aforementioned circumstances have adversely affected the City's enforcement of the ESWM Act of 2000.",
+      "recommendations": "24.24. We recommended that Management: a. Through the DPS and SWM Board, for SWM ordinances and SWM Plans, to: • Fast-track the revision of outdated SWM ordinances and strengthen penalties for non-compliance to align with evolving national policies and current environmental challenges of the City; and • Formulate a mechanism for the regular review and updating of the SWM Plan to ensure compliance with legal requirements and responsiveness to evolving waste management challenges. b. Implement aggressive IEC campaigns to increase public awareness and compliance, and adjust engagement targets to reflect demographic changes. c. Direct the City Council to take the necessary steps to operationalize the Manila CENRO to fulfill its environmental mandate.",
+      "action_plan": "DPS will propose to the City Solid Waste Management Board at least once a year update on the PPAs indicated in the plan as part of its monitoring and evaluation mechanism to form part of the regular updates of the SWM Plan. DPS will formulate a robust IEC strategy that will utilize multiple communication platforms such as social media, digital channels, community engagement, and flyers.",
+      "person_responsible": "DPS",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    },
+    {
+      "reference": "AAR 2024 Observation No. 25 Page 164",
+      "observations": "25. The 5% share of the DPWH in the Building Permit Fees amounting to P23.797 million remained unremitted, as of December 31, 2024, contrary to Section 2 of the DPWH-DILG JMC No. 001, s. 2013. Further, the 15% share of the Office of the Building Official (OBO) amounting to P71.399 million remained unutilized contrary to Section 2 of the said JMC, thereby missing out on improvement opportunities of OBO operations had its share from Building Permit Fees been utilized.",
+      "recommendations": "25.10.We recommended that Management: a. Require the OCAT and CTO to verify and reconcile the amount of 5 percent share due to the DPWH, and remit the same promptly pursuant to the provisions of JMC No. 01, s. 2013; b. Require the OBO to formulate a Program of Work for the utilization of the 15 percent OBO share to further improve the efficiency of its operations and to comply with the provisions of PD No.1096 and its IRR and JMC No. 01.",
+      "action_plan": "",
+      "person_responsible": "OCAT, CTO",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    }
+  ],
+  "year": 2024,
+  "doc": "AAPSI",
+  "page": 22,
+  "model": "gemini-3.8-flash"
+}

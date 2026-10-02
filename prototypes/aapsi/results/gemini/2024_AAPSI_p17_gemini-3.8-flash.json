@@ -1,0 +1,39 @@
+{
+  "seconds": 23.6,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1716,
+    "output_tokens": 769,
+    "thought_tokens": 2731
+  },
+  "rows": [
+    {
+      "reference": "AAR 2024 Observation No. 16 Page 139",
+      "observations": "16. The premium contributions and loan amortizations deducted from employees totaling P34.590 million were not remitted to Pag-IBIG, contrary to Section 3, Rule VII of the IRR of RA No. 9679, thereby exposing the City to possible penalties. Further, one SL account has an abnormal balance of P0.123 million, contrary to Paragraph 27 of IPSAS 1 - Presentation of Financial Statements, which adversely affects the Due to Pag-IBIG account balance.",
+      "recommendations": "16.8.We recommended that Management: a. Remit the P34,589,935.79 premium contributions and loan amortizations withheld from employees upon due validation of the amount; b. Reconcile and draw necessary adjusting entries for the P123,096,14 abnormal balance; and c. Strictly comply with Section 3, Rule VII of the IRR of RA No. 9679 dated July 21, 2009, on the remittances of premium contributions and loan payments.",
+      "action_plan": "The OCAT has promptly communicated the identified issued to the concerned departments for necessary action. They committed to ensure that the remittance will follow upon validation of the amounts due. Likewise, thorough reconciliation of the abnormal balance will be done to identify the cause of the same. They committed to address the issues with urgency. OCAT has drawn JEV#1002504009380 to address abnormal balance as recommended in letter b. The City Personnel Office will meet with the concerned officers to discuss this recommendation. Likewise, the CPO is in the initial stage of devising a detailed and comprehensive database of all city employees' monthly contributions/premiums and loan amortizations deducted from their salaries.",
+      "person_responsible": "OCAT",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    },
+    {
+      "reference": "AAR 2024 Observation No. 17 Page 142",
+      "observations": "17. The balance of Due to PhilHealth account under the GF amounting to P43.517 million could not be ascertained due to: a. Unreconciled/unremitted balance amounting to P29.998 million and delayed remittance for a period of 16 to 787 days during the year;",
+      "recommendations": "18.15. We recommended and the Management agreed to require the OCAT: a. To review all dormant accounts and ensure that copies of MOA, Deeds of Donations and other similar documents, Liquidation Reports, Status of Utilization and other documents to support fund transfers are available to determine if project implementations are in compliance with COA Circular No. 2016-005 and ensure that fund balances, if any, are properly accounted for and disposed of in accordance with Section 6.7 of COA Circular No. 94-013;",
+      "action_plan": "The CTO commented that they have been observing the prescribed remittance procedures which was always based on the approved DV by the OCAT. The OCAT has already initiated a comprehensive reconciliation of the account through coordinating with respective Departments/Offices and the CTO; reviewing and validating the unreconciled/unremitted balance and identifying transactions with delayed remittance; examining the errors and taking corrective actions; and updating and correcting the delayed recording of",
+      "person_responsible": "OCAT",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    }
+  ],
+  "year": 2024,
+  "doc": "AAPSI",
+  "page": 17,
+  "model": "gemini-3.8-flash"
+}

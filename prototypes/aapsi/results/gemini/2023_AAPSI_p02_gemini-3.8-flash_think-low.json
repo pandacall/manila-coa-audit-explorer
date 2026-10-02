@@ -1,0 +1,63 @@
+{
+  "seconds": 5.9,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1711,
+    "output_tokens": 761,
+    "thought_tokens": 0
+  },
+  "rows": [
+    {
+      "reference": "AAR 2023 Observation No. 1 Page 79",
+      "observations": "1. The accuracy of the Cash-in-Bank (CIB) accounts balance as of December 31, 2023, amounting to P9.237 billion could not be established due to: 1) unreconciled variance of P106.634 million between books balances and the result of bank confirmations; and 2) accumulated unadjusted book reconciling items for several years totaling P182.123 million, mainly due to lapses in the preparation and submission of Bank Reconciliation Statements (BRS) contrary to Section 74 of Presidential Decree (PD) No. 1445. Thus, affected the fair presentation of the FS.",
+      "recommendations": "We recommended and Management agreed that the OCAT and the CTO: 1.7.1. Reconcile the variances between the balances per bank confirmations and book balance, and accordingly affect the necessary adjustments to reflect correct ending balances of CIB accounts;",
+      "action_plan": "",
+      "person_responsible": "OCAT and CTO",
+      "target_from": "2023",
+      "target_to": "2024",
+      "status": "Fully Implemented",
+      "reason_for_delay": "",
+      "action_taken": "Submitted the Bank Reconciliation Statements for the CIB Accounts affected"
+    },
+    {
+      "reference": "",
+      "observations": "",
+      "recommendations": "1.7.2. Cause the timely preparation and submission of monthly BRSs for each bank account pursuant to Section 74 of P.D. No. 1445; and",
+      "action_plan": "",
+      "person_responsible": "OCAT and CTO",
+      "target_from": "2023",
+      "target_to": "2024",
+      "status": "Fully Implemented",
+      "reason_for_delay": "",
+      "action_taken": "Submitted the Bank Reconciliation Statements for the CIB Accounts affected"
+    },
+    {
+      "reference": "",
+      "observations": "",
+      "recommendations": "1.7.3. Formulate a document tracking system to establish accountability for records to provide an effective internal control tool for documentation and recording of the City's transactions.",
+      "action_plan": "",
+      "person_responsible": "OCAT and CTO",
+      "target_from": "2023",
+      "target_to": "2024",
+      "status": "Fully Implemented",
+      "reason_for_delay": "",
+      "action_taken": "The OCAT and CTO is currently implementing a document tracking system that will ensure the proper and timely recording of the financial transactions of the City"
+    },
+    {
+      "reference": "AAR 2023 Observation No. 2 Page 82",
+      "observations": "2. The accuracy, completeness, and reliability of the year-end balance of AP amounting to P4.577 billion could not be determined due to net understatement variance of P525.234 million from confirmation results with contractors/suppliers as against balances per books contrary to Paragraph 27 of International Public Sector Accounting Standard 1 (IPSAS). Thus, affecting the fair presentation of the FS.",
+      "recommendations": "We recommended that Management direct: The OCAT to: 2.9.1.1. Identify the causes of variances between recorded accounts payable and the contractors/suppliers' confirmed balances and reconcile the same;",
+      "action_plan": "",
+      "person_responsible": "OCAT",
+      "target_from": "2023",
+      "target_to": "2024",
+      "status": "Fully Implemented",
+      "reason_for_delay": "",
+      "action_taken": "The OCAT already undertaken actions to properly account the payables per Supplier. The amount of the variance is already recorded thru JEV No. 100-24-04-06 dated June 15, 2024"
+    }
+  ],
+  "year": 2023,
+  "doc": "AAPSI",
+  "page": 2,
+  "model": "gemini-3.8-flash"
+}

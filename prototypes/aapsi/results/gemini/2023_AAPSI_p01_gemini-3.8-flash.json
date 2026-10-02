@@ -1,0 +1,14 @@
+{
+  "seconds": 7.3,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1711,
+    "output_tokens": 4,
+    "thought_tokens": 343
+  },
+  "rows": [],
+  "year": 2023,
+  "doc": "AAPSI",
+  "page": 1,
+  "model": "gemini-3.8-flash"
+}

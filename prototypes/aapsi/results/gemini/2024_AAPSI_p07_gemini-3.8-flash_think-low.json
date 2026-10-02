@@ -1,0 +1,39 @@
+{
+  "seconds": 6.9,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1716,
+    "output_tokens": 849,
+    "thought_tokens": 0
+  },
+  "rows": [
+    {
+      "reference": "",
+      "observations": "These are not in accordance with Paragraph 44 of IPSAS 12, Section 114 of the Manual of the New Government Accounting System (MNGAS) for Local Government Units (LGUs), and Section 111 of PD No. 1445.",
+      "recommendations": "d. Standardize the preparation and submission of SSMI; and e. Explore the acquisition of an automated inventory system. c. For hospitals to submit and reconcile their records with CGSO on a regular basis.",
+      "action_plan": "",
+      "person_responsible": "",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    },
+    {
+      "reference": "AAR 2024 Observation No. 7 Page 107",
+      "observations": "7. The audit of the Land account disclosed the following conditions: a. There are 348 land titles in the custody of the CGSO that are not registered under the name of the City, thus raising uncertainties in the ownership or rightful claim for said real properties; b. The Land Transfer Certificate Titles (TCTs) of the City could not be traced to OCAT and CGSO records due to incomplete details in the Report on the Physical Count of Property, Plant and Equipment (RPCPPE) and SL of the Land account; c. The AO in charge of the custody and safekeeping of the TCTs and vault is not covered with fidelity bond; and d. The vault for TCTs is no longer suitable for safekeeping purposes due to flood damage, and wear and tear. These conditions are contrary to Paragraphs 27 of the IPSAS 1, Section 376 of RA No. 7160 or Local Government Code (LGC), and Section 4.4 of Treasury Circular No. 02-2009. Thus, the accuracy, reliability and existence of the land could not be ascertained. Further, the absence of fidelity bond of the AO and the lack of a suitable vault for TCTs exposes said documents to potential loss, misappropriation, and damage due to natural hazards.",
+      "recommendations": "7.16. We recommended and Management agreed and acted upon on the following: a. The OCAT to coordinate with CGSO to initiate the reconciliation of the land account details and to establish a fair presentation of the account in the books; b.The CGSO to: •Gather data to complete land records and update the inventory listing of land titles; •Secure a fidelity bond for the accountable officer in charge of the safekeeping of the land titles; and •Request the assistance of the Legal Department in evaluating and transferring the TCTs under the name of the City; c. The City Budget Office (CBO) to source funds for the procurement of a safety vault and for possible costs of ownership transfer should several properties be deemed as owned by the City. d. Strictly comply with the proper recording of PPE accounts guided by Paragraphs 27 of IPSAS 1, Paragraph 82 of IPSAS 17, Section 125 of the MNGAS, Section 376 of RA No. 7160 and Section 4.4 of Treasury Circular No. 2-2009.",
+      "action_plan": "The OCAT is collaborating with the CGSO to reconcile the account. The CGSO is currently gathering data to establish and maintain an exhaustive, authoritative, and verifiable repository of land assets. Likewise, they have identified a suitable location for the vault and preparatory activities is presently being undertaken such as minor retrofitting and fixture adjustments to ensure readiness upon delivery and installation of the vault. The requisite bond covering the accountable officer is currently on process and has been documented by Special Order dated April 10, 2025. The GCSO will actively and continually engage with the City Legal Office to facilitate transfer transactions and documentation.",
+      "person_responsible": "CBO, Inventory Committee, CGSO, DEPW",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    }
+  ],
+  "year": 2024,
+  "doc": "AAPSI",
+  "page": 7,
+  "model": "gemini-3.8-flash"
+}

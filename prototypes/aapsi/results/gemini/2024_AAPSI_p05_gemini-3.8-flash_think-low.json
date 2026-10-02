@@ -1,0 +1,39 @@
+{
+  "seconds": 6.4,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1716,
+    "output_tokens": 772,
+    "thought_tokens": 0
+  },
+  "rows": [
+    {
+      "reference": "",
+      "observations": "b. No reasonable Allowance for Impairment was provided for RPT and SET Receivables despite the presence of balances that have remained outstanding for more than 10 years totaling P10.889 billion and P5.754 billion for RPT and SET, respectively, which is not in accordance with Paragraph 37 of IPSAS 3 to attain fair presentation as provided by IPSAS 1. These have casted doubt on the accuracy, validity and reliability of the RPT and SET Receivable account balances.",
+      "recommendations": "d. Require the OCAT to conduct regular and periodic verification, analysis, and validation of receivable accounts; and e. Ensure strict adherence to the provisions of Section 37 of IPSAS 3 – Accounting Policies, Changes in Accounting Estimates and Errors in establishing estimates and sufficient proper disclosures to sustain the fair presentation of financial statements under IPSAS 1",
+      "action_plan": "",
+      "person_responsible": "OCAT",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    },
+    {
+      "reference": "AAR 2024 Observation No. 5 Page 95",
+      "observations": "5. The tax collection strategies and remedies for RPT and SET delinquencies provided under pertinent Sections of RA No. 7160 were not optimally utilized by the City, as manifested by the following circumstances: a. 12,680 Notices of Delinquencies were not received by or served to registered owners of RPUs due to non-updating of addresses and other pertinent information in the RPT Assessment Roll (RPTAR) and Tax Declarations (TDs); b. Submission of a certified list of RPT delinquencies to the City Council and posting of Notice of Delinquencies (NOD) were not undertaken by the CTO within City Hall premises and in strategic locations in barangays where the delinquent RPUs are situated; and c. Discrepancies noted between the TDs vis-à-vis th actual status of properties based on the Geographical Information System (GIS) of the CTO.",
+      "recommendations": "a. The DOA to: Conduct periodic tax mapping operations and physical surveys to validate whether all real properties are properly recorded; Fastrack updating of the AR, FAAS, and TDs by assigning additional tax mappers, appraisers, and field personnel; and Coordinate with the Register of Deeds of the City of Manila for the submission of their latest abstract of registry pursuant to Section 209 of RA No. 7160. b. The CTO to: Intensify the operations of its GIS, i.e., to includ other districts of the City, and furnish DOA a copy of the GIS Monitoring Report; Adopt strategies such as issuance of the warrant of levy, public auction, and institution of civil action against delinquent real property taxpayers;",
+      "action_plan": "The DOA has already coordinated with the pertinent offices and bureaus of the City to promptly act on the recommendations. The CTO has been implementing the following measures in order to intensify RPT Collections: 1. Issuance of Notice of Delinquencies to different barangays from all districts which revealed various delinquencies since 2020. 2. The CTO shall issue the corresponding warrant of levy as soon as it has determined the delinquent properties that shall be subjected to auction. 3. CTO shall exert effort to furnish all barangays on the existence of each delinquent properties. 4. The CTO shall also furnish the city council of all notices sent to each barangays and shall post on conspicuous places of all districts all delinquent properties.",
+      "person_responsible": "Department of Assessment (DOA) & CTO",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    }
+  ],
+  "year": 2024,
+  "doc": "AAPSI",
+  "page": 5,
+  "model": "gemini-3.8-flash"
+}

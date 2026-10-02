@@ -1,0 +1,39 @@
+{
+  "seconds": 21.7,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1716,
+    "output_tokens": 706,
+    "thought_tokens": 2349
+  },
+  "rows": [
+    {
+      "reference": "AAR 2024 Observation No. 15 Page 133",
+      "observations": "15. The Due to Government Service Insurance System (GSIS) account balance of P161.416 million as of December 31, 2024, showed deficiencies, as follows: a. Accounting errors resulted in a abnormal balance of P7.290 million in the GSIS SL, contrary to Paragraph 27 of IPSAS 1; and",
+      "recommendations": "15.18. We recommended and Management agreed to: a.Require the DPOs to: • Ensure the timely submission of update information of City employees to GSIS, such as new salary rates, employment status, positions, and other pertinent information to minimize the occurrence of mismatched records; •Promptly address deficiencies noted which cause the mismatch of data, and coordinate/report to the CPO all actions taken and results of such actions regarding the request for updates of employees' information before the GSIS;",
+      "action_plan": "The CPO stated that they are scheduling regular meetings with the DPOs, OCAT, and AAOs to address the root cause and mitigate the deficiencies noted. They are optimistic that the recent decentralisation of 12 Departments and Offices of the City will be a significant factor in resolving the GSIS concerns in the AOM. The OCAT has adjusted in CY 2025 the errors raised in item a. The understatement of P5.446 million is related to initial salary, final salary, salary differentials and special payrolls. These transactions will be recorded once they have been processed by their respective offices. The variance of P85.150 million pertains to employee loans that were not deducted from their payroll.",
+      "person_responsible": "CPO, AAOs, OCAT",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    },
+    {
+      "reference": "",
+      "observations": "b. Unreconciled balances between the amounts recorded in the books and the GSIS billing statements, amounting to P5.446 million for premium contribution and P85.150 million for various service loans availed by city employees resulted from gaps in implementation of procedures and policies, contrary to pertinent provisions of RA No. 8291 or the GSIS Act of 1997 and its Revised Implementing Rules and Regulations (IRR).",
+      "recommendations": "• Regularly reconcile, together with AAOs, the records with the OCAT and CPO to promptly establish the actual amount withheld from employees for immediate recording and remittance and loan amortizations to the GSIS; • Require AAOs to submit to OCAT and CP complete and accurate records of employees with existing loan accounts and mismatched records with the GSIS for monitoring and reconciliation purposes.",
+      "action_plan": "",
+      "person_responsible": "",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    }
+  ],
+  "year": 2024,
+  "doc": "AAPSI",
+  "page": 14,
+  "model": "gemini-3.8-flash"
+}

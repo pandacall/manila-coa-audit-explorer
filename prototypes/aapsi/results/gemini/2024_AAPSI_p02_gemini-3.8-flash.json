@@ -1,0 +1,39 @@
+{
+  "seconds": 16.3,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1716,
+    "output_tokens": 823,
+    "thought_tokens": 1733
+  },
+  "rows": [
+    {
+      "reference": "AAR 2024 Observation No. 1 Page 78",
+      "observations": "The reliability of the reported Cash in Bank - Local Currency, Current Account (CIB - LCCA) account amounting to P8.072 billion is unreliable due to the following: a.Existence of outstanding reconciling items in the Bank Reconciliation Statement (BRS) totaling P155.799 million and P142.181 million for additions and deductions, respectively, which remain unadjusted in the books; b.Existence of variance totaling P96.510 million between the Subsidiary Ledgers (SL) balance of the OCAT and cashbook balance of the City Treasurer's Office (CTO); and P160.925 million between the SL and the confirmed balances from Authorized Government Depository Banks (AGDBs); and c.Existence of bank accounts for expropriated properties that were opened and confirmed by the bank as savings accounts and were recorded as CIB - LCCA under the General Fund (GF) books totaling P145.025 million. The above conditions resulted in the misstatement of affected accounts contrary to Paragraph 27 of International Public Sector Accounting Standard (IPSAS) 1, Item 3.0 of COA Circular No. 96-011 and Section 20 of COA Circular No. 92-382 dated July 3, 1992.",
+      "recommendations": "1.17.We recommended that Management require: a.The CTO to: •Immediately forward to the OCAT the supporting documents for the recording of necessary adjusting entries; •Regularly coordinate with the OCAT to facilitate reconciliation of cashbook balances with the OCAT SLs for CIB accounts; and •Promptly communicate noted discrepancies with the OCAT so adjustments, if any, can be recorded in a timely manner both in the books and BRS. b.The OCAT to: •Ensure that BRS are prepared for all active bank accounts and reconciling items identified in the reports are promptly recorded in the books; and •Ensure that identified reconciling items in the BRS are immediately adjusted in the books to prevent accumulation of unadjusted variances between records of the OCAT, CTO and AGDB balances.",
+      "action_plan": "The CTO committed to furnish the OCAT with the reconciling items reflected in theri cash books for reconciliation of CAD records.",
+      "person_responsible": "Office of the City Accountant (OCAT) & City Treasurer's Office (CTO)",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    },
+    {
+      "reference": "AAR 2024 Observation No. 2 Page 82",
+      "observations": "2.There were deficiencies in the grant and liquidation of cash advances, contrary to COA regulations to wit: a.Cash advances amounting to P355.158 million remained unliquidated as of December 31, 2024, due to the non-submission of liquidation reports by Accountable Officers (AOs), contrary to Section 89 of PD No. 1445 and Sections 5.1.1, 5.1.3, 5.7 and 5.8 of COA Circular No. 97-002;",
+      "recommendations": "2.19.We recommended that Management: a.Direct all concerned AOs to submit the liquidation reports with supporting documents (SDs) for all outstanding CAs by issuing demand letters particularly for due and demandable advances as of December 31, 2024;",
+      "action_plan": "The OCAT committed to implementing improved processes and regular internal audits to prevent the issues raised from recurring in the future",
+      "person_responsible": "Concerned AOs & OCAT",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    }
+  ],
+  "year": 2024,
+  "doc": "AAPSI",
+  "page": 2,
+  "model": "gemini-3.8-flash"
+}

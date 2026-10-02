@@ -1,0 +1,775 @@
+{
+ "text": "OF THE CITY ACCOU\n4\nCITY OF MANILA\nLUNGSOD NG MAYNIL,\nPILIPINAS\nBAGONG PILIPINAS\nOffice of the City Auditor\nManila\nSEP 10 2025\nREPUBLIC OF THE PHILIPPINES\nCITY OF MANILA\nReceived by:\nOFFICE OF THE CITY ACCOUNTANT\nSeptember 10, 2025\nJOSE DENNIS G. ISIP\nSupervising Auditor\nCity Auditor's Office\nManila\nThon\n1154\nTime:\nDear Auditor,\nIn reference to the Commission on Audit (COA) Audit Observations and Recommendations for\nCalendar Year (CY) 2024, we are transmitting herewith the updated Agency Action Plan and\nStatus of Implementation as of August 31, 2025.\nThank you for your cooperation and prompt action.\nVery truly yours,\nJONATHAN R. GALORIO\nAssistant City Accountant\nOfficer-in-Charge\n",
+ "tokens": [
+  {
+   "text": "OF",
+   "x": 0.35077,
+   "y": 0.0711,
+   "confidence": 0.9027
+  },
+  {
+   "text": "THE",
+   "x": 0.36111,
+   "y": 0.06528,
+   "confidence": 0.9742
+  },
+  {
+   "text": "CITY",
+   "x": 0.37973,
+   "y": 0.06284,
+   "confidence": 0.8702
+  },
+  {
+   "text": "ACCOU",
+   "x": 0.40426,
+   "y": 0.0694,
+   "confidence": 0.9348
+  },
+  {
+   "text": "4",
+   "x": 0.35313,
+   "y": 0.08633,
+   "confidence": 0.6287
+  },
+  {
+   "text": "CITY",
+   "x": 0.35461,
+   "y": 0.11574,
+   "confidence": 0.945
+  },
+  {
+   "text": "OF",
+   "x": 0.3719,
+   "y": 0.12167,
+   "confidence": 0.8986
+  },
+  {
+   "text": "MANILA",
+   "x": 0.40012,
+   "y": 0.11807,
+   "confidence": 0.9203
+  },
+  {
+   "text": "LUNGSOD",
+   "x": 0.4802,
+   "y": 0.07427,
+   "confidence": 0.9619
+  },
+  {
+   "text": "NG",
+   "x": 0.50946,
+   "y": 0.06348,
+   "confidence": 0.9808
+  },
+  {
+   "text": "MAYNIL",
+   "x": 0.53428,
+   "y": 0.07226,
+   "confidence": 0.9713
+  },
+  {
+   "text": ",",
+   "x": 0.54462,
+   "y": 0.0821,
+   "confidence": 0.5459
+  },
+  {
+   "text": "PILIPINAS",
+   "x": 0.50724,
+   "y": 0.11934,
+   "confidence": 0.9675
+  },
+  {
+   "text": "BAGONG",
+   "x": 0.60195,
+   "y": 0.12378,
+   "confidence": 0.9834
+  },
+  {
+   "text": "PILIPINAS",
+   "x": 0.65396,
+   "y": 0.12378,
+   "confidence": 0.9913
+  },
+  {
+   "text": "Office",
+   "x": 0.72813,
+   "y": 0.04972,
+   "confidence": 0.989
+  },
+  {
+   "text": "of",
+   "x": 0.77955,
+   "y": 0.04951,
+   "confidence": 0.991
+  },
+  {
+   "text": "the",
+   "x": 0.81058,
+   "y": 0.04951,
+   "confidence": 0.9858
+  },
+  {
+   "text": "City",
+   "x": 0.8552,
+   "y": 0.04951,
+   "confidence": 0.9742
+  },
+  {
+   "text": "Auditor",
+   "x": 0.92139,
+   "y": 0.04951,
+   "confidence": 0.9796
+  },
+  {
+   "text": "Manila",
+   "x": 0.82801,
+   "y": 0.06708,
+   "confidence": 0.9966
+  },
+  {
+   "text": "SEP",
+   "x": 0.78989,
+   "y": 0.10897,
+   "confidence": 0.9103
+  },
+  {
+   "text": "10",
+   "x": 0.82949,
+   "y": 0.10876,
+   "confidence": 0.9784
+  },
+  {
+   "text": "2025",
+   "x": 0.8685,
+   "y": 0.10876,
+   "confidence": 0.9909
+  },
+  {
+   "text": "REPUBLIC",
+   "x": 0.41519,
+   "y": 0.14769,
+   "confidence": 0.9938
+  },
+  {
+   "text": "OF",
+   "x": 0.47843,
+   "y": 0.14769,
+   "confidence": 0.981
+  },
+  {
+   "text": "THE",
+   "x": 0.5133,
+   "y": 0.14769,
+   "confidence": 0.9844
+  },
+  {
+   "text": "PHILIPPINES",
+   "x": 0.59309,
+   "y": 0.14769,
+   "confidence": 0.9931
+  },
+  {
+   "text": "CITY",
+   "x": 0.44888,
+   "y": 0.16356,
+   "confidence": 0.981
+  },
+  {
+   "text": "OF",
+   "x": 0.49232,
+   "y": 0.16356,
+   "confidence": 0.9836
+  },
+  {
+   "text": "MANILA",
+   "x": 0.55349,
+   "y": 0.16356,
+   "confidence": 0.9921
+  },
+  {
+   "text": "Received",
+   "x": 0.71927,
+   "y": 0.16314,
+   "confidence": 0.9922
+  },
+  {
+   "text": "by",
+   "x": 0.75532,
+   "y": 0.16314,
+   "confidence": 0.9928
+  },
+  {
+   "text": ":",
+   "x": 0.76182,
+   "y": 0.16314,
+   "confidence": 0.9761
+  },
+  {
+   "text": "OFFICE",
+   "x": 0.32329,
+   "y": 0.18261,
+   "confidence": 0.9878
+  },
+  {
+   "text": "OF",
+   "x": 0.39982,
+   "y": 0.18282,
+   "confidence": 0.9799
+  },
+  {
+   "text": "THE",
+   "x": 0.45124,
+   "y": 0.18303,
+   "confidence": 0.9883
+  },
+  {
+   "text": "CITY",
+   "x": 0.51832,
+   "y": 0.18345,
+   "confidence": 0.9588
+  },
+  {
+   "text": "ACCOUNTANT",
+   "x": 0.65071,
+   "y": 0.18388,
+   "confidence": 0.9644
+  },
+  {
+   "text": "September",
+   "x": 0.16992,
+   "y": 0.23339,
+   "confidence": 0.9927
+  },
+  {
+   "text": "10",
+   "x": 0.22636,
+   "y": 0.23318,
+   "confidence": 0.9962
+  },
+  {
+   "text": ",",
+   "x": 0.23788,
+   "y": 0.23318,
+   "confidence": 0.9919
+  },
+  {
+   "text": "2025",
+   "x": 0.26448,
+   "y": 0.23318,
+   "confidence": 0.9934
+  },
+  {
+   "text": "JOSE",
+   "x": 0.15426,
+   "y": 0.29771,
+   "confidence": 0.9826
+  },
+  {
+   "text": "DENNIS",
+   "x": 0.22134,
+   "y": 0.29814,
+   "confidence": 0.9868
+  },
+  {
+   "text": "G.",
+   "x": 0.27246,
+   "y": 0.29856,
+   "confidence": 0.9862
+  },
+  {
+   "text": "ISIP",
+   "x": 0.30644,
+   "y": 0.29898,
+   "confidence": 0.9876
+  },
+  {
+   "text": "Supervising",
+   "x": 0.17612,
+   "y": 0.31549,
+   "confidence": 0.988
+  },
+  {
+   "text": "Auditor",
+   "x": 0.2568,
+   "y": 0.31591,
+   "confidence": 0.99
+  },
+  {
+   "text": "City",
+   "x": 0.14657,
+   "y": 0.33178,
+   "confidence": 0.981
+  },
+  {
+   "text": "Auditor's",
+   "x": 0.20213,
+   "y": 0.33178,
+   "confidence": 0.9741
+  },
+  {
+   "text": "Office",
+   "x": 0.2695,
+   "y": 0.33242,
+   "confidence": 0.989
+  },
+  {
+   "text": "Manila",
+   "x": 0.15839,
+   "y": 0.34554,
+   "confidence": 0.9943
+  },
+  {
+   "text": "Thon",
+   "x": 0.79492,
+   "y": 0.13838,
+   "confidence": 0.6911
+  },
+  {
+   "text": "1154",
+   "x": 0.9344,
+   "y": 0.14875,
+   "confidence": 0.7496
+  },
+  {
+   "text": "Time",
+   "x": 0.88002,
+   "y": 0.16208,
+   "confidence": 0.9879
+  },
+  {
+   "text": ":",
+   "x": 0.8945,
+   "y": 0.16208,
+   "confidence": 0.9855
+  },
+  {
+   "text": "Dear",
+   "x": 0.1513,
+   "y": 0.41092,
+   "confidence": 0.9832
+  },
+  {
+   "text": "Auditor",
+   "x": 0.20479,
+   "y": 0.41134,
+   "confidence": 0.9878
+  },
+  {
+   "text": ",",
+   "x": 0.23641,
+   "y": 0.41134,
+   "confidence": 0.9733
+  },
+  {
+   "text": "In",
+   "x": 0.14243,
+   "y": 0.44414,
+   "confidence": 0.9896
+  },
+  {
+   "text": "reference",
+   "x": 0.19149,
+   "y": 0.44414,
+   "confidence": 0.9963
+  },
+  {
+   "text": "to",
+   "x": 0.23936,
+   "y": 0.44414,
+   "confidence": 0.9951
+  },
+  {
+   "text": "the",
+   "x": 0.26359,
+   "y": 0.44414,
+   "confidence": 0.9966
+  },
+  {
+   "text": "Commission",
+   "x": 0.3289,
+   "y": 0.44414,
+   "confidence": 0.996
+  },
+  {
+   "text": "on",
+   "x": 0.39125,
+   "y": 0.44414,
+   "confidence": 0.9927
+  },
+  {
+   "text": "Audit",
+   "x": 0.42553,
+   "y": 0.44414,
+   "confidence": 0.9807
+  },
+  {
+   "text": "(",
+   "x": 0.45508,
+   "y": 0.44414,
+   "confidence": 0.9671
+  },
+  {
+   "text": "COA",
+   "x": 0.47843,
+   "y": 0.44456,
+   "confidence": 0.9855
+  },
+  {
+   "text": ")",
+   "x": 0.50089,
+   "y": 0.44456,
+   "confidence": 0.9645
+  },
+  {
+   "text": "Audit",
+   "x": 0.53191,
+   "y": 0.44456,
+   "confidence": 0.9871
+  },
+  {
+   "text": "Observations",
+   "x": 0.61377,
+   "y": 0.44456,
+   "confidence": 0.9951
+  },
+  {
+   "text": "and",
+   "x": 0.68765,
+   "y": 0.44456,
+   "confidence": 0.9965
+  },
+  {
+   "text": "Recommendations",
+   "x": 0.78428,
+   "y": 0.44477,
+   "confidence": 0.9972
+  },
+  {
+   "text": "for",
+   "x": 0.87766,
+   "y": 0.44499,
+   "confidence": 0.9952
+  },
+  {
+   "text": "Calendar",
+   "x": 0.17465,
+   "y": 0.46001,
+   "confidence": 0.9828
+  },
+  {
+   "text": "Year",
+   "x": 0.23818,
+   "y": 0.46001,
+   "confidence": 0.9831
+  },
+  {
+   "text": "(",
+   "x": 0.26714,
+   "y": 0.46001,
+   "confidence": 0.9747
+  },
+  {
+   "text": "CY",
+   "x": 0.28457,
+   "y": 0.46001,
+   "confidence": 0.9748
+  },
+  {
+   "text": ")",
+   "x": 0.30053,
+   "y": 0.46001,
+   "confidence": 0.9922
+  },
+  {
+   "text": "2024",
+   "x": 0.33038,
+   "y": 0.46001,
+   "confidence": 0.9949
+  },
+  {
+   "text": ",",
+   "x": 0.35195,
+   "y": 0.46001,
+   "confidence": 0.9879
+  },
+  {
+   "text": "we",
+   "x": 0.37264,
+   "y": 0.46001,
+   "confidence": 0.9939
+  },
+  {
+   "text": "are",
+   "x": 0.40248,
+   "y": 0.46001,
+   "confidence": 0.9946
+  },
+  {
+   "text": "transmitting",
+   "x": 0.46631,
+   "y": 0.46001,
+   "confidence": 0.9977
+  },
+  {
+   "text": "herewith",
+   "x": 0.5523,
+   "y": 0.46001,
+   "confidence": 0.9944
+  },
+  {
+   "text": "the",
+   "x": 0.60343,
+   "y": 0.46001,
+   "confidence": 0.9943
+  },
+  {
+   "text": "updated",
+   "x": 0.65248,
+   "y": 0.46001,
+   "confidence": 0.9935
+  },
+  {
+   "text": "Agency",
+   "x": 0.71838,
+   "y": 0.46001,
+   "confidence": 0.993
+  },
+  {
+   "text": "Action",
+   "x": 0.78014,
+   "y": 0.46001,
+   "confidence": 0.9912
+  },
+  {
+   "text": "Plan",
+   "x": 0.83392,
+   "y": 0.46001,
+   "confidence": 0.9888
+  },
+  {
+   "text": "and",
+   "x": 0.875,
+   "y": 0.46001,
+   "confidence": 0.9844
+  },
+  {
+   "text": "Status",
+   "x": 0.15898,
+   "y": 0.47567,
+   "confidence": 0.9814
+  },
+  {
+   "text": "of",
+   "x": 0.20035,
+   "y": 0.47567,
+   "confidence": 0.9823
+  },
+  {
+   "text": "Implementation",
+   "x": 0.27394,
+   "y": 0.47567,
+   "confidence": 0.9932
+  },
+  {
+   "text": "as",
+   "x": 0.35047,
+   "y": 0.47609,
+   "confidence": 0.9911
+  },
+  {
+   "text": "of",
+   "x": 0.37234,
+   "y": 0.47609,
+   "confidence": 0.9793
+  },
+  {
+   "text": "August",
+   "x": 0.40957,
+   "y": 0.47609,
+   "confidence": 0.9844
+  },
+  {
+   "text": "31",
+   "x": 0.45065,
+   "y": 0.47609,
+   "confidence": 0.9887
+  },
+  {
+   "text": ",",
+   "x": 0.46365,
+   "y": 0.47651,
+   "confidence": 0.9793
+  },
+  {
+   "text": "2025",
+   "x": 0.48936,
+   "y": 0.47651,
+   "confidence": 0.9908
+  },
+  {
+   "text": ".",
+   "x": 0.51064,
+   "y": 0.47651,
+   "confidence": 0.9775
+  },
+  {
+   "text": "Thank",
+   "x": 0.16046,
+   "y": 0.50656,
+   "confidence": 0.9879
+  },
+  {
+   "text": "you",
+   "x": 0.20449,
+   "y": 0.50656,
+   "confidence": 0.9895
+  },
+  {
+   "text": "for",
+   "x": 0.23611,
+   "y": 0.50656,
+   "confidence": 0.9879
+  },
+  {
+   "text": "your",
+   "x": 0.26921,
+   "y": 0.50677,
+   "confidence": 0.9927
+  },
+  {
+   "text": "cooperation",
+   "x": 0.33717,
+   "y": 0.50698,
+   "confidence": 0.9966
+  },
+  {
+   "text": "and",
+   "x": 0.40071,
+   "y": 0.50698,
+   "confidence": 0.9925
+  },
+  {
+   "text": "prompt",
+   "x": 0.44681,
+   "y": 0.50741,
+   "confidence": 0.9953
+  },
+  {
+   "text": "action",
+   "x": 0.50236,
+   "y": 0.50741,
+   "confidence": 0.9935
+  },
+  {
+   "text": ".",
+   "x": 0.52719,
+   "y": 0.50741,
+   "confidence": 0.9689
+  },
+  {
+   "text": "Very",
+   "x": 0.15366,
+   "y": 0.56898,
+   "confidence": 0.9839
+  },
+  {
+   "text": "truly",
+   "x": 0.19622,
+   "y": 0.56898,
+   "confidence": 0.9891
+  },
+  {
+   "text": "yours",
+   "x": 0.24054,
+   "y": 0.56919,
+   "confidence": 0.9938
+  },
+  {
+   "text": ",",
+   "x": 0.26478,
+   "y": 0.5694,
+   "confidence": 0.9818
+  },
+  {
+   "text": "JONATHAN",
+   "x": 0.19326,
+   "y": 0.63542,
+   "confidence": 0.9697
+  },
+  {
+   "text": "R.",
+   "x": 0.263,
+   "y": 0.63521,
+   "confidence": 0.9647
+  },
+  {
+   "text": "GALORIO",
+   "x": 0.32654,
+   "y": 0.63521,
+   "confidence": 0.9503
+  },
+  {
+   "text": "Assistant",
+   "x": 0.16283,
+   "y": 0.65912,
+   "confidence": 0.9581
+  },
+  {
+   "text": "City",
+   "x": 0.23257,
+   "y": 0.65891,
+   "confidence": 0.9861
+  },
+  {
+   "text": "Accountant",
+   "x": 0.29876,
+   "y": 0.65891,
+   "confidence": 0.9754
+  },
+  {
+   "text": "Officer",
+   "x": 0.1646,
+   "y": 0.67266,
+   "confidence": 0.9685
+  },
+  {
+   "text": "-",
+   "x": 0.19681,
+   "y": 0.67245,
+   "confidence": 0.9674
+  },
+  {
+   "text": "in",
+   "x": 0.20774,
+   "y": 0.67245,
+   "confidence": 0.9723
+  },
+  {
+   "text": "-",
+   "x": 0.2172,
+   "y": 0.67245,
+   "confidence": 0.9593
+  },
+  {
+   "text": "Charge",
+   "x": 0.25296,
+   "y": 0.67245,
+   "confidence": 0.9861
+  }
+ ],
+ "dimension": {
+  "width": 1692.0,
+  "height": 2363.0
+ },
+ "detected_languages": [
+  "en",
+  "fil",
+  "yo"
+ ],
+ "image_quality": 0.9877320528030396,
+ "tables_found": 0,
+ "year": 2024,
+ "doc": "AAPSI",
+ "page": 1
+}

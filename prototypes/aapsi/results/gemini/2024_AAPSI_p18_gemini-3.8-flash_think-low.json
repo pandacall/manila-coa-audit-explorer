@@ -1,0 +1,39 @@
+{
+  "seconds": 5.1,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1716,
+    "output_tokens": 585,
+    "thought_tokens": 0
+  },
+  "rows": [
+    {
+      "reference": "",
+      "observations": "b. Errors in recording transactions in the SLs amounting to P7.513 million; and c. Delay in the recording of remittances in the books totaling P25.571 million. Thus, the accuracy and fairness of the Due to PhilHealth account cannot be ascertained. Likewise, the delayed remittances may expose the City to liability in paying the interest and penalties prescribed by PhilHealth and other penalties as provided by the IRR of the National Health Insurance Act of 2013.",
+      "recommendations": "b. Together with implementing offices, ensure that MOAs and Deeds of Donation or other similar documents are duly safeguarded in support of transaction recorded in the books; c. In case of unavailability of MOAs, Deeds of Donation or other similar documents, immediately coordinate with corresponding NGA grantors/donors to obtain copies thereof; and c. Henceforth, ensure that fund transfers and its corresponding MOAs/TAs are strictly monitored",
+      "action_plan": "remittance to reflect the accurate and timely entries in the books. They committed to resolve the issues raised promptly to prevent recurrence.",
+      "person_responsible": "",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    },
+    {
+      "reference": "AAR 2024 Observation No. 18 Page 142",
+      "observations": "18. The determination of whether intended projects were implemented in compliance with Section 6.7 of COA Circular No. 94-013 and COA Circular No. 2012-001, could not be performed due to the following: a. Fund transfers from various NGAs aged more than five years totaling P97.852 million remained unliquidated due to the absence of supporting documents and reports to establish whether intended projects were implemented or not; and",
+      "recommendations": "18.15. We recommended and the Management agreed to require the OCAT: a. To review all dormant accounts and ensure that coples of MOA, Deeds of Donations and other similar documents, Liquidation Reports, Status of Utilization and other documents to support fund transfers are available to determine if project implementations are in compliance with COA Circular No. 2016-005 and ensure that fund balances, if any, are properly accounted for and disposed of in accordance with Section 6.7 of COA Circular No. 94-013;",
+      "action_plan": "The OCAT is committed and actively working on determining the relevant basis for the utilization of these fund transfers. Additionally, they committed to thoroughly reviewing all dormant accounts and will ensure that necessary documentations are made available prior to implementation.",
+      "person_responsible": "OCAT",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    }
+  ],
+  "year": 2024,
+  "doc": "AAPSI",
+  "page": 18,
+  "model": "gemini-3.8-flash"
+}

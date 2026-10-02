@@ -1,0 +1,2996 @@
+{
+ "text": "Reference\nAAR 2023\nAudit Observations\nAudit Recommendations\nWe recommended and Management agreed\nto:\n6. The City was unable to identify and\nObservation No. 6 appropriate various PPAs for LCCAP in CY 2023,\nPage 95\nwhich is not Inconsonance with Section 14 of\nRepublic Act (RA) No. 9729, otherwise known as, 6.11.1. Promptly create the City's ICCAP Core\nthe Climate Change Act of 2009, as amended\nTeam in accordance with Pparagraph. 3.1.1\nof DILG-MC No. 2014-135 and Section. 7 of\nthe City's LCCAP to facilitate the proper\nplanning, prioritization, funding,\nImplementation and monitoring/assessment\nof proposed climate change PPAs; and\n6.11.2. Ensure that approved climate change\nPPAs are aligned with the City's LCCAP and\nfunded from the City's IRA (now NTA) In\naccordance with Section. 14 of RA No. 9729.\nAGENCY ACTION PLAN\nPerson/Dept.\nTarget Implementation Date\nAction Plan\nStatus of\nImplementation\nResponsible\nFrom\nTo\nOffice of the City\nMayor\nOngoing\nOffice of the City\nMayor\nOngoing\nCY 2022 AAR,\n7. The City has not remitted P393.564 million\nObservation No. 6, representing the amounts withheld as of\nPage 81\nDecember 31, 2022 for the accounts of the BIR,\nGSIS, Pag-IBIG and PhilHealth, contrary to the\nappertaining legal prescriptions.\nWe relterated our recommendation that\nManagement direct the OCAT and CTO to\nremit the P393.564 million to the BIR, GSIS,\nPag-IBIG and PhilHealth without further\ndelay.\nOCAT and CТО\nOngoing\nCY 2021 AAR,\n8. Seven hundred twenty-three (723) cases of\nObservatlon No. 4, double payment of emergency subsidy/financial\nPage 83\nassistance (FA) to beneficiarles In COVID-19\nlockdown translated to a total payment of\nP8.424 million In excess of the amounts legally\nauthorized,\nWe recommended that Management:\na. Establish the accountability for and recover\nthe excess payment of emergency subsidy\nand FA; and\nb. In coordination with the DSWD, supply the\nmissing beneficiary information necessary In\nthe full validation of the payments of the\nsubject emergency subsidy/FA.\nOffice of the Mayor/\nManila Department\nof Social Welfare/\nCity Legal Office\nOffice of the Mayor/\nManila Department\nof Social Welfare\nOngoing\nOngoing\nReason for Partial/Delay/\nNon-Implementation, if\napplicable\nThe management Is\ncurrently in the process of\ncreating the Core Team.\nThe necessary documents\nwill be submitted to COA\nonce finalized and\napproved.\nAction Taken/Action to\nbe Taken\nThe OCAT In\ncoordination with CTO\nIs continuously\nremitting the remaining\nunremitted amount to\nIssues related to\nemployees detalls and\nInformation (for Clarif\nItems) for GSIS. On the\nother hand the amount\npayable to BIR reflects the date.\nwithholding taxes related\nto unpald payable to\ndifferent suppliers.\n",
+ "tokens": [
+  {
+   "text": "Reference",
+   "x": 0.09758,
+   "y": 0.15472,
+   "confidence": 0.9955
+  },
+  {
+   "text": "AAR",
+   "x": 0.08857,
+   "y": 0.18117,
+   "confidence": 0.982
+  },
+  {
+   "text": "2023",
+   "x": 0.10462,
+   "y": 0.18117,
+   "confidence": 0.9906
+  },
+  {
+   "text": "Audit",
+   "x": 0.18945,
+   "y": 0.15472,
+   "confidence": 0.9908
+  },
+  {
+   "text": "Observations",
+   "x": 0.21626,
+   "y": 0.15472,
+   "confidence": 0.9916
+  },
+  {
+   "text": "Audit",
+   "x": 0.32659,
+   "y": 0.15444,
+   "confidence": 0.8675
+  },
+  {
+   "text": "Recommendations",
+   "x": 0.36374,
+   "y": 0.15415,
+   "confidence": 0.9599
+  },
+  {
+   "text": "We",
+   "x": 0.29099,
+   "y": 0.18146,
+   "confidence": 0.9818
+  },
+  {
+   "text": "recommended",
+   "x": 0.31978,
+   "y": 0.18117,
+   "confidence": 0.9943
+  },
+  {
+   "text": "and",
+   "x": 0.34945,
+   "y": 0.18117,
+   "confidence": 0.9925
+  },
+  {
+   "text": "Management",
+   "x": 0.37692,
+   "y": 0.18117,
+   "confidence": 0.9946
+  },
+  {
+   "text": "agreed",
+   "x": 0.41011,
+   "y": 0.18117,
+   "confidence": 0.9933
+  },
+  {
+   "text": "to",
+   "x": 0.28901,
+   "y": 0.19454,
+   "confidence": 0.9855
+  },
+  {
+   "text": ":",
+   "x": 0.29275,
+   "y": 0.19454,
+   "confidence": 0.9781
+  },
+  {
+   "text": "6.",
+   "x": 0.13429,
+   "y": 0.18174,
+   "confidence": 0.9726
+  },
+  {
+   "text": "The",
+   "x": 0.14527,
+   "y": 0.18146,
+   "confidence": 0.986
+  },
+  {
+   "text": "City",
+   "x": 0.15868,
+   "y": 0.18146,
+   "confidence": 0.9881
+  },
+  {
+   "text": "was",
+   "x": 0.17187,
+   "y": 0.18146,
+   "confidence": 0.9884
+  },
+  {
+   "text": "unable",
+   "x": 0.19011,
+   "y": 0.18146,
+   "confidence": 0.993
+  },
+  {
+   "text": "to",
+   "x": 0.20549,
+   "y": 0.18146,
+   "confidence": 0.988
+  },
+  {
+   "text": "identify",
+   "x": 0.22198,
+   "y": 0.18146,
+   "confidence": 0.9486
+  },
+  {
+   "text": "and",
+   "x": 0.24088,
+   "y": 0.18146,
+   "confidence": 0.9889
+  },
+  {
+   "text": "Observation",
+   "x": 0.08769,
+   "y": 0.19511,
+   "confidence": 0.9353
+  },
+  {
+   "text": "No.",
+   "x": 0.11407,
+   "y": 0.19511,
+   "confidence": 0.7629
+  },
+  {
+   "text": "6",
+   "x": 0.1233,
+   "y": 0.19511,
+   "confidence": 0.98
+  },
+  {
+   "text": "appropriate",
+   "x": 0.15011,
+   "y": 0.19511,
+   "confidence": 0.9886
+  },
+  {
+   "text": "various",
+   "x": 0.1811,
+   "y": 0.19511,
+   "confidence": 0.9152
+  },
+  {
+   "text": "PPAs",
+   "x": 0.20132,
+   "y": 0.19511,
+   "confidence": 0.9795
+  },
+  {
+   "text": "for",
+   "x": 0.21538,
+   "y": 0.19511,
+   "confidence": 0.9866
+  },
+  {
+   "text": "LCCAP",
+   "x": 0.23077,
+   "y": 0.19511,
+   "confidence": 0.985
+  },
+  {
+   "text": "in",
+   "x": 0.24505,
+   "y": 0.19511,
+   "confidence": 0.9698
+  },
+  {
+   "text": "CY",
+   "x": 0.25341,
+   "y": 0.19511,
+   "confidence": 0.9663
+  },
+  {
+   "text": "2023",
+   "x": 0.26615,
+   "y": 0.19511,
+   "confidence": 0.9942
+  },
+  {
+   "text": ",",
+   "x": 0.27473,
+   "y": 0.19511,
+   "confidence": 0.9879
+  },
+  {
+   "text": "Page",
+   "x": 0.09538,
+   "y": 0.20848,
+   "confidence": 0.9854
+  },
+  {
+   "text": "95",
+   "x": 0.10484,
+   "y": 0.20848,
+   "confidence": 0.9936
+  },
+  {
+   "text": "which",
+   "x": 0.14022,
+   "y": 0.20705,
+   "confidence": 0.9826
+  },
+  {
+   "text": "is",
+   "x": 0.15429,
+   "y": 0.20677,
+   "confidence": 0.9875
+  },
+  {
+   "text": "not",
+   "x": 0.1633,
+   "y": 0.20677,
+   "confidence": 0.995
+  },
+  {
+   "text": "Inconsonance",
+   "x": 0.19121,
+   "y": 0.20677,
+   "confidence": 0.9873
+  },
+  {
+   "text": "with",
+   "x": 0.22022,
+   "y": 0.20677,
+   "confidence": 0.9894
+  },
+  {
+   "text": "Section",
+   "x": 0.23956,
+   "y": 0.20677,
+   "confidence": 0.9269
+  },
+  {
+   "text": "14",
+   "x": 0.25626,
+   "y": 0.20677,
+   "confidence": 0.9801
+  },
+  {
+   "text": "of",
+   "x": 0.26505,
+   "y": 0.20677,
+   "confidence": 0.9732
+  },
+  {
+   "text": "Republic",
+   "x": 0.14462,
+   "y": 0.2227,
+   "confidence": 0.9842
+  },
+  {
+   "text": "Act",
+   "x": 0.16418,
+   "y": 0.2227,
+   "confidence": 0.9764
+  },
+  {
+   "text": "(",
+   "x": 0.17231,
+   "y": 0.2227,
+   "confidence": 0.9875
+  },
+  {
+   "text": "RA",
+   "x": 0.17846,
+   "y": 0.2227,
+   "confidence": 0.9857
+  },
+  {
+   "text": ")",
+   "x": 0.18352,
+   "y": 0.2227,
+   "confidence": 0.977
+  },
+  {
+   "text": "No.",
+   "x": 0.19099,
+   "y": 0.2227,
+   "confidence": 0.9545
+  },
+  {
+   "text": "9729",
+   "x": 0.20549,
+   "y": 0.2227,
+   "confidence": 0.9628
+  },
+  {
+   "text": ",",
+   "x": 0.21429,
+   "y": 0.2227,
+   "confidence": 0.981
+  },
+  {
+   "text": "otherwise",
+   "x": 0.23231,
+   "y": 0.2227,
+   "confidence": 0.9894
+  },
+  {
+   "text": "known",
+   "x": 0.25956,
+   "y": 0.2227,
+   "confidence": 0.7122
+  },
+  {
+   "text": "as",
+   "x": 0.27495,
+   "y": 0.2227,
+   "confidence": 0.9775
+  },
+  {
+   "text": ",",
+   "x": 0.28,
+   "y": 0.2227,
+   "confidence": 0.9279
+  },
+  {
+   "text": "6.11.1",
+   "x": 0.29429,
+   "y": 0.2227,
+   "confidence": 0.7489
+  },
+  {
+   "text": ".",
+   "x": 0.30462,
+   "y": 0.2227,
+   "confidence": 0.8099
+  },
+  {
+   "text": "Promptly",
+   "x": 0.32242,
+   "y": 0.2227,
+   "confidence": 0.9828
+  },
+  {
+   "text": "create",
+   "x": 0.34747,
+   "y": 0.2227,
+   "confidence": 0.9454
+  },
+  {
+   "text": "the",
+   "x": 0.36374,
+   "y": 0.2227,
+   "confidence": 0.9841
+  },
+  {
+   "text": "City's",
+   "x": 0.3789,
+   "y": 0.2227,
+   "confidence": 0.9506
+  },
+  {
+   "text": "ICCAP",
+   "x": 0.39824,
+   "y": 0.2227,
+   "confidence": 0.8344
+  },
+  {
+   "text": "Core",
+   "x": 0.41736,
+   "y": 0.2227,
+   "confidence": 0.9671
+  },
+  {
+   "text": "the",
+   "x": 0.13648,
+   "y": 0.23521,
+   "confidence": 0.9841
+  },
+  {
+   "text": "Climate",
+   "x": 0.15516,
+   "y": 0.23521,
+   "confidence": 0.9871
+  },
+  {
+   "text": "Change",
+   "x": 0.18,
+   "y": 0.23521,
+   "confidence": 0.9873
+  },
+  {
+   "text": "Act",
+   "x": 0.19736,
+   "y": 0.23521,
+   "confidence": 0.9435
+  },
+  {
+   "text": "of",
+   "x": 0.20835,
+   "y": 0.23521,
+   "confidence": 0.9652
+  },
+  {
+   "text": "2009",
+   "x": 0.22066,
+   "y": 0.23521,
+   "confidence": 0.9862
+  },
+  {
+   "text": ",",
+   "x": 0.22879,
+   "y": 0.23521,
+   "confidence": 0.9763
+  },
+  {
+   "text": "as",
+   "x": 0.23473,
+   "y": 0.23521,
+   "confidence": 0.9687
+  },
+  {
+   "text": "amended",
+   "x": 0.25407,
+   "y": 0.23521,
+   "confidence": 0.9562
+  },
+  {
+   "text": "Team",
+   "x": 0.29297,
+   "y": 0.23521,
+   "confidence": 0.9634
+  },
+  {
+   "text": "in",
+   "x": 0.30615,
+   "y": 0.23521,
+   "confidence": 0.7291
+  },
+  {
+   "text": "accordance",
+   "x": 0.32835,
+   "y": 0.23521,
+   "confidence": 0.9917
+  },
+  {
+   "text": "with",
+   "x": 0.35363,
+   "y": 0.23521,
+   "confidence": 0.9858
+  },
+  {
+   "text": "Pparagraph",
+   "x": 0.37978,
+   "y": 0.23521,
+   "confidence": 0.9668
+  },
+  {
+   "text": ".",
+   "x": 0.39868,
+   "y": 0.23521,
+   "confidence": 0.5401
+  },
+  {
+   "text": "3.1.1",
+   "x": 0.40857,
+   "y": 0.23521,
+   "confidence": 0.9758
+  },
+  {
+   "text": "of",
+   "x": 0.29055,
+   "y": 0.24716,
+   "confidence": 0.9567
+  },
+  {
+   "text": "DILG",
+   "x": 0.3,
+   "y": 0.24716,
+   "confidence": 0.9851
+  },
+  {
+   "text": "-",
+   "x": 0.30857,
+   "y": 0.24716,
+   "confidence": 0.9849
+  },
+  {
+   "text": "MC",
+   "x": 0.31495,
+   "y": 0.24716,
+   "confidence": 0.9843
+  },
+  {
+   "text": "No.",
+   "x": 0.32725,
+   "y": 0.24716,
+   "confidence": 0.9558
+  },
+  {
+   "text": "2014-135",
+   "x": 0.34857,
+   "y": 0.24716,
+   "confidence": 0.9444
+  },
+  {
+   "text": "and",
+   "x": 0.36967,
+   "y": 0.24716,
+   "confidence": 0.9856
+  },
+  {
+   "text": "Section",
+   "x": 0.38879,
+   "y": 0.24716,
+   "confidence": 0.9758
+  },
+  {
+   "text": ".",
+   "x": 0.4011,
+   "y": 0.24716,
+   "confidence": 0.9613
+  },
+  {
+   "text": "7",
+   "x": 0.40549,
+   "y": 0.24716,
+   "confidence": 0.9831
+  },
+  {
+   "text": "of",
+   "x": 0.41253,
+   "y": 0.24716,
+   "confidence": 0.9801
+  },
+  {
+   "text": "the",
+   "x": 0.29099,
+   "y": 0.26109,
+   "confidence": 0.9766
+  },
+  {
+   "text": "City's",
+   "x": 0.30571,
+   "y": 0.26109,
+   "confidence": 0.8861
+  },
+  {
+   "text": "LCCAP",
+   "x": 0.3244,
+   "y": 0.26109,
+   "confidence": 0.9837
+  },
+  {
+   "text": "to",
+   "x": 0.34,
+   "y": 0.26109,
+   "confidence": 0.9888
+  },
+  {
+   "text": "facilitate",
+   "x": 0.3578,
+   "y": 0.26109,
+   "confidence": 0.9466
+  },
+  {
+   "text": "the",
+   "x": 0.37758,
+   "y": 0.26109,
+   "confidence": 0.9862
+  },
+  {
+   "text": "proper",
+   "x": 0.39495,
+   "y": 0.26109,
+   "confidence": 0.9867
+  },
+  {
+   "text": "planning",
+   "x": 0.29692,
+   "y": 0.27389,
+   "confidence": 0.9769
+  },
+  {
+   "text": ",",
+   "x": 0.31121,
+   "y": 0.27361,
+   "confidence": 0.9742
+  },
+  {
+   "text": "prioritization",
+   "x": 0.33319,
+   "y": 0.27361,
+   "confidence": 0.9783
+  },
+  {
+   "text": ",",
+   "x": 0.35385,
+   "y": 0.27361,
+   "confidence": 0.9848
+  },
+  {
+   "text": "funding",
+   "x": 0.36835,
+   "y": 0.27361,
+   "confidence": 0.9928
+  },
+  {
+   "text": ",",
+   "x": 0.38088,
+   "y": 0.27361,
+   "confidence": 0.9762
+  },
+  {
+   "text": "Implementation",
+   "x": 0.30879,
+   "y": 0.28669,
+   "confidence": 0.9682
+  },
+  {
+   "text": "and",
+   "x": 0.3411,
+   "y": 0.28669,
+   "confidence": 0.9758
+  },
+  {
+   "text": "monitoring",
+   "x": 0.36505,
+   "y": 0.28669,
+   "confidence": 0.953
+  },
+  {
+   "text": "/",
+   "x": 0.3833,
+   "y": 0.28669,
+   "confidence": 0.9901
+  },
+  {
+   "text": "assessment",
+   "x": 0.40286,
+   "y": 0.28669,
+   "confidence": 0.9939
+  },
+  {
+   "text": "of",
+   "x": 0.28857,
+   "y": 0.30091,
+   "confidence": 0.983
+  },
+  {
+   "text": "proposed",
+   "x": 0.30615,
+   "y": 0.30091,
+   "confidence": 0.9927
+  },
+  {
+   "text": "climate",
+   "x": 0.33363,
+   "y": 0.30091,
+   "confidence": 0.9864
+  },
+  {
+   "text": "change",
+   "x": 0.3578,
+   "y": 0.30091,
+   "confidence": 0.9891
+  },
+  {
+   "text": "PPAs",
+   "x": 0.37824,
+   "y": 0.30091,
+   "confidence": 0.981
+  },
+  {
+   "text": ";",
+   "x": 0.38681,
+   "y": 0.30091,
+   "confidence": 0.9475
+  },
+  {
+   "text": "and",
+   "x": 0.39495,
+   "y": 0.30091,
+   "confidence": 0.9867
+  },
+  {
+   "text": "6.11.2",
+   "x": 0.29341,
+   "y": 0.33959,
+   "confidence": 0.9785
+  },
+  {
+   "text": ".",
+   "x": 0.3033,
+   "y": 0.33931,
+   "confidence": 0.9793
+  },
+  {
+   "text": "Ensure",
+   "x": 0.31648,
+   "y": 0.33931,
+   "confidence": 0.9906
+  },
+  {
+   "text": "that",
+   "x": 0.33495,
+   "y": 0.33931,
+   "confidence": 0.9886
+  },
+  {
+   "text": "approved",
+   "x": 0.35736,
+   "y": 0.33931,
+   "confidence": 0.9936
+  },
+  {
+   "text": "climate",
+   "x": 0.38505,
+   "y": 0.33931,
+   "confidence": 0.9876
+  },
+  {
+   "text": "change",
+   "x": 0.40879,
+   "y": 0.33931,
+   "confidence": 0.9956
+  },
+  {
+   "text": "PPAs",
+   "x": 0.29297,
+   "y": 0.35296,
+   "confidence": 0.9711
+  },
+  {
+   "text": "are",
+   "x": 0.30703,
+   "y": 0.35267,
+   "confidence": 0.9887
+  },
+  {
+   "text": "aligned",
+   "x": 0.32264,
+   "y": 0.35267,
+   "confidence": 0.992
+  },
+  {
+   "text": "with",
+   "x": 0.34264,
+   "y": 0.35267,
+   "confidence": 0.9015
+  },
+  {
+   "text": "the",
+   "x": 0.35604,
+   "y": 0.35267,
+   "confidence": 0.99
+  },
+  {
+   "text": "City's",
+   "x": 0.37099,
+   "y": 0.35267,
+   "confidence": 0.8965
+  },
+  {
+   "text": "LCCAP",
+   "x": 0.39099,
+   "y": 0.35267,
+   "confidence": 0.9873
+  },
+  {
+   "text": "and",
+   "x": 0.40769,
+   "y": 0.35267,
+   "confidence": 0.9841
+  },
+  {
+   "text": "funded",
+   "x": 0.29451,
+   "y": 0.36661,
+   "confidence": 0.9877
+  },
+  {
+   "text": "from",
+   "x": 0.31473,
+   "y": 0.36661,
+   "confidence": 0.9896
+  },
+  {
+   "text": "the",
+   "x": 0.32857,
+   "y": 0.36661,
+   "confidence": 0.9893
+  },
+  {
+   "text": "City's",
+   "x": 0.34374,
+   "y": 0.36661,
+   "confidence": 0.9682
+  },
+  {
+   "text": "IRA",
+   "x": 0.35846,
+   "y": 0.36661,
+   "confidence": 0.9867
+  },
+  {
+   "text": "(",
+   "x": 0.36637,
+   "y": 0.36661,
+   "confidence": 0.9775
+  },
+  {
+   "text": "now",
+   "x": 0.37495,
+   "y": 0.36661,
+   "confidence": 0.9827
+  },
+  {
+   "text": "NTA",
+   "x": 0.38901,
+   "y": 0.36661,
+   "confidence": 0.9824
+  },
+  {
+   "text": ")",
+   "x": 0.39648,
+   "y": 0.36661,
+   "confidence": 0.9824
+  },
+  {
+   "text": "In",
+   "x": 0.4022,
+   "y": 0.36661,
+   "confidence": 0.9872
+  },
+  {
+   "text": "accordance",
+   "x": 0.30088,
+   "y": 0.37884,
+   "confidence": 0.9906
+  },
+  {
+   "text": "with",
+   "x": 0.32637,
+   "y": 0.37884,
+   "confidence": 0.8534
+  },
+  {
+   "text": "Section",
+   "x": 0.34659,
+   "y": 0.37884,
+   "confidence": 0.9874
+  },
+  {
+   "text": ".",
+   "x": 0.3589,
+   "y": 0.37884,
+   "confidence": 0.9642
+  },
+  {
+   "text": "14",
+   "x": 0.36527,
+   "y": 0.37884,
+   "confidence": 0.9759
+  },
+  {
+   "text": "of",
+   "x": 0.37385,
+   "y": 0.37884,
+   "confidence": 0.97
+  },
+  {
+   "text": "RA",
+   "x": 0.38286,
+   "y": 0.37884,
+   "confidence": 0.9895
+  },
+  {
+   "text": "No.",
+   "x": 0.39385,
+   "y": 0.37884,
+   "confidence": 0.9627
+  },
+  {
+   "text": "9729",
+   "x": 0.40769,
+   "y": 0.37884,
+   "confidence": 0.9917
+  },
+  {
+   "text": ".",
+   "x": 0.41692,
+   "y": 0.37884,
+   "confidence": 0.9654
+  },
+  {
+   "text": "AGENCY",
+   "x": 0.5233,
+   "y": 0.14306,
+   "confidence": 0.9871
+  },
+  {
+   "text": "ACTION",
+   "x": 0.54769,
+   "y": 0.14278,
+   "confidence": 0.9888
+  },
+  {
+   "text": "PLAN",
+   "x": 0.56835,
+   "y": 0.14278,
+   "confidence": 0.9897
+  },
+  {
+   "text": "Person",
+   "x": 0.52132,
+   "y": 0.15444,
+   "confidence": 0.9864
+  },
+  {
+   "text": "/",
+   "x": 0.53319,
+   "y": 0.15415,
+   "confidence": 0.9783
+  },
+  {
+   "text": "Dept",
+   "x": 0.54176,
+   "y": 0.15415,
+   "confidence": 0.9883
+  },
+  {
+   "text": ".",
+   "x": 0.55011,
+   "y": 0.15415,
+   "confidence": 0.9715
+  },
+  {
+   "text": "Target",
+   "x": 0.5822,
+   "y": 0.15472,
+   "confidence": 0.991
+  },
+  {
+   "text": "Implementation",
+   "x": 0.61626,
+   "y": 0.15444,
+   "confidence": 0.9543
+  },
+  {
+   "text": "Date",
+   "x": 0.64769,
+   "y": 0.15444,
+   "confidence": 0.9887
+  },
+  {
+   "text": "Action",
+   "x": 0.45516,
+   "y": 0.16041,
+   "confidence": 0.882
+  },
+  {
+   "text": "Plan",
+   "x": 0.47253,
+   "y": 0.16041,
+   "confidence": 0.9895
+  },
+  {
+   "text": "Status",
+   "x": 0.68637,
+   "y": 0.14733,
+   "confidence": 0.9867
+  },
+  {
+   "text": "of",
+   "x": 0.70022,
+   "y": 0.14704,
+   "confidence": 0.9798
+  },
+  {
+   "text": "Implementation",
+   "x": 0.68989,
+   "y": 0.15984,
+   "confidence": 0.9913
+  },
+  {
+   "text": "Responsible",
+   "x": 0.53143,
+   "y": 0.16667,
+   "confidence": 0.9899
+  },
+  {
+   "text": "From",
+   "x": 0.58923,
+   "y": 0.16667,
+   "confidence": 0.9856
+  },
+  {
+   "text": "To",
+   "x": 0.63802,
+   "y": 0.1661,
+   "confidence": 0.909
+  },
+  {
+   "text": "Office",
+   "x": 0.50835,
+   "y": 0.18203,
+   "confidence": 0.9864
+  },
+  {
+   "text": "of",
+   "x": 0.52198,
+   "y": 0.18203,
+   "confidence": 0.98
+  },
+  {
+   "text": "the",
+   "x": 0.53143,
+   "y": 0.18203,
+   "confidence": 0.9804
+  },
+  {
+   "text": "City",
+   "x": 0.54418,
+   "y": 0.18203,
+   "confidence": 0.9393
+  },
+  {
+   "text": "Mayor",
+   "x": 0.50835,
+   "y": 0.19482,
+   "confidence": 0.9907
+  },
+  {
+   "text": "Ongoing",
+   "x": 0.67582,
+   "y": 0.18089,
+   "confidence": 0.9925
+  },
+  {
+   "text": "Office",
+   "x": 0.50615,
+   "y": 0.33987,
+   "confidence": 0.9766
+  },
+  {
+   "text": "of",
+   "x": 0.52066,
+   "y": 0.33987,
+   "confidence": 0.9773
+  },
+  {
+   "text": "the",
+   "x": 0.53077,
+   "y": 0.33987,
+   "confidence": 0.9823
+  },
+  {
+   "text": "City",
+   "x": 0.54286,
+   "y": 0.33987,
+   "confidence": 0.8587
+  },
+  {
+   "text": "Mayor",
+   "x": 0.50725,
+   "y": 0.35353,
+   "confidence": 0.9907
+  },
+  {
+   "text": "Ongoing",
+   "x": 0.67516,
+   "y": 0.33902,
+   "confidence": 0.9279
+  },
+  {
+   "text": "CY",
+   "x": 0.0778,
+   "y": 0.40614,
+   "confidence": 0.9653
+  },
+  {
+   "text": "2022",
+   "x": 0.09121,
+   "y": 0.40614,
+   "confidence": 0.9924
+  },
+  {
+   "text": "AAR",
+   "x": 0.10659,
+   "y": 0.40614,
+   "confidence": 0.9923
+  },
+  {
+   "text": ",",
+   "x": 0.11473,
+   "y": 0.40614,
+   "confidence": 0.9739
+  },
+  {
+   "text": "7.",
+   "x": 0.13165,
+   "y": 0.40586,
+   "confidence": 0.9696
+  },
+  {
+   "text": "The",
+   "x": 0.14242,
+   "y": 0.40586,
+   "confidence": 0.9817
+  },
+  {
+   "text": "City",
+   "x": 0.15648,
+   "y": 0.40586,
+   "confidence": 0.9241
+  },
+  {
+   "text": "has",
+   "x": 0.16901,
+   "y": 0.40586,
+   "confidence": 0.9935
+  },
+  {
+   "text": "not",
+   "x": 0.18132,
+   "y": 0.40586,
+   "confidence": 0.9947
+  },
+  {
+   "text": "remitted",
+   "x": 0.20154,
+   "y": 0.40586,
+   "confidence": 0.9279
+  },
+  {
+   "text": "P393.564",
+   "x": 0.23099,
+   "y": 0.40586,
+   "confidence": 0.977
+  },
+  {
+   "text": "million",
+   "x": 0.25692,
+   "y": 0.40586,
+   "confidence": 0.8507
+  },
+  {
+   "text": "Observation",
+   "x": 0.08418,
+   "y": 0.41894,
+   "confidence": 0.9369
+  },
+  {
+   "text": "No.",
+   "x": 0.11011,
+   "y": 0.41866,
+   "confidence": 0.9829
+  },
+  {
+   "text": "6",
+   "x": 0.11956,
+   "y": 0.41866,
+   "confidence": 0.9785
+  },
+  {
+   "text": ",",
+   "x": 0.1222,
+   "y": 0.41866,
+   "confidence": 0.981
+  },
+  {
+   "text": "representing",
+   "x": 0.14901,
+   "y": 0.41866,
+   "confidence": 0.9911
+  },
+  {
+   "text": "the",
+   "x": 0.1756,
+   "y": 0.41866,
+   "confidence": 0.9854
+  },
+  {
+   "text": "amounts",
+   "x": 0.1956,
+   "y": 0.41866,
+   "confidence": 0.9895
+  },
+  {
+   "text": "withheld",
+   "x": 0.22374,
+   "y": 0.41866,
+   "confidence": 0.921
+  },
+  {
+   "text": "as",
+   "x": 0.2422,
+   "y": 0.41866,
+   "confidence": 0.9849
+  },
+  {
+   "text": "of",
+   "x": 0.25099,
+   "y": 0.41866,
+   "confidence": 0.9913
+  },
+  {
+   "text": "Page",
+   "x": 0.09187,
+   "y": 0.43231,
+   "confidence": 0.9865
+  },
+  {
+   "text": "81",
+   "x": 0.10264,
+   "y": 0.43203,
+   "confidence": 0.9861
+  },
+  {
+   "text": "December",
+   "x": 0.14505,
+   "y": 0.43288,
+   "confidence": 0.9898
+  },
+  {
+   "text": "31",
+   "x": 0.16681,
+   "y": 0.43288,
+   "confidence": 0.9869
+  },
+  {
+   "text": ",",
+   "x": 0.17165,
+   "y": 0.43288,
+   "confidence": 0.9869
+  },
+  {
+   "text": "2022",
+   "x": 0.18176,
+   "y": 0.43288,
+   "confidence": 0.9757
+  },
+  {
+   "text": "for",
+   "x": 0.19538,
+   "y": 0.43288,
+   "confidence": 0.9829
+  },
+  {
+   "text": "the",
+   "x": 0.20637,
+   "y": 0.43288,
+   "confidence": 0.9799
+  },
+  {
+   "text": "accounts",
+   "x": 0.22637,
+   "y": 0.43288,
+   "confidence": 0.9799
+  },
+  {
+   "text": "of",
+   "x": 0.24527,
+   "y": 0.43288,
+   "confidence": 0.9646
+  },
+  {
+   "text": "the",
+   "x": 0.25495,
+   "y": 0.43288,
+   "confidence": 0.9744
+  },
+  {
+   "text": "BIR",
+   "x": 0.26637,
+   "y": 0.43288,
+   "confidence": 0.9394
+  },
+  {
+   "text": ",",
+   "x": 0.27253,
+   "y": 0.43288,
+   "confidence": 0.9633
+  },
+  {
+   "text": "GSIS",
+   "x": 0.13538,
+   "y": 0.44568,
+   "confidence": 0.9853
+  },
+  {
+   "text": ",",
+   "x": 0.14396,
+   "y": 0.44539,
+   "confidence": 0.9771
+  },
+  {
+   "text": "Pag",
+   "x": 0.15187,
+   "y": 0.44539,
+   "confidence": 0.9725
+  },
+  {
+   "text": "-",
+   "x": 0.15912,
+   "y": 0.44539,
+   "confidence": 0.9734
+  },
+  {
+   "text": "IBIG",
+   "x": 0.16659,
+   "y": 0.44539,
+   "confidence": 0.9857
+  },
+  {
+   "text": "and",
+   "x": 0.18022,
+   "y": 0.44539,
+   "confidence": 0.9817
+  },
+  {
+   "text": "PhilHealth",
+   "x": 0.20308,
+   "y": 0.44539,
+   "confidence": 0.9677
+  },
+  {
+   "text": ",",
+   "x": 0.21934,
+   "y": 0.44539,
+   "confidence": 0.9554
+  },
+  {
+   "text": "contrary",
+   "x": 0.23495,
+   "y": 0.44539,
+   "confidence": 0.9915
+  },
+  {
+   "text": "to",
+   "x": 0.25297,
+   "y": 0.44539,
+   "confidence": 0.9931
+  },
+  {
+   "text": "the",
+   "x": 0.26264,
+   "y": 0.44539,
+   "confidence": 0.9898
+  },
+  {
+   "text": "appertaining",
+   "x": 0.14835,
+   "y": 0.45904,
+   "confidence": 0.9839
+  },
+  {
+   "text": "legal",
+   "x": 0.1767,
+   "y": 0.45904,
+   "confidence": 0.9935
+  },
+  {
+   "text": "prescriptions",
+   "x": 0.20571,
+   "y": 0.45904,
+   "confidence": 0.9694
+  },
+  {
+   "text": ".",
+   "x": 0.22659,
+   "y": 0.45904,
+   "confidence": 0.9584
+  },
+  {
+   "text": "We",
+   "x": 0.28967,
+   "y": 0.40529,
+   "confidence": 0.9832
+  },
+  {
+   "text": "relterated",
+   "x": 0.31033,
+   "y": 0.40501,
+   "confidence": 0.9903
+  },
+  {
+   "text": "our",
+   "x": 0.33319,
+   "y": 0.40501,
+   "confidence": 0.9812
+  },
+  {
+   "text": "recommendation",
+   "x": 0.36615,
+   "y": 0.40501,
+   "confidence": 0.9821
+  },
+  {
+   "text": "that",
+   "x": 0.4,
+   "y": 0.40501,
+   "confidence": 0.9845
+  },
+  {
+   "text": "Management",
+   "x": 0.30308,
+   "y": 0.41923,
+   "confidence": 0.9942
+  },
+  {
+   "text": "direct",
+   "x": 0.33451,
+   "y": 0.41894,
+   "confidence": 0.9908
+  },
+  {
+   "text": "the",
+   "x": 0.35055,
+   "y": 0.41894,
+   "confidence": 0.9845
+  },
+  {
+   "text": "OCAT",
+   "x": 0.36549,
+   "y": 0.41894,
+   "confidence": 0.9923
+  },
+  {
+   "text": "and",
+   "x": 0.38132,
+   "y": 0.41894,
+   "confidence": 0.9846
+  },
+  {
+   "text": "CTO",
+   "x": 0.39516,
+   "y": 0.41894,
+   "confidence": 0.9863
+  },
+  {
+   "text": "to",
+   "x": 0.40637,
+   "y": 0.41894,
+   "confidence": 0.9888
+  },
+  {
+   "text": "remit",
+   "x": 0.29165,
+   "y": 0.43288,
+   "confidence": 0.8573
+  },
+  {
+   "text": "the",
+   "x": 0.30659,
+   "y": 0.43288,
+   "confidence": 0.9819
+  },
+  {
+   "text": "P393.564",
+   "x": 0.32769,
+   "y": 0.43288,
+   "confidence": 0.9548
+  },
+  {
+   "text": "million",
+   "x": 0.35363,
+   "y": 0.43288,
+   "confidence": 0.9054
+  },
+  {
+   "text": "to",
+   "x": 0.36923,
+   "y": 0.43288,
+   "confidence": 0.9902
+  },
+  {
+   "text": "the",
+   "x": 0.37912,
+   "y": 0.43288,
+   "confidence": 0.98
+  },
+  {
+   "text": "BIR",
+   "x": 0.39077,
+   "y": 0.43288,
+   "confidence": 0.9905
+  },
+  {
+   "text": ",",
+   "x": 0.39648,
+   "y": 0.43288,
+   "confidence": 0.987
+  },
+  {
+   "text": "GSIS",
+   "x": 0.40593,
+   "y": 0.43288,
+   "confidence": 0.9913
+  },
+  {
+   "text": ",",
+   "x": 0.41363,
+   "y": 0.43288,
+   "confidence": 0.9777
+  },
+  {
+   "text": "Pag",
+   "x": 0.28901,
+   "y": 0.44539,
+   "confidence": 0.9769
+  },
+  {
+   "text": "-",
+   "x": 0.29495,
+   "y": 0.44511,
+   "confidence": 0.9766
+  },
+  {
+   "text": "IBIG",
+   "x": 0.30242,
+   "y": 0.44511,
+   "confidence": 0.9877
+  },
+  {
+   "text": "and",
+   "x": 0.31604,
+   "y": 0.44511,
+   "confidence": 0.9805
+  },
+  {
+   "text": "PhilHealth",
+   "x": 0.33912,
+   "y": 0.44511,
+   "confidence": 0.9167
+  },
+  {
+   "text": "without",
+   "x": 0.36857,
+   "y": 0.44511,
+   "confidence": 0.9859
+  },
+  {
+   "text": "further",
+   "x": 0.39319,
+   "y": 0.44511,
+   "confidence": 0.993
+  },
+  {
+   "text": "delay",
+   "x": 0.29033,
+   "y": 0.45876,
+   "confidence": 0.9938
+  },
+  {
+   "text": ".",
+   "x": 0.29978,
+   "y": 0.45848,
+   "confidence": 0.9839
+  },
+  {
+   "text": "OCAT",
+   "x": 0.50549,
+   "y": 0.40557,
+   "confidence": 0.985
+  },
+  {
+   "text": "and",
+   "x": 0.52132,
+   "y": 0.40529,
+   "confidence": 0.9724
+  },
+  {
+   "text": "CТО",
+   "x": 0.53473,
+   "y": 0.40529,
+   "confidence": 0.6807
+  },
+  {
+   "text": "Ongoing",
+   "x": 0.67451,
+   "y": 0.40557,
+   "confidence": 0.9172
+  },
+  {
+   "text": "CY",
+   "x": 0.0767,
+   "y": 0.55148,
+   "confidence": 0.9709
+  },
+  {
+   "text": "2021",
+   "x": 0.08945,
+   "y": 0.55148,
+   "confidence": 0.9909
+  },
+  {
+   "text": "AAR",
+   "x": 0.10527,
+   "y": 0.55148,
+   "confidence": 0.9931
+  },
+  {
+   "text": ",",
+   "x": 0.11297,
+   "y": 0.55148,
+   "confidence": 0.975
+  },
+  {
+   "text": "8.",
+   "x": 0.13055,
+   "y": 0.55091,
+   "confidence": 0.9818
+  },
+  {
+   "text": "Seven",
+   "x": 0.14484,
+   "y": 0.55091,
+   "confidence": 0.9898
+  },
+  {
+   "text": "hundred",
+   "x": 0.16879,
+   "y": 0.55091,
+   "confidence": 0.9888
+  },
+  {
+   "text": "twenty",
+   "x": 0.19473,
+   "y": 0.55091,
+   "confidence": 0.9849
+  },
+  {
+   "text": "-",
+   "x": 0.20637,
+   "y": 0.55091,
+   "confidence": 0.9698
+  },
+  {
+   "text": "three",
+   "x": 0.2156,
+   "y": 0.55091,
+   "confidence": 0.9865
+  },
+  {
+   "text": "(",
+   "x": 0.22549,
+   "y": 0.55091,
+   "confidence": 0.9885
+  },
+  {
+   "text": "723",
+   "x": 0.23363,
+   "y": 0.55091,
+   "confidence": 0.9865
+  },
+  {
+   "text": ")",
+   "x": 0.24,
+   "y": 0.55091,
+   "confidence": 0.9829
+  },
+  {
+   "text": "cases",
+   "x": 0.25165,
+   "y": 0.55091,
+   "confidence": 0.9935
+  },
+  {
+   "text": "of",
+   "x": 0.26484,
+   "y": 0.55091,
+   "confidence": 0.9889
+  },
+  {
+   "text": "Observatlon",
+   "x": 0.08286,
+   "y": 0.56456,
+   "confidence": 0.9759
+  },
+  {
+   "text": "No.",
+   "x": 0.10923,
+   "y": 0.56456,
+   "confidence": 0.9726
+  },
+  {
+   "text": "4",
+   "x": 0.1178,
+   "y": 0.56456,
+   "confidence": 0.9543
+  },
+  {
+   "text": ",",
+   "x": 0.12066,
+   "y": 0.56456,
+   "confidence": 0.9796
+  },
+  {
+   "text": "double",
+   "x": 0.13824,
+   "y": 0.56456,
+   "confidence": 0.9922
+  },
+  {
+   "text": "payment",
+   "x": 0.16484,
+   "y": 0.56456,
+   "confidence": 0.9785
+  },
+  {
+   "text": "of",
+   "x": 0.18352,
+   "y": 0.56456,
+   "confidence": 0.9878
+  },
+  {
+   "text": "emergency",
+   "x": 0.20549,
+   "y": 0.56456,
+   "confidence": 0.9881
+  },
+  {
+   "text": "subsidy",
+   "x": 0.23538,
+   "y": 0.56456,
+   "confidence": 0.9641
+  },
+  {
+   "text": "/",
+   "x": 0.24747,
+   "y": 0.56456,
+   "confidence": 0.9877
+  },
+  {
+   "text": "financial",
+   "x": 0.26198,
+   "y": 0.56456,
+   "confidence": 0.9361
+  },
+  {
+   "text": "Page",
+   "x": 0.08989,
+   "y": 0.57736,
+   "confidence": 0.9872
+  },
+  {
+   "text": "83",
+   "x": 0.1011,
+   "y": 0.57708,
+   "confidence": 0.9875
+  },
+  {
+   "text": "assistance",
+   "x": 0.14308,
+   "y": 0.57679,
+   "confidence": 0.9917
+  },
+  {
+   "text": "(",
+   "x": 0.16154,
+   "y": 0.57651,
+   "confidence": 0.9883
+  },
+  {
+   "text": "FA",
+   "x": 0.16747,
+   "y": 0.57651,
+   "confidence": 0.9906
+  },
+  {
+   "text": ")",
+   "x": 0.17231,
+   "y": 0.57651,
+   "confidence": 0.9912
+  },
+  {
+   "text": "to",
+   "x": 0.17824,
+   "y": 0.57651,
+   "confidence": 0.9871
+  },
+  {
+   "text": "beneficiarles",
+   "x": 0.20242,
+   "y": 0.57651,
+   "confidence": 0.9624
+  },
+  {
+   "text": "In",
+   "x": 0.22571,
+   "y": 0.57651,
+   "confidence": 0.917
+  },
+  {
+   "text": "COVID",
+   "x": 0.24022,
+   "y": 0.57651,
+   "confidence": 0.9927
+  },
+  {
+   "text": "-",
+   "x": 0.25143,
+   "y": 0.57651,
+   "confidence": 0.9929
+  },
+  {
+   "text": "19",
+   "x": 0.25604,
+   "y": 0.57651,
+   "confidence": 0.988
+  },
+  {
+   "text": "lockdown",
+   "x": 0.1422,
+   "y": 0.59073,
+   "confidence": 0.9503
+  },
+  {
+   "text": "translated",
+   "x": 0.17495,
+   "y": 0.59073,
+   "confidence": 0.9949
+  },
+  {
+   "text": "to",
+   "x": 0.19538,
+   "y": 0.59073,
+   "confidence": 0.9922
+  },
+  {
+   "text": "a",
+   "x": 0.20176,
+   "y": 0.59073,
+   "confidence": 0.9772
+  },
+  {
+   "text": "total",
+   "x": 0.21231,
+   "y": 0.59073,
+   "confidence": 0.9923
+  },
+  {
+   "text": "payment",
+   "x": 0.23516,
+   "y": 0.59073,
+   "confidence": 0.9924
+  },
+  {
+   "text": "of",
+   "x": 0.25363,
+   "y": 0.59073,
+   "confidence": 0.9819
+  },
+  {
+   "text": "P8.424",
+   "x": 0.13802,
+   "y": 0.60438,
+   "confidence": 0.9604
+  },
+  {
+   "text": "million",
+   "x": 0.16088,
+   "y": 0.60438,
+   "confidence": 0.8137
+  },
+  {
+   "text": "In",
+   "x": 0.17429,
+   "y": 0.60438,
+   "confidence": 0.9247
+  },
+  {
+   "text": "excess",
+   "x": 0.18989,
+   "y": 0.60438,
+   "confidence": 0.9907
+  },
+  {
+   "text": "of",
+   "x": 0.20484,
+   "y": 0.60438,
+   "confidence": 0.9825
+  },
+  {
+   "text": "the",
+   "x": 0.21429,
+   "y": 0.60438,
+   "confidence": 0.9914
+  },
+  {
+   "text": "amounts",
+   "x": 0.23429,
+   "y": 0.60438,
+   "confidence": 0.991
+  },
+  {
+   "text": "legally",
+   "x": 0.25956,
+   "y": 0.60438,
+   "confidence": 0.9901
+  },
+  {
+   "text": "authorized",
+   "x": 0.14352,
+   "y": 0.61576,
+   "confidence": 0.9563
+  },
+  {
+   "text": ",",
+   "x": 0.16044,
+   "y": 0.61547,
+   "confidence": 0.7412
+  },
+  {
+   "text": "We",
+   "x": 0.28637,
+   "y": 0.55176,
+   "confidence": 0.8785
+  },
+  {
+   "text": "recommended",
+   "x": 0.31648,
+   "y": 0.55176,
+   "confidence": 0.9915
+  },
+  {
+   "text": "that",
+   "x": 0.34659,
+   "y": 0.55176,
+   "confidence": 0.9846
+  },
+  {
+   "text": "Management",
+   "x": 0.37516,
+   "y": 0.55176,
+   "confidence": 0.9931
+  },
+  {
+   "text": ":",
+   "x": 0.39648,
+   "y": 0.55176,
+   "confidence": 0.9815
+  },
+  {
+   "text": "a",
+   "x": 0.2833,
+   "y": 0.57793,
+   "confidence": 0.9731
+  },
+  {
+   "text": ".",
+   "x": 0.28615,
+   "y": 0.57793,
+   "confidence": 0.9822
+  },
+  {
+   "text": "Establish",
+   "x": 0.30198,
+   "y": 0.57793,
+   "confidence": 0.9625
+  },
+  {
+   "text": "the",
+   "x": 0.32264,
+   "y": 0.57793,
+   "confidence": 0.992
+  },
+  {
+   "text": "accountability",
+   "x": 0.35099,
+   "y": 0.57793,
+   "confidence": 0.9636
+  },
+  {
+   "text": "for",
+   "x": 0.37846,
+   "y": 0.57793,
+   "confidence": 0.9887
+  },
+  {
+   "text": "and",
+   "x": 0.39011,
+   "y": 0.57793,
+   "confidence": 0.9869
+  },
+  {
+   "text": "recover",
+   "x": 0.40967,
+   "y": 0.57793,
+   "confidence": 0.992
+  },
+  {
+   "text": "the",
+   "x": 0.28659,
+   "y": 0.5913,
+   "confidence": 0.9851
+  },
+  {
+   "text": "excess",
+   "x": 0.30308,
+   "y": 0.5913,
+   "confidence": 0.9939
+  },
+  {
+   "text": "payment",
+   "x": 0.32879,
+   "y": 0.5913,
+   "confidence": 0.9898
+  },
+  {
+   "text": "of",
+   "x": 0.34747,
+   "y": 0.5913,
+   "confidence": 0.9864
+  },
+  {
+   "text": "emergency",
+   "x": 0.36967,
+   "y": 0.5913,
+   "confidence": 0.9932
+  },
+  {
+   "text": "subsidy",
+   "x": 0.39978,
+   "y": 0.5913,
+   "confidence": 0.997
+  },
+  {
+   "text": "and",
+   "x": 0.28659,
+   "y": 0.6041,
+   "confidence": 0.9821
+  },
+  {
+   "text": "FA",
+   "x": 0.29802,
+   "y": 0.6041,
+   "confidence": 0.9683
+  },
+  {
+   "text": ";",
+   "x": 0.30242,
+   "y": 0.6041,
+   "confidence": 0.8658
+  },
+  {
+   "text": "and",
+   "x": 0.31143,
+   "y": 0.6041,
+   "confidence": 0.9849
+  },
+  {
+   "text": "b",
+   "x": 0.28242,
+   "y": 0.64363,
+   "confidence": 0.9639
+  },
+  {
+   "text": ".",
+   "x": 0.28505,
+   "y": 0.64363,
+   "confidence": 0.9777
+  },
+  {
+   "text": "In",
+   "x": 0.29099,
+   "y": 0.64363,
+   "confidence": 0.9715
+  },
+  {
+   "text": "coordination",
+   "x": 0.31538,
+   "y": 0.64363,
+   "confidence": 0.9677
+  },
+  {
+   "text": "with",
+   "x": 0.34352,
+   "y": 0.64363,
+   "confidence": 0.8686
+  },
+  {
+   "text": "the",
+   "x": 0.35692,
+   "y": 0.64363,
+   "confidence": 0.9794
+  },
+  {
+   "text": "DSWD",
+   "x": 0.37319,
+   "y": 0.64363,
+   "confidence": 0.9902
+  },
+  {
+   "text": ",",
+   "x": 0.38418,
+   "y": 0.64363,
+   "confidence": 0.9891
+  },
+  {
+   "text": "supply",
+   "x": 0.39692,
+   "y": 0.64363,
+   "confidence": 0.9894
+  },
+  {
+   "text": "the",
+   "x": 0.41341,
+   "y": 0.64363,
+   "confidence": 0.9913
+  },
+  {
+   "text": "missing",
+   "x": 0.29209,
+   "y": 0.65728,
+   "confidence": 0.9672
+  },
+  {
+   "text": "beneficiary",
+   "x": 0.32198,
+   "y": 0.65728,
+   "confidence": 0.9542
+  },
+  {
+   "text": "information",
+   "x": 0.3589,
+   "y": 0.65728,
+   "confidence": 0.9422
+  },
+  {
+   "text": "necessary",
+   "x": 0.39429,
+   "y": 0.65728,
+   "confidence": 0.9943
+  },
+  {
+   "text": "In",
+   "x": 0.41363,
+   "y": 0.65728,
+   "confidence": 0.8394
+  },
+  {
+   "text": "the",
+   "x": 0.28747,
+   "y": 0.67036,
+   "confidence": 0.9872
+  },
+  {
+   "text": "full",
+   "x": 0.29692,
+   "y": 0.67036,
+   "confidence": 0.9849
+  },
+  {
+   "text": "validation",
+   "x": 0.3189,
+   "y": 0.67036,
+   "confidence": 0.8872
+  },
+  {
+   "text": "of",
+   "x": 0.33912,
+   "y": 0.67036,
+   "confidence": 0.9885
+  },
+  {
+   "text": "the",
+   "x": 0.34857,
+   "y": 0.67036,
+   "confidence": 0.9946
+  },
+  {
+   "text": "payments",
+   "x": 0.37077,
+   "y": 0.67036,
+   "confidence": 0.9866
+  },
+  {
+   "text": "of",
+   "x": 0.39099,
+   "y": 0.67036,
+   "confidence": 0.9893
+  },
+  {
+   "text": "the",
+   "x": 0.40044,
+   "y": 0.67036,
+   "confidence": 0.9929
+  },
+  {
+   "text": "subject",
+   "x": 0.29143,
+   "y": 0.68373,
+   "confidence": 0.9929
+  },
+  {
+   "text": "emergency",
+   "x": 0.32154,
+   "y": 0.68373,
+   "confidence": 0.9914
+  },
+  {
+   "text": "subsidy",
+   "x": 0.35209,
+   "y": 0.68373,
+   "confidence": 0.9947
+  },
+  {
+   "text": "/",
+   "x": 0.3644,
+   "y": 0.68373,
+   "confidence": 0.9834
+  },
+  {
+   "text": "FA",
+   "x": 0.37011,
+   "y": 0.68373,
+   "confidence": 0.9664
+  },
+  {
+   "text": ".",
+   "x": 0.37341,
+   "y": 0.68373,
+   "confidence": 0.9457
+  },
+  {
+   "text": "Office",
+   "x": 0.50462,
+   "y": 0.55063,
+   "confidence": 0.982
+  },
+  {
+   "text": "of",
+   "x": 0.51956,
+   "y": 0.55063,
+   "confidence": 0.9897
+  },
+  {
+   "text": "the",
+   "x": 0.52901,
+   "y": 0.55063,
+   "confidence": 0.9836
+  },
+  {
+   "text": "Mayor",
+   "x": 0.54549,
+   "y": 0.55063,
+   "confidence": 0.9871
+  },
+  {
+   "text": "/",
+   "x": 0.5567,
+   "y": 0.55063,
+   "confidence": 0.9736
+  },
+  {
+   "text": "Manila",
+   "x": 0.50571,
+   "y": 0.56456,
+   "confidence": 0.8851
+  },
+  {
+   "text": "Department",
+   "x": 0.5378,
+   "y": 0.56456,
+   "confidence": 0.9857
+  },
+  {
+   "text": "of",
+   "x": 0.50132,
+   "y": 0.57679,
+   "confidence": 0.9755
+  },
+  {
+   "text": "Social",
+   "x": 0.51253,
+   "y": 0.57651,
+   "confidence": 0.916
+  },
+  {
+   "text": "Welfare",
+   "x": 0.53451,
+   "y": 0.57651,
+   "confidence": 0.9893
+  },
+  {
+   "text": "/",
+   "x": 0.54857,
+   "y": 0.57651,
+   "confidence": 0.9813
+  },
+  {
+   "text": "City",
+   "x": 0.50198,
+   "y": 0.59101,
+   "confidence": 0.8589
+  },
+  {
+   "text": "Legal",
+   "x": 0.51714,
+   "y": 0.59101,
+   "confidence": 0.9819
+  },
+  {
+   "text": "Office",
+   "x": 0.53538,
+   "y": 0.59101,
+   "confidence": 0.9834
+  },
+  {
+   "text": "Office",
+   "x": 0.50418,
+   "y": 0.64334,
+   "confidence": 0.9748
+  },
+  {
+   "text": "of",
+   "x": 0.51868,
+   "y": 0.64334,
+   "confidence": 0.9912
+  },
+  {
+   "text": "the",
+   "x": 0.52835,
+   "y": 0.64334,
+   "confidence": 0.9826
+  },
+  {
+   "text": "Mayor",
+   "x": 0.54484,
+   "y": 0.64334,
+   "confidence": 0.9858
+  },
+  {
+   "text": "/",
+   "x": 0.55604,
+   "y": 0.64334,
+   "confidence": 0.9779
+  },
+  {
+   "text": "Manila",
+   "x": 0.50527,
+   "y": 0.657,
+   "confidence": 0.9597
+  },
+  {
+   "text": "Department",
+   "x": 0.53714,
+   "y": 0.657,
+   "confidence": 0.9942
+  },
+  {
+   "text": "of",
+   "x": 0.50132,
+   "y": 0.66951,
+   "confidence": 0.9785
+  },
+  {
+   "text": "Social",
+   "x": 0.51231,
+   "y": 0.66951,
+   "confidence": 0.9899
+  },
+  {
+   "text": "Welfare",
+   "x": 0.53451,
+   "y": 0.66951,
+   "confidence": 0.99
+  },
+  {
+   "text": "Ongoing",
+   "x": 0.67363,
+   "y": 0.55091,
+   "confidence": 0.983
+  },
+  {
+   "text": "Ongoing",
+   "x": 0.67341,
+   "y": 0.64391,
+   "confidence": 0.9126
+  },
+  {
+   "text": "Reason",
+   "x": 0.73363,
+   "y": 0.14278,
+   "confidence": 0.9832
+  },
+  {
+   "text": "for",
+   "x": 0.75011,
+   "y": 0.14249,
+   "confidence": 0.9872
+  },
+  {
+   "text": "Partial",
+   "x": 0.76615,
+   "y": 0.14249,
+   "confidence": 0.9826
+  },
+  {
+   "text": "/",
+   "x": 0.77648,
+   "y": 0.14249,
+   "confidence": 0.9673
+  },
+  {
+   "text": "Delay",
+   "x": 0.78593,
+   "y": 0.14249,
+   "confidence": 0.975
+  },
+  {
+   "text": "/",
+   "x": 0.79538,
+   "y": 0.14249,
+   "confidence": 0.9622
+  },
+  {
+   "text": "Non",
+   "x": 0.73429,
+   "y": 0.15444,
+   "confidence": 0.9899
+  },
+  {
+   "text": "-",
+   "x": 0.7389,
+   "y": 0.15415,
+   "confidence": 0.9806
+  },
+  {
+   "text": "Implementation",
+   "x": 0.76352,
+   "y": 0.15415,
+   "confidence": 0.9711
+  },
+  {
+   "text": ",",
+   "x": 0.78791,
+   "y": 0.15415,
+   "confidence": 0.9835
+  },
+  {
+   "text": "if",
+   "x": 0.79275,
+   "y": 0.15415,
+   "confidence": 0.9736
+  },
+  {
+   "text": "applicable",
+   "x": 0.76022,
+   "y": 0.16581,
+   "confidence": 0.9476
+  },
+  {
+   "text": "The",
+   "x": 0.72637,
+   "y": 0.1806,
+   "confidence": 0.9801
+  },
+  {
+   "text": "management",
+   "x": 0.75297,
+   "y": 0.18032,
+   "confidence": 0.9894
+  },
+  {
+   "text": "Is",
+   "x": 0.77802,
+   "y": 0.18032,
+   "confidence": 0.8395
+  },
+  {
+   "text": "currently",
+   "x": 0.73363,
+   "y": 0.19425,
+   "confidence": 0.9896
+  },
+  {
+   "text": "in",
+   "x": 0.75231,
+   "y": 0.19425,
+   "confidence": 0.9929
+  },
+  {
+   "text": "the",
+   "x": 0.76176,
+   "y": 0.19425,
+   "confidence": 0.9866
+  },
+  {
+   "text": "process",
+   "x": 0.78044,
+   "y": 0.19425,
+   "confidence": 0.9915
+  },
+  {
+   "text": "of",
+   "x": 0.79692,
+   "y": 0.19425,
+   "confidence": 0.9847
+  },
+  {
+   "text": "creating",
+   "x": 0.73187,
+   "y": 0.20705,
+   "confidence": 0.9863
+  },
+  {
+   "text": "the",
+   "x": 0.75143,
+   "y": 0.20677,
+   "confidence": 0.9833
+  },
+  {
+   "text": "Core",
+   "x": 0.76505,
+   "y": 0.20677,
+   "confidence": 0.9837
+  },
+  {
+   "text": "Team",
+   "x": 0.7822,
+   "y": 0.20677,
+   "confidence": 0.9778
+  },
+  {
+   "text": ".",
+   "x": 0.79231,
+   "y": 0.20677,
+   "confidence": 0.9682
+  },
+  {
+   "text": "The",
+   "x": 0.72462,
+   "y": 0.21985,
+   "confidence": 0.9787
+  },
+  {
+   "text": "necessary",
+   "x": 0.74769,
+   "y": 0.21957,
+   "confidence": 0.9948
+  },
+  {
+   "text": "documents",
+   "x": 0.78176,
+   "y": 0.21957,
+   "confidence": 0.9949
+  },
+  {
+   "text": "will",
+   "x": 0.7244,
+   "y": 0.23294,
+   "confidence": 0.9409
+  },
+  {
+   "text": "be",
+   "x": 0.73495,
+   "y": 0.23294,
+   "confidence": 0.9913
+  },
+  {
+   "text": "submitted",
+   "x": 0.7567,
+   "y": 0.23294,
+   "confidence": 0.9926
+  },
+  {
+   "text": "to",
+   "x": 0.77802,
+   "y": 0.23294,
+   "confidence": 0.9898
+  },
+  {
+   "text": "COA",
+   "x": 0.78901,
+   "y": 0.23294,
+   "confidence": 0.96
+  },
+  {
+   "text": "once",
+   "x": 0.72659,
+   "y": 0.24573,
+   "confidence": 0.9896
+  },
+  {
+   "text": "finalized",
+   "x": 0.74857,
+   "y": 0.24545,
+   "confidence": 0.9727
+  },
+  {
+   "text": "and",
+   "x": 0.76901,
+   "y": 0.24545,
+   "confidence": 0.9883
+  },
+  {
+   "text": "approved",
+   "x": 0.73341,
+   "y": 0.25967,
+   "confidence": 0.9931
+  },
+  {
+   "text": ".",
+   "x": 0.74879,
+   "y": 0.25939,
+   "confidence": 0.985
+  },
+  {
+   "text": "Action",
+   "x": 0.81626,
+   "y": 0.1479,
+   "confidence": 0.9859
+  },
+  {
+   "text": "Taken",
+   "x": 0.83604,
+   "y": 0.1479,
+   "confidence": 0.962
+  },
+  {
+   "text": "/",
+   "x": 0.84593,
+   "y": 0.1479,
+   "confidence": 0.9748
+  },
+  {
+   "text": "Action",
+   "x": 0.85714,
+   "y": 0.1479,
+   "confidence": 0.987
+  },
+  {
+   "text": "to",
+   "x": 0.87165,
+   "y": 0.1479,
+   "confidence": 0.9902
+  },
+  {
+   "text": "be",
+   "x": 0.83231,
+   "y": 0.15927,
+   "confidence": 0.9855
+  },
+  {
+   "text": "Taken",
+   "x": 0.84462,
+   "y": 0.15899,
+   "confidence": 0.9922
+  },
+  {
+   "text": "The",
+   "x": 0.80857,
+   "y": 0.40415,
+   "confidence": 0.9814
+  },
+  {
+   "text": "OCAT",
+   "x": 0.82418,
+   "y": 0.40415,
+   "confidence": 0.993
+  },
+  {
+   "text": "In",
+   "x": 0.83626,
+   "y": 0.40415,
+   "confidence": 0.9656
+  },
+  {
+   "text": "coordination",
+   "x": 0.82132,
+   "y": 0.41752,
+   "confidence": 0.9517
+  },
+  {
+   "text": "with",
+   "x": 0.84857,
+   "y": 0.41724,
+   "confidence": 0.9606
+  },
+  {
+   "text": "CTO",
+   "x": 0.86374,
+   "y": 0.41724,
+   "confidence": 0.9703
+  },
+  {
+   "text": "Is",
+   "x": 0.8044,
+   "y": 0.43203,
+   "confidence": 0.9391
+  },
+  {
+   "text": "continuously",
+   "x": 0.82857,
+   "y": 0.43203,
+   "confidence": 0.9871
+  },
+  {
+   "text": "remitting",
+   "x": 0.81626,
+   "y": 0.44454,
+   "confidence": 0.932
+  },
+  {
+   "text": "the",
+   "x": 0.83714,
+   "y": 0.44425,
+   "confidence": 0.9888
+  },
+  {
+   "text": "remaining",
+   "x": 0.85912,
+   "y": 0.44425,
+   "confidence": 0.9945
+  },
+  {
+   "text": "unremitted",
+   "x": 0.8189,
+   "y": 0.45734,
+   "confidence": 0.9742
+  },
+  {
+   "text": "amount",
+   "x": 0.84989,
+   "y": 0.45705,
+   "confidence": 0.9889
+  },
+  {
+   "text": "to",
+   "x": 0.86659,
+   "y": 0.45705,
+   "confidence": 0.9871
+  },
+  {
+   "text": "Issues",
+   "x": 0.72813,
+   "y": 0.40472,
+   "confidence": 0.9526
+  },
+  {
+   "text": "related",
+   "x": 0.75055,
+   "y": 0.40472,
+   "confidence": 0.9913
+  },
+  {
+   "text": "to",
+   "x": 0.76659,
+   "y": 0.40472,
+   "confidence": 0.9901
+  },
+  {
+   "text": "employees",
+   "x": 0.73495,
+   "y": 0.41809,
+   "confidence": 0.9916
+  },
+  {
+   "text": "detalls",
+   "x": 0.76352,
+   "y": 0.4178,
+   "confidence": 0.9787
+  },
+  {
+   "text": "and",
+   "x": 0.78154,
+   "y": 0.4178,
+   "confidence": 0.9887
+  },
+  {
+   "text": "Information",
+   "x": 0.73604,
+   "y": 0.43089,
+   "confidence": 0.987
+  },
+  {
+   "text": "(",
+   "x": 0.75714,
+   "y": 0.4306,
+   "confidence": 0.981
+  },
+  {
+   "text": "for",
+   "x": 0.7633,
+   "y": 0.4306,
+   "confidence": 0.9878
+  },
+  {
+   "text": "Clarif",
+   "x": 0.77692,
+   "y": 0.4306,
+   "confidence": 0.9303
+  },
+  {
+   "text": "Items",
+   "x": 0.72659,
+   "y": 0.44454,
+   "confidence": 0.89
+  },
+  {
+   "text": ")",
+   "x": 0.73582,
+   "y": 0.44454,
+   "confidence": 0.9816
+  },
+  {
+   "text": "for",
+   "x": 0.74418,
+   "y": 0.44454,
+   "confidence": 0.9925
+  },
+  {
+   "text": "GSIS",
+   "x": 0.75692,
+   "y": 0.44454,
+   "confidence": 0.989
+  },
+  {
+   "text": ".",
+   "x": 0.76527,
+   "y": 0.44454,
+   "confidence": 0.9581
+  },
+  {
+   "text": "On",
+   "x": 0.77187,
+   "y": 0.44454,
+   "confidence": 0.9754
+  },
+  {
+   "text": "the",
+   "x": 0.7833,
+   "y": 0.44454,
+   "confidence": 0.9807
+  },
+  {
+   "text": "other",
+   "x": 0.72637,
+   "y": 0.45705,
+   "confidence": 0.9891
+  },
+  {
+   "text": "hand",
+   "x": 0.74418,
+   "y": 0.45677,
+   "confidence": 0.9924
+  },
+  {
+   "text": "the",
+   "x": 0.7589,
+   "y": 0.45677,
+   "confidence": 0.9789
+  },
+  {
+   "text": "amount",
+   "x": 0.7778,
+   "y": 0.45677,
+   "confidence": 0.988
+  },
+  {
+   "text": "payable",
+   "x": 0.73033,
+   "y": 0.47099,
+   "confidence": 0.9878
+  },
+  {
+   "text": "to",
+   "x": 0.74703,
+   "y": 0.47071,
+   "confidence": 0.9917
+  },
+  {
+   "text": "BIR",
+   "x": 0.75714,
+   "y": 0.47071,
+   "confidence": 0.9896
+  },
+  {
+   "text": "reflects",
+   "x": 0.77538,
+   "y": 0.47071,
+   "confidence": 0.9942
+  },
+  {
+   "text": "the",
+   "x": 0.79341,
+   "y": 0.47071,
+   "confidence": 0.9938
+  },
+  {
+   "text": "date",
+   "x": 0.80901,
+   "y": 0.47071,
+   "confidence": 0.9918
+  },
+  {
+   "text": ".",
+   "x": 0.81692,
+   "y": 0.47071,
+   "confidence": 0.9851
+  },
+  {
+   "text": "withholding",
+   "x": 0.73604,
+   "y": 0.48436,
+   "confidence": 0.982
+  },
+  {
+   "text": "taxes",
+   "x": 0.76505,
+   "y": 0.48436,
+   "confidence": 0.974
+  },
+  {
+   "text": "related",
+   "x": 0.78571,
+   "y": 0.48436,
+   "confidence": 0.9936
+  },
+  {
+   "text": "to",
+   "x": 0.72176,
+   "y": 0.49801,
+   "confidence": 0.9857
+  },
+  {
+   "text": "unpald",
+   "x": 0.73626,
+   "y": 0.49801,
+   "confidence": 0.9895
+  },
+  {
+   "text": "payable",
+   "x": 0.76154,
+   "y": 0.49801,
+   "confidence": 0.9899
+  },
+  {
+   "text": "to",
+   "x": 0.77868,
+   "y": 0.49801,
+   "confidence": 0.9893
+  },
+  {
+   "text": "different",
+   "x": 0.73099,
+   "y": 0.51081,
+   "confidence": 0.9829
+  },
+  {
+   "text": "suppliers",
+   "x": 0.76066,
+   "y": 0.51081,
+   "confidence": 0.9331
+  },
+  {
+   "text": ".",
+   "x": 0.77582,
+   "y": 0.51081,
+   "confidence": 0.9779
+  }
+ ],
+ "dimension": {
+  "width": 2275.0,
+  "height": 1758.0
+ },
+ "detected_languages": [
+  "en",
+  "fil",
+  "es",
+  "da"
+ ],
+ "image_quality": 0.9902138710021973,
+ "tables_found": 0,
+ "year": 2023,
+ "doc": "AAPSI",
+ "page": 6
+}

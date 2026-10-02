@@ -1,0 +1,1163 @@
+{
+ "text": "Reference\nAudit Observations\nAudit Recommendations\nCITY OF MANILA\nAGENCY ACTION PLAN AND STATUS of IMPLEMENTATION\nAudit Observations and Recommendations\nFor the Calendar Year 2024\nAs of August 31, 2025\nd. Strengthen coordination among departments,\nstreamline the remittance process, and\nimplement more effective monitoring and\nreconciliation procedures;\ne.\nProvide uniform policy/guidelines to all\npersonnel involved from OCAT, CPO, DPOS, and\nAAOs on the proper procedures for handling GSIS\ncontributions, loan repayments, and member\nupdates to ensure that all employees are aware\nof their responsibilities and that there is a\nconsistent approach to managing GSIS-related\ntasks across departments; and\nf. Henceforth, strictly comply with Sections 14,\n15 and 16 of RA No. 8291 and its RIRR and GSIS\nMemorandum Circular No. 027, s. 2021, dated\nMay 19, 2021.\nAGENCY ACTION PLAN\nAction Plan\nPerson/Dept.\nResponsible\nTarget Implementation Date\nFrom\nStatus of\nImplementation\nTo\nReason for Partial/Delay/\nNon-Implementation, if\napplicable\nAction Taken/Action to\nbe Taken\nPage 15 of 24\n",
+ "tokens": [
+  {
+   "text": "Reference",
+   "x": 0.05479,
+   "y": 0.26036,
+   "confidence": 0.9953
+  },
+  {
+   "text": "Audit",
+   "x": 0.15366,
+   "y": 0.25912,
+   "confidence": 0.9901
+  },
+  {
+   "text": "Observations",
+   "x": 0.18318,
+   "y": 0.25881,
+   "confidence": 0.9942
+  },
+  {
+   "text": "Audit",
+   "x": 0.3055,
+   "y": 0.25665,
+   "confidence": 0.9858
+  },
+  {
+   "text": "Recommendations",
+   "x": 0.34351,
+   "y": 0.25634,
+   "confidence": 0.9931
+  },
+  {
+   "text": "CITY",
+   "x": 0.46381,
+   "y": 0.11101,
+   "confidence": 0.9822
+  },
+  {
+   "text": "OF",
+   "x": 0.47816,
+   "y": 0.11101,
+   "confidence": 0.9806
+  },
+  {
+   "text": "MANILA",
+   "x": 0.50121,
+   "y": 0.11039,
+   "confidence": 0.9938
+  },
+  {
+   "text": "AGENCY",
+   "x": 0.39406,
+   "y": 0.13111,
+   "confidence": 0.988
+  },
+  {
+   "text": "ACTION",
+   "x": 0.426,
+   "y": 0.13049,
+   "confidence": 0.9937
+  },
+  {
+   "text": "PLAN",
+   "x": 0.45269,
+   "y": 0.12956,
+   "confidence": 0.9929
+  },
+  {
+   "text": "AND",
+   "x": 0.47271,
+   "y": 0.12894,
+   "confidence": 0.9788
+  },
+  {
+   "text": "STATUS",
+   "x": 0.49717,
+   "y": 0.12863,
+   "confidence": 0.9832
+  },
+  {
+   "text": "of",
+   "x": 0.5182,
+   "y": 0.12801,
+   "confidence": 0.9442
+  },
+  {
+   "text": "IMPLEMENTATION",
+   "x": 0.55843,
+   "y": 0.12678,
+   "confidence": 0.9865
+  },
+  {
+   "text": "Audit",
+   "x": 0.4171,
+   "y": 0.1475,
+   "confidence": 0.9846
+  },
+  {
+   "text": "Observations",
+   "x": 0.45309,
+   "y": 0.14719,
+   "confidence": 0.9889
+  },
+  {
+   "text": "and",
+   "x": 0.48706,
+   "y": 0.14657,
+   "confidence": 0.9748
+  },
+  {
+   "text": "Recommendations",
+   "x": 0.53114,
+   "y": 0.14595,
+   "confidence": 0.9926
+  },
+  {
+   "text": "For",
+   "x": 0.44238,
+   "y": 0.16636,
+   "confidence": 0.984
+  },
+  {
+   "text": "the",
+   "x": 0.45633,
+   "y": 0.16605,
+   "confidence": 0.9815
+  },
+  {
+   "text": "Calendar",
+   "x": 0.48099,
+   "y": 0.16543,
+   "confidence": 0.9895
+  },
+  {
+   "text": "Year",
+   "x": 0.50768,
+   "y": 0.16512,
+   "confidence": 0.9648
+  },
+  {
+   "text": "2024",
+   "x": 0.5275,
+   "y": 0.1645,
+   "confidence": 0.9842
+  },
+  {
+   "text": "As",
+   "x": 0.45208,
+   "y": 0.18553,
+   "confidence": 0.97
+  },
+  {
+   "text": "of",
+   "x": 0.46098,
+   "y": 0.18522,
+   "confidence": 0.9816
+  },
+  {
+   "text": "August",
+   "x": 0.47938,
+   "y": 0.1846,
+   "confidence": 0.9862
+  },
+  {
+   "text": "31",
+   "x": 0.49939,
+   "y": 0.1846,
+   "confidence": 0.991
+  },
+  {
+   "text": ",",
+   "x": 0.50485,
+   "y": 0.1846,
+   "confidence": 0.9933
+  },
+  {
+   "text": "2025",
+   "x": 0.51719,
+   "y": 0.18398,
+   "confidence": 0.9931
+  },
+  {
+   "text": "d",
+   "x": 0.26102,
+   "y": 0.30612,
+   "confidence": 0.9714
+  },
+  {
+   "text": ".",
+   "x": 0.26385,
+   "y": 0.3055,
+   "confidence": 0.9791
+  },
+  {
+   "text": "Strengthen",
+   "x": 0.28569,
+   "y": 0.3055,
+   "confidence": 0.9922
+  },
+  {
+   "text": "coordination",
+   "x": 0.3243,
+   "y": 0.3055,
+   "confidence": 0.9883
+  },
+  {
+   "text": "among",
+   "x": 0.35645,
+   "y": 0.3055,
+   "confidence": 0.988
+  },
+  {
+   "text": "departments",
+   "x": 0.38839,
+   "y": 0.3055,
+   "confidence": 0.9949
+  },
+  {
+   "text": ",",
+   "x": 0.40942,
+   "y": 0.3055,
+   "confidence": 0.9764
+  },
+  {
+   "text": "streamline",
+   "x": 0.27517,
+   "y": 0.32127,
+   "confidence": 0.9885
+  },
+  {
+   "text": "the",
+   "x": 0.30611,
+   "y": 0.32096,
+   "confidence": 0.9848
+  },
+  {
+   "text": "remittance",
+   "x": 0.33765,
+   "y": 0.32096,
+   "confidence": 0.9812
+  },
+  {
+   "text": "process",
+   "x": 0.37525,
+   "y": 0.32096,
+   "confidence": 0.9942
+  },
+  {
+   "text": ",",
+   "x": 0.38799,
+   "y": 0.32096,
+   "confidence": 0.9834
+  },
+  {
+   "text": "and",
+   "x": 0.40437,
+   "y": 0.3188,
+   "confidence": 0.9936
+  },
+  {
+   "text": "implement",
+   "x": 0.27558,
+   "y": 0.33643,
+   "confidence": 0.9886
+  },
+  {
+   "text": "more",
+   "x": 0.30752,
+   "y": 0.33612,
+   "confidence": 0.9541
+  },
+  {
+   "text": "effective",
+   "x": 0.33664,
+   "y": 0.33519,
+   "confidence": 0.9907
+  },
+  {
+   "text": "monitoring",
+   "x": 0.37404,
+   "y": 0.33488,
+   "confidence": 0.9936
+  },
+  {
+   "text": "and",
+   "x": 0.40437,
+   "y": 0.33488,
+   "confidence": 0.98
+  },
+  {
+   "text": "reconciliation",
+   "x": 0.27962,
+   "y": 0.35158,
+   "confidence": 0.9907
+  },
+  {
+   "text": "procedures",
+   "x": 0.31884,
+   "y": 0.35127,
+   "confidence": 0.9921
+  },
+  {
+   "text": ";",
+   "x": 0.33704,
+   "y": 0.35127,
+   "confidence": 0.8734
+  },
+  {
+   "text": "e",
+   "x": 0.26082,
+   "y": 0.38281,
+   "confidence": 0.9628
+  },
+  {
+   "text": ".",
+   "x": 0.26304,
+   "y": 0.38219,
+   "confidence": 0.9615
+  },
+  {
+   "text": "Provide",
+   "x": 0.28407,
+   "y": 0.38095,
+   "confidence": 0.9836
+  },
+  {
+   "text": "uniform",
+   "x": 0.31359,
+   "y": 0.38064,
+   "confidence": 0.8973
+  },
+  {
+   "text": "policy",
+   "x": 0.34189,
+   "y": 0.38064,
+   "confidence": 0.9924
+  },
+  {
+   "text": "/",
+   "x": 0.352,
+   "y": 0.38064,
+   "confidence": 0.9858
+  },
+  {
+   "text": "guidelines",
+   "x": 0.36899,
+   "y": 0.38064,
+   "confidence": 0.9919
+  },
+  {
+   "text": "to",
+   "x": 0.39385,
+   "y": 0.38064,
+   "confidence": 0.9818
+  },
+  {
+   "text": "all",
+   "x": 0.40639,
+   "y": 0.38064,
+   "confidence": 0.9754
+  },
+  {
+   "text": "personnel",
+   "x": 0.27436,
+   "y": 0.39672,
+   "confidence": 0.9887
+  },
+  {
+   "text": "involved",
+   "x": 0.3051,
+   "y": 0.39641,
+   "confidence": 0.9919
+  },
+  {
+   "text": "from",
+   "x": 0.32814,
+   "y": 0.39641,
+   "confidence": 0.9821
+  },
+  {
+   "text": "OCAT",
+   "x": 0.34715,
+   "y": 0.39641,
+   "confidence": 0.9826
+  },
+  {
+   "text": ",",
+   "x": 0.35625,
+   "y": 0.39641,
+   "confidence": 0.987
+  },
+  {
+   "text": "CPO",
+   "x": 0.36676,
+   "y": 0.39641,
+   "confidence": 0.9796
+  },
+  {
+   "text": ",",
+   "x": 0.37364,
+   "y": 0.39641,
+   "confidence": 0.9841
+  },
+  {
+   "text": "DPOS",
+   "x": 0.38577,
+   "y": 0.39641,
+   "confidence": 0.9598
+  },
+  {
+   "text": ",",
+   "x": 0.39507,
+   "y": 0.39641,
+   "confidence": 0.9809
+  },
+  {
+   "text": "and",
+   "x": 0.40437,
+   "y": 0.39641,
+   "confidence": 0.9829
+  },
+  {
+   "text": "AAOs",
+   "x": 0.26688,
+   "y": 0.41156,
+   "confidence": 0.8886
+  },
+  {
+   "text": "on",
+   "x": 0.28104,
+   "y": 0.41126,
+   "confidence": 0.9733
+  },
+  {
+   "text": "the",
+   "x": 0.29216,
+   "y": 0.41126,
+   "confidence": 0.9821
+  },
+  {
+   "text": "proper",
+   "x": 0.30934,
+   "y": 0.41126,
+   "confidence": 0.9895
+  },
+  {
+   "text": "procedures",
+   "x": 0.33866,
+   "y": 0.41126,
+   "confidence": 0.9914
+  },
+  {
+   "text": "for",
+   "x": 0.36272,
+   "y": 0.41126,
+   "confidence": 0.9935
+  },
+  {
+   "text": "handling",
+   "x": 0.38213,
+   "y": 0.41126,
+   "confidence": 0.9938
+  },
+  {
+   "text": "GSIS",
+   "x": 0.40356,
+   "y": 0.41126,
+   "confidence": 0.9805
+  },
+  {
+   "text": "contributions",
+   "x": 0.27962,
+   "y": 0.42672,
+   "confidence": 0.9875
+  },
+  {
+   "text": ",",
+   "x": 0.30085,
+   "y": 0.42641,
+   "confidence": 0.9702
+  },
+  {
+   "text": "loan",
+   "x": 0.31338,
+   "y": 0.42641,
+   "confidence": 0.9859
+  },
+  {
+   "text": "repayments",
+   "x": 0.3429,
+   "y": 0.42641,
+   "confidence": 0.9937
+  },
+  {
+   "text": ",",
+   "x": 0.36191,
+   "y": 0.42641,
+   "confidence": 0.9821
+  },
+  {
+   "text": "and",
+   "x": 0.37404,
+   "y": 0.42641,
+   "confidence": 0.9924
+  },
+  {
+   "text": "member",
+   "x": 0.39749,
+   "y": 0.42641,
+   "confidence": 0.9934
+  },
+  {
+   "text": "updates",
+   "x": 0.27133,
+   "y": 0.44187,
+   "confidence": 0.9889
+  },
+  {
+   "text": "to",
+   "x": 0.28953,
+   "y": 0.44156,
+   "confidence": 0.9891
+  },
+  {
+   "text": "ensure",
+   "x": 0.3053,
+   "y": 0.44156,
+   "confidence": 0.9919
+  },
+  {
+   "text": "that",
+   "x": 0.32471,
+   "y": 0.44156,
+   "confidence": 0.9901
+  },
+  {
+   "text": "all",
+   "x": 0.33704,
+   "y": 0.44156,
+   "confidence": 0.9695
+  },
+  {
+   "text": "employees",
+   "x": 0.35968,
+   "y": 0.44156,
+   "confidence": 0.9926
+  },
+  {
+   "text": "are",
+   "x": 0.38415,
+   "y": 0.44156,
+   "confidence": 0.9934
+  },
+  {
+   "text": "aware",
+   "x": 0.40133,
+   "y": 0.44156,
+   "confidence": 0.9942
+  },
+  {
+   "text": "of",
+   "x": 0.26264,
+   "y": 0.45671,
+   "confidence": 0.976
+  },
+  {
+   "text": "their",
+   "x": 0.2774,
+   "y": 0.4564,
+   "confidence": 0.982
+  },
+  {
+   "text": "responsibilities",
+   "x": 0.31318,
+   "y": 0.4564,
+   "confidence": 0.9901
+  },
+  {
+   "text": "and",
+   "x": 0.34695,
+   "y": 0.4564,
+   "confidence": 0.9904
+  },
+  {
+   "text": "that",
+   "x": 0.36413,
+   "y": 0.4564,
+   "confidence": 0.98
+  },
+  {
+   "text": "there",
+   "x": 0.38374,
+   "y": 0.4564,
+   "confidence": 0.9854
+  },
+  {
+   "text": "is",
+   "x": 0.39992,
+   "y": 0.4564,
+   "confidence": 0.9712
+  },
+  {
+   "text": "a",
+   "x": 0.40861,
+   "y": 0.4564,
+   "confidence": 0.9791
+  },
+  {
+   "text": "consistent",
+   "x": 0.27477,
+   "y": 0.47155,
+   "confidence": 0.9889
+  },
+  {
+   "text": "approach",
+   "x": 0.30894,
+   "y": 0.47124,
+   "confidence": 0.9878
+  },
+  {
+   "text": "to",
+   "x": 0.33077,
+   "y": 0.47124,
+   "confidence": 0.9743
+  },
+  {
+   "text": "managing",
+   "x": 0.35342,
+   "y": 0.47124,
+   "confidence": 0.9873
+  },
+  {
+   "text": "GSIS",
+   "x": 0.3795,
+   "y": 0.47124,
+   "confidence": 0.9874
+  },
+  {
+   "text": "-",
+   "x": 0.38759,
+   "y": 0.47062,
+   "confidence": 0.9694
+  },
+  {
+   "text": "related",
+   "x": 0.40012,
+   "y": 0.47062,
+   "confidence": 0.9845
+  },
+  {
+   "text": "tasks",
+   "x": 0.26688,
+   "y": 0.48732,
+   "confidence": 0.9875
+  },
+  {
+   "text": "across",
+   "x": 0.28589,
+   "y": 0.48701,
+   "confidence": 0.9871
+  },
+  {
+   "text": "departments",
+   "x": 0.31622,
+   "y": 0.48701,
+   "confidence": 0.9938
+  },
+  {
+   "text": ";",
+   "x": 0.33643,
+   "y": 0.48701,
+   "confidence": 0.59
+  },
+  {
+   "text": "and",
+   "x": 0.34513,
+   "y": 0.48701,
+   "confidence": 0.994
+  },
+  {
+   "text": "f",
+   "x": 0.26001,
+   "y": 0.51793,
+   "confidence": 0.9744
+  },
+  {
+   "text": ".",
+   "x": 0.26264,
+   "y": 0.51732,
+   "confidence": 0.9821
+  },
+  {
+   "text": "Henceforth",
+   "x": 0.28528,
+   "y": 0.51732,
+   "confidence": 0.9925
+  },
+  {
+   "text": ",",
+   "x": 0.30328,
+   "y": 0.51732,
+   "confidence": 0.9888
+  },
+  {
+   "text": "strictly",
+   "x": 0.31783,
+   "y": 0.51732,
+   "confidence": 0.9881
+  },
+  {
+   "text": "comply",
+   "x": 0.3425,
+   "y": 0.51732,
+   "confidence": 0.9921
+  },
+  {
+   "text": "with",
+   "x": 0.36252,
+   "y": 0.51732,
+   "confidence": 0.9939
+  },
+  {
+   "text": "Sections",
+   "x": 0.38556,
+   "y": 0.51732,
+   "confidence": 0.9927
+  },
+  {
+   "text": "14",
+   "x": 0.40558,
+   "y": 0.51732,
+   "confidence": 0.9913
+  },
+  {
+   "text": ",",
+   "x": 0.40983,
+   "y": 0.51732,
+   "confidence": 0.9766
+  },
+  {
+   "text": "15",
+   "x": 0.26284,
+   "y": 0.53154,
+   "confidence": 0.958
+  },
+  {
+   "text": "and",
+   "x": 0.27477,
+   "y": 0.53123,
+   "confidence": 0.9764
+  },
+  {
+   "text": "16",
+   "x": 0.2869,
+   "y": 0.53123,
+   "confidence": 0.9611
+  },
+  {
+   "text": "of",
+   "x": 0.29681,
+   "y": 0.53123,
+   "confidence": 0.9523
+  },
+  {
+   "text": "RA",
+   "x": 0.30611,
+   "y": 0.53123,
+   "confidence": 0.9797
+  },
+  {
+   "text": "No.",
+   "x": 0.31763,
+   "y": 0.53123,
+   "confidence": 0.9562
+  },
+  {
+   "text": "8291",
+   "x": 0.33279,
+   "y": 0.53123,
+   "confidence": 0.9834
+  },
+  {
+   "text": "and",
+   "x": 0.34877,
+   "y": 0.53123,
+   "confidence": 0.9874
+  },
+  {
+   "text": "its",
+   "x": 0.3611,
+   "y": 0.53123,
+   "confidence": 0.9862
+  },
+  {
+   "text": "RIRR",
+   "x": 0.37404,
+   "y": 0.53123,
+   "confidence": 0.9777
+  },
+  {
+   "text": "and",
+   "x": 0.3892,
+   "y": 0.53123,
+   "confidence": 0.9844
+  },
+  {
+   "text": "GSIS",
+   "x": 0.40396,
+   "y": 0.53123,
+   "confidence": 0.9816
+  },
+  {
+   "text": "Memorandum",
+   "x": 0.28063,
+   "y": 0.54669,
+   "confidence": 0.9814
+  },
+  {
+   "text": "Circular",
+   "x": 0.31783,
+   "y": 0.54638,
+   "confidence": 0.9834
+  },
+  {
+   "text": "No.",
+   "x": 0.33825,
+   "y": 0.54638,
+   "confidence": 0.9733
+  },
+  {
+   "text": "027",
+   "x": 0.35241,
+   "y": 0.54638,
+   "confidence": 0.9818
+  },
+  {
+   "text": ",",
+   "x": 0.35928,
+   "y": 0.54638,
+   "confidence": 0.9704
+  },
+  {
+   "text": "s",
+   "x": 0.36575,
+   "y": 0.54638,
+   "confidence": 0.9519
+  },
+  {
+   "text": ".",
+   "x": 0.36797,
+   "y": 0.54638,
+   "confidence": 0.9786
+  },
+  {
+   "text": "2021",
+   "x": 0.3799,
+   "y": 0.54638,
+   "confidence": 0.9906
+  },
+  {
+   "text": ",",
+   "x": 0.3886,
+   "y": 0.54638,
+   "confidence": 0.9811
+  },
+  {
+   "text": "dated",
+   "x": 0.40194,
+   "y": 0.54638,
+   "confidence": 0.9887
+  },
+  {
+   "text": "May",
+   "x": 0.26547,
+   "y": 0.5637,
+   "confidence": 0.9597
+  },
+  {
+   "text": "19",
+   "x": 0.2778,
+   "y": 0.56339,
+   "confidence": 0.9868
+  },
+  {
+   "text": ",",
+   "x": 0.28225,
+   "y": 0.56339,
+   "confidence": 0.9879
+  },
+  {
+   "text": "2021",
+   "x": 0.29256,
+   "y": 0.56339,
+   "confidence": 0.9895
+  },
+  {
+   "text": ".",
+   "x": 0.30125,
+   "y": 0.56339,
+   "confidence": 0.9618
+  },
+  {
+   "text": "AGENCY",
+   "x": 0.54266,
+   "y": 0.23686,
+   "confidence": 0.9884
+  },
+  {
+   "text": "ACTION",
+   "x": 0.56935,
+   "y": 0.23624,
+   "confidence": 0.9888
+  },
+  {
+   "text": "PLAN",
+   "x": 0.59118,
+   "y": 0.23531,
+   "confidence": 0.9944
+  },
+  {
+   "text": "Action",
+   "x": 0.46725,
+   "y": 0.26252,
+   "confidence": 0.9941
+  },
+  {
+   "text": "Plan",
+   "x": 0.48625,
+   "y": 0.26221,
+   "confidence": 0.9781
+  },
+  {
+   "text": "Person",
+   "x": 0.56652,
+   "y": 0.25263,
+   "confidence": 0.99
+  },
+  {
+   "text": "/",
+   "x": 0.57885,
+   "y": 0.25263,
+   "confidence": 0.9887
+  },
+  {
+   "text": "Dept",
+   "x": 0.58835,
+   "y": 0.2517,
+   "confidence": 0.9944
+  },
+  {
+   "text": ".",
+   "x": 0.59644,
+   "y": 0.25201,
+   "confidence": 0.9853
+  },
+  {
+   "text": "Responsible",
+   "x": 0.57683,
+   "y": 0.26747,
+   "confidence": 0.995
+  },
+  {
+   "text": "Target",
+   "x": 0.63122,
+   "y": 0.24985,
+   "confidence": 0.9888
+  },
+  {
+   "text": "Implementation",
+   "x": 0.66842,
+   "y": 0.24923,
+   "confidence": 0.9802
+  },
+  {
+   "text": "Date",
+   "x": 0.70239,
+   "y": 0.24892,
+   "confidence": 0.993
+  },
+  {
+   "text": "From",
+   "x": 0.6391,
+   "y": 0.26654,
+   "confidence": 0.9923
+  },
+  {
+   "text": "Status",
+   "x": 0.74484,
+   "y": 0.2381,
+   "confidence": 0.9902
+  },
+  {
+   "text": "of",
+   "x": 0.75981,
+   "y": 0.2381,
+   "confidence": 0.9819
+  },
+  {
+   "text": "Implementation",
+   "x": 0.74889,
+   "y": 0.25417,
+   "confidence": 0.9894
+  },
+  {
+   "text": "To",
+   "x": 0.69228,
+   "y": 0.26438,
+   "confidence": 0.8998
+  },
+  {
+   "text": "Reason",
+   "x": 0.796,
+   "y": 0.23036,
+   "confidence": 0.9829
+  },
+  {
+   "text": "for",
+   "x": 0.81419,
+   "y": 0.23006,
+   "confidence": 0.9856
+  },
+  {
+   "text": "Partial",
+   "x": 0.83017,
+   "y": 0.23006,
+   "confidence": 0.9843
+  },
+  {
+   "text": "/",
+   "x": 0.8425,
+   "y": 0.23006,
+   "confidence": 0.9856
+  },
+  {
+   "text": "Delay",
+   "x": 0.8522,
+   "y": 0.22975,
+   "confidence": 0.9887
+  },
+  {
+   "text": "/",
+   "x": 0.86272,
+   "y": 0.22944,
+   "confidence": 0.9756
+  },
+  {
+   "text": "Non",
+   "x": 0.79559,
+   "y": 0.24552,
+   "confidence": 0.9844
+  },
+  {
+   "text": "-",
+   "x": 0.80247,
+   "y": 0.24552,
+   "confidence": 0.9815
+  },
+  {
+   "text": "Implementation",
+   "x": 0.82855,
+   "y": 0.24459,
+   "confidence": 0.992
+  },
+  {
+   "text": ",",
+   "x": 0.85443,
+   "y": 0.24428,
+   "confidence": 0.9816
+  },
+  {
+   "text": "if",
+   "x": 0.86009,
+   "y": 0.24428,
+   "confidence": 0.9829
+  },
+  {
+   "text": "applicable",
+   "x": 0.82471,
+   "y": 0.26036,
+   "confidence": 0.9931
+  },
+  {
+   "text": "Action",
+   "x": 0.88476,
+   "y": 0.23408,
+   "confidence": 0.9909
+  },
+  {
+   "text": "Taken",
+   "x": 0.90679,
+   "y": 0.23377,
+   "confidence": 0.9844
+  },
+  {
+   "text": "/",
+   "x": 0.91812,
+   "y": 0.23377,
+   "confidence": 0.9793
+  },
+  {
+   "text": "Action",
+   "x": 0.92903,
+   "y": 0.23346,
+   "confidence": 0.9905
+  },
+  {
+   "text": "to",
+   "x": 0.9444,
+   "y": 0.23315,
+   "confidence": 0.9827
+  },
+  {
+   "text": "be",
+   "x": 0.90133,
+   "y": 0.24954,
+   "confidence": 0.9756
+  },
+  {
+   "text": "Taken",
+   "x": 0.91589,
+   "y": 0.24923,
+   "confidence": 0.9934
+  },
+  {
+   "text": "Page",
+   "x": 0.4812,
+   "y": 0.96939,
+   "confidence": 0.9885
+  },
+  {
+   "text": "15",
+   "x": 0.49393,
+   "y": 0.96939,
+   "confidence": 0.9843
+  },
+  {
+   "text": "of",
+   "x": 0.50445,
+   "y": 0.96939,
+   "confidence": 0.982
+  },
+  {
+   "text": "24",
+   "x": 0.51355,
+   "y": 0.96908,
+   "confidence": 0.988
+  }
+ ],
+ "dimension": {
+  "width": 2473.0,
+  "height": 1617.0
+ },
+ "detected_languages": [
+  "en"
+ ],
+ "image_quality": 0.9926671385765076,
+ "tables_found": 0,
+ "year": 2024,
+ "doc": "AAPSI",
+ "page": 16
+}

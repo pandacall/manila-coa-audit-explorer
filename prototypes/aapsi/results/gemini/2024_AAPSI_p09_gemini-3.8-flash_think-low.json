@@ -1,0 +1,51 @@
+{
+  "seconds": 5.7,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1716,
+    "output_tokens": 833,
+    "thought_tokens": 0
+  },
+  "rows": [
+    {
+      "reference": "",
+      "observations": "",
+      "recommendations": "c. The Inventory Committee to conduct a comprehensive physical inventory of all road network assets; d. The CGSO to prepare the Report on the Local Road Network and the Inventory Committee to submit the Report on the Physical Count of the Local Road Network in accordance with Section VI and VII-b of COA Circular No. 2015-008; e. The DEPW, CGSO and OCAT to enhance coordination regarding IA-Road Networks; and f. The City to comply with pertinent provisions of COA Circular No. 2015-008, Paragraphs 27 of the IPSAS 1, Paragraph 59 of IPSAS 17.",
+      "action_plan": "",
+      "person_responsible": "",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    },
+    {
+      "reference": "AAR 2024 Observation No. 9 Page 114",
+      "observations": "9. The balances of the Building and School Buildings account as of December 31, 2024, cannot be ascertained due to the following: a. Discrepancies between the OCAT SLs and the CGSO RPCPPE amounting to P3.741 billion due to: • PPE items that were recorded in the OCAT but not the RPCPPE amounting to P0.772 billion; • PPE items that were recorded in the RPCPPE but no in the OCAT, totaling P4.512 billion;",
+      "recommendations": "9.14. We recommended that Management direct: a. The OCAT and CGSO to initiate reconciliation of their data; b. The OCAT to coordinate with the DEPW and establish the cost of demolished school buildings for proper derecognition in the books (with supporting documentation);",
+      "action_plan": "Management planned on implementing the one-time cleansing of PPE. Simultaneously, CGSO will initiate coordination with the DEPW and formally request the submission of all relevant documentation relative to the demolition of school buildings, to facilitate the verification of reported adjustments and proper attribution of asset status",
+      "person_responsible": "OCAT, CGSO",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    },
+    {
+      "reference": "",
+      "observations": "These conditions are not in accordance with Paragraph 27 of the IPSAS 1, Paragraph 82 of IPSAS 17, Section 147 of COA Circular 92-386, and Section 3.6 of COA Circular 2020-006. These discrepancies between the OCAT and CGSO records cast doubt on the accuracy, reliability and validity of the reported balances of Building and School Buildings. Also, the non-derecognition of demolished PPE overstated the School Buildings account by P0.051 billion.",
+      "recommendations": "c. The DEPW to fast-track the retrieval of documents pertaining to demolished school buildings, and submit to OCAT and CGSO verified information for updating purposes; and d. Strictly comply with Paragraphs 27 of IPSAS 1, Paragraph 82 of IPSAS 17, Section 147 of COA Circular 92-386 and Section 6.3 of COA Circular No. 2020-006.",
+      "action_plan": "The OCAT committed that beginning CY 2025, their office is working with the CGSO and the Inventory Team for the conduct and completion of the one-time cleansing of PPE. Also, JEV No. 1002501008778 was drawn in CY 2025 to address observation B. The CGSO will prepare and provide all available necessary documents needed by the OCAT in order to update their SLs",
+      "person_responsible": "DEPW",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    }
+  ],
+  "year": 2024,
+  "doc": "AAPSI",
+  "page": 9,
+  "model": "gemini-3.8-flash"
+}

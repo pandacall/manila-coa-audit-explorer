@@ -1,0 +1,51 @@
+{
+  "seconds": 4.8,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1716,
+    "output_tokens": 705,
+    "thought_tokens": 0
+  },
+  "rows": [
+    {
+      "reference": "",
+      "observations": "c. Misclassified tax credits amounting to P510.615 million in the Other Receivables - Others account and unrecorded Other Receivables amounting to P770.569 million; and d. Unreconciled balance of P9.309 million due to non-recording of cleared dishonored checks under the Other Receivables - Dishonored Checks account. These are contrary to Paragraph 27 of the IPSAS 1; Sections 111 and 112 of PD No. 1445; and Items 6.1 and 6.2 of COA Circular No. 2016-005, dated December 19, 2016.",
+      "recommendations": "Conduct a regular review and reconciliation of receivables, including monthly or quarterly reporting, to ensure the accuracy of balances in the financial statements; and Coordinate and reconcile with the Patrimonial Unit of the City General Services Office's (CGSO) to establish the correct balances for the leased properties of the City b. The MUSO to: •Submit a complete and up-to-date schedule of receivables, including collections and ageing reports pertaining to the Land for the Landless program, to OCAT on a timely basis.",
+      "action_plan": "",
+      "person_responsible": "MUSO",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    },
+    {
+      "reference": "AAR 2024 Observation No. 4 Page 92",
+      "observations": "4. The balance of the RPT and Special Education Tax (SET) Receivable amounting to P15.773 billion and P10.885 billion, respectively, as of December 31, 2024, cannot be ascertained due to the following:",
+      "recommendations": "4.19. We recommended and Management agreed and acted upon on the recommendations to: a. Require the CTO to provide the OCAT with RPTODL for monitoring purposes; b. Direct the OCAT and the CTO to coordinate and reconcile discrepancies between recorded balances of RPT and SET Receivable accounts against the total amount of tax delinquencies indicated in the RPTODL;",
+      "action_plan": "The OCAT will reconcile the discrepancies and will coordinate closely with the CTO for review, analysis and reconciliation of these accounts. They also committed to undertake a comprehensive assessment of uncollected tax accounts",
+      "person_responsible": "CTO, OCAT",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    },
+    {
+      "reference": "",
+      "observations": "a. The RPT and SET Receivables per books do not tally with the total RPT Delinquencies recorded in the Real Property Tax Owners Delinquency Listing (RPTODL) by P1.207 billion, due to non-coordination between the OCAT and CTO, which resulted in unreconciled data, contrary to Paragraph 27 of IPSAS 1; and",
+      "recommendations": "c. Direct the OCAT to make a reliable estimate of the City's bad debts arising from uncollected taxes and set up an allowance for impairment based on the most reliable and available data that the OCAT can obtain;'",
+      "action_plan": "",
+      "person_responsible": "",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    }
+  ],
+  "year": 2024,
+  "doc": "AAPSI",
+  "page": 4,
+  "model": "gemini-3.8-flash"
+}

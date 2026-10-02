@@ -1,0 +1,39 @@
+{
+  "seconds": 4.2,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1711,
+    "output_tokens": 484,
+    "thought_tokens": 0
+  },
+  "rows": [
+    {
+      "reference": "CY 2018 AAR, Observation No. 15, Page 91",
+      "observations": "10. The creation, organization and operation of an Internal Audit Service (IAS) mandated under Section 2 of RA No. 3456 as amended by RA No. 4177 was not undertaken by the City, thus, Management was not accorded with the assistance in the achievement of an efficient and effective fiscal administration and performance of agency affairs and functions.",
+      "recommendations": "We recommended that the LCE facilitate the creation, organization and operation of the City's IAS as required under RA No. 3456 as amended by RA No. 4177, to assist in the achievement of an efficient and effective fiscal administration and performance of City's affairs and functions.",
+      "action_plan": "",
+      "person_responsible": "Office of the City Mayor",
+      "target_from": "",
+      "target_to": "",
+      "status": "Ongoing",
+      "reason_for_delay": "",
+      "action_taken": ""
+    },
+    {
+      "reference": "CY 2018 AAR, Observation No. 16, Page 92",
+      "observations": "11. The excess amount of collections/proceeds from sale of bid documents and other related fees amounting to P13.958 million as of December 31, 2018 was still being maintained under the TF instead of transferring the same to the GF pursuant to Item 6.2 of DBM Circular No. 2004-5A.",
+      "recommendations": "We recommended that Management direct the City Treasurer to cause the immediate transfer of the unutilized amount of the proceeds from the collection of bid documents and related fees from the TF to the GF.",
+      "action_plan": "",
+      "person_responsible": "OCAT",
+      "target_from": "2024",
+      "target_to": "2024",
+      "status": "Fully Implemented",
+      "reason_for_delay": "",
+      "action_taken": "The OCAT already determined the correct amount of collection/proceed form sale of bid documents and other related fees to be transferred to the GF amounting to Php6,923,146.93. The said amount is already transferred to the GF thru JEV No. 300-24-04-06 dated 15 June 2024."
+    }
+  ],
+  "year": 2023,
+  "doc": "AAPSI",
+  "page": 7,
+  "model": "gemini-3.8-flash"
+}

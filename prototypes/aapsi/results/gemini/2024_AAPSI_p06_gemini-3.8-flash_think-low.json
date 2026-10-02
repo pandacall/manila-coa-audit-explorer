@@ -1,0 +1,39 @@
+{
+  "seconds": 6.4,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1716,
+    "output_tokens": 742,
+    "thought_tokens": 0
+  },
+  "rows": [
+    {
+      "reference": "",
+      "observations": "These conditions contributed to the accumulation of tax delinquencies totaling P27.864 billion, exclusive of interest, as of December 31, 2024, thus, depriving the City of essential income for the implementation of priority PPAs for the benefit of its constituents.",
+      "recommendations": "• Request assistance from barangays for its tax campaign program, particularly in the dissemination of NODs and demand letters, and serve warrants of levy to the delinquent real property owners within their areas of jurisdiction; • Regularly post notices of delinquencies i strategic locations of the City Hall, and ask for the assistance of barangays for the posting of the same in each barangay where the delinquent property is located; and • Furnish the City Council with a copy of the NOD for assistance and enforcement purposes.",
+      "action_plan": "",
+      "person_responsible": "",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    },
+    {
+      "reference": "AAR 2024 Observation No. 6 Page 101",
+      "observations": "6. The accuracy of the Inventory account, totaling P309.908 million, as presented in the FS could not be determined due to: a. Adjustments to year-end balances with net amount of P757.257 million without corresponding documentation; b. Unreconciled differences between the OCAT records and the CGSO Reports of Physical Count of Inventories (RPCI) resulting in misclassification or misposting within inventory sub-accounts amounting to P301.743 million; c. Inability of the OCAT to maintain Stock Ledger Cards (SLC); and d. Unreliability of the CGSO RPCI due to discrepancies between CGSO reports and hospitals concerned caused by: (1) incorrect cut-off; (2) non-maintenance of stock cards; and (3) inconsistencies in the preparation and submission of Summary of Supplies and Materials Issued (SSMI).",
+      "recommendations": "6.22.We recommended that: a. The OCAT to – • Provide documentation for inventor adjustments when reconciling the RPCI with accounting records; • Strictly implement the Perpetual Inventor Method through maintenance of SLC; • Coordinate with CGSO on the reconciliation an review of inventory accounts, to include the proper classification of inventories; and • Subsequently, prepare adjusting entries correct the balances of inventory accounts based on reconciliations conducted. b. The CGSO to – • Observe proper cut-off procedures to ensur that the RPCI reflects correct year-end balances; • Maintain and update stock cards for all inventor items, and ensure that the same are readily available for examination;",
+      "action_plan": "The OCAT is already working with the CGSO and the Inventory Team for the conduct and completion of the one-time cleansing of PPE. The double recording was already adjusted. They commit to ensure the establishment of the CIPLC for each project simultaneously with the one-time cleansing. Particular attention shall be given to the reinforcement of the internal processes, improvement of inter-office collaboration, and pursuit of any supplementary measures that may facilitate the accurate and prompt submission of requisite documents. Furthermore, they justified that the discrepancy was due to the different operational procedures of the two offices – namely, the accounting treatment applied by the OCAT and the technical monitoring and reporting methods they observed. Nonetheless, they are in close coordination with the OCAT to confirm the source of discrepancy and to ensure appropriate adjustments.",
+      "person_responsible": "OCAT, CGSO",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    }
+  ],
+  "year": 2024,
+  "doc": "AAPSI",
+  "page": 6,
+  "model": "gemini-3.8-flash"
+}

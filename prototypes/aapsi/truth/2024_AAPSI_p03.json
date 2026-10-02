@@ -1,0 +1,63 @@
+{
+ "year": 2024,
+ "doc": "AAPSI",
+ "page": 3,
+ "method": "Transcribed from 200-dpi crops of the scan. The merged right-hand cells on the first two bands continue from the previous page and are blank here; the third band is cut off by the page end.",
+ "columns_x": [
+  0.019,
+  0.0911,
+  0.2567,
+  0.411,
+  0.5413,
+  0.6159,
+  0.6685,
+  0.7216,
+  0.7822,
+  0.8725,
+  0.9567
+ ],
+ "rows_y": [
+  0.2706,
+  0.4146,
+  0.6251,
+  0.86
+ ],
+ "rows": [
+  {
+   "reference": "",
+   "observations": "b.Cash Advances required for immediate liquidation and settlement totaling P106.136 million pertained to accounts of AOs who are already deceased, resigned, retired or separated from the City that have been aged two months to 19 years, contrary to Section 4.1.3 of COA Circular No. 97-002 dated February 10, 1997; and",
+   "recommendations": "b.Ensure that O&E who will retire, resign or transfer to other agencies settle their accountabilities before issuing them clearance certificates. Ascertain the actual employment status of those with no information as to whether they are still active or already separated from the service; and",
+   "action_plan": "",
+   "person_responsible": "",
+   "target_from": "",
+   "target_to": "",
+   "status": "",
+   "reason_for_delay": "",
+   "action_taken": ""
+  },
+  {
+   "reference": "",
+   "observations": "c.Additional cash advances were granted to six AOs despite non-liquidation or non-settlement of their previous cash advances, which is contrary to Item 4.1.2 of COA Circular No. 97-002, resulting in difficulty of liquidation, improper/ unmonitored utilization and accumulation of cash advances. These circumstances resulted in the accumulation of cash advances by AOs, which overstated the Receivable accounts and understated the related Expense accounts as of December 31, 2024.",
+   "recommendations": "c.Refrain from granting additional CAs to O&E without first liquidating their previous CAs pursuant to Section 4.1.2 of COA Circular No. 97-002 dated February 10, 1997.",
+   "action_plan": "",
+   "person_responsible": "",
+   "target_from": "",
+   "target_to": "",
+   "status": "",
+   "reason_for_delay": "",
+   "action_taken": ""
+  },
+  {
+   "reference": "AAR 2024 Observation No. 3 Page 87",
+   "observations": "3. The accuracy, existence and completeness of various receivables accounts as of December 31, 2024, cannot be ascertained due to the following: a. Receivables totaling P276.143 million were recorded in total amount without SL details or supporting documentation to substantiate the composition of the balances; b. Unsupported balances of Inter-Agency Receivables amounting to P23.682 million;",
+   "recommendations": "3.24.We recommended that Management require: a.The OCAT to: •Maintain SLs for all receivable accounts to ensure that detailed records support the bulk amounts reflected in the financial statements. •Immediately coordinate and reconcile with the concerned NGAs and GOCCs to confirm the unconfirmed balances and establish the correct amount for the affected accounts. •Prepare adjusting entries to correct misstatements identified upon thorough evaluation of the transactions",
+   "action_plan": "The MUSO undertake to faithfully submit a complete and up-to-date schedule of receivables, including collections and ageing reports pertaining to Land-for-the-Landless Program, to OCAT on a timely basis.",
+   "person_responsible": "OCAT",
+   "target_from": "",
+   "target_to": "",
+   "status": "",
+   "reason_for_delay": "",
+   "action_taken": ""
+  }
+ ]
+}

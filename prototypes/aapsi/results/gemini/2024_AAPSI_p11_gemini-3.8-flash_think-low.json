@@ -1,0 +1,39 @@
+{
+  "seconds": 6.0,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1716,
+    "output_tokens": 861,
+    "thought_tokens": 0
+  },
+  "rows": [
+    {
+      "reference": "",
+      "observations": "Also, the misclassification overstated the Medical Equipment account by P0.174 billion and understated the Computer Software account, together with its Accumulated Depreciation of P0.003 billion, and Prior Period Adjustment account for the Semi-Expendable Items amounting to P0.170 billion.",
+      "recommendations": "c. Henceforth, strictly comply with the proper recording of PPE accounts as guided by Paragraph 14 of IPSAS 1, and Section 6.3 of COA Circular No. 2020-006.",
+      "action_plan": "",
+      "person_responsible": "",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    },
+    {
+      "reference": "AAR 2024 Observation No. 11 Page 121",
+      "observations": "11. The six City District Hospitals could not maximize utilization of their resources due to the following PPE and Semi-Expendable items challenges that have not been addressed: a. Unserviceable PPE and Semi-Expendable items amounting to P74.131 million remained undisposed; b. Unserviceable PPE and Semi-Expendable items amounting to P45.867 million could no longer be traced in the books despite non-disposal of said items; and c. Semi-expandable property items that are no longer used and unserviceable amounting to P1.128 million were inappropriately reported in the Waste Materials Report (WMR). These are contrary to Part I, Section C.1 of COA-DBM Joint Circular No. 2024-1 dated January 30, 2024, or the Revised Manual on the Disposal of Government Properties, Section 4.7.10 of COA Circular No. 2022-004 dated May 30, 2022, and Section 167 of COA Circular No. 92-386, dated October 20, 1992, or the Rules and Regulations in the Supply and Property Management in the Local Governments",
+      "recommendations": "11.16. We recommended that Management require the: a. Disposal Committee and CGSO coordinate with the Property Units of the six District Hospitals to facilitate the procedures for disposal of items and updating of the IIRUP and WMR, as guided by COA-DBM Joint Circular No. 2024-1, Section 4.7.10 of COA Circular No. 2022-004 and Section 167 of COA Circular No. 92-386; b. Disposal Committee and CGSO consider the other modes of disposal provided under Section H of Part II of COA-DBM Joint Circular No. 2024-1 viable to the six district hospitals and initiate disposal procedures; c. OCAT to revisit and reconcile all adjusting entries made in prior years pertaining to the dropping of PPE accounts in the books to account for the items that are no longer recorded; and d. Henceforth, strictly comply with COA-DBM Joint Circular No. 2024-1, Section 4.7.10 of COA Circular No. 2022-004, and Section 167 of COA Circular No. 92-386.",
+      "action_plan": "The CGSO stated that they coordinated with the 6 district hospitals and assisted them with the classifications, proper procedures and other modes of disposal of unserviceable PPE and semi-expendables. In addition, they also disseminated memorandum dated May 9, 2025 informing all departments on the proper procedures and appropriate forms in compliance with JC No. 2024-1, COA Circular 2022-004 and COA Circular 92-386.",
+      "person_responsible": "Disposal Committee, OCAT and CGSO",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    }
+  ],
+  "year": 2024,
+  "doc": "AAPSI",
+  "page": 11,
+  "model": "gemini-3.8-flash"
+}

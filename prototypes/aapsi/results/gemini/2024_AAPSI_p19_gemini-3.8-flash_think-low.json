@@ -1,0 +1,39 @@
+{
+  "seconds": 5.6,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1716,
+    "output_tokens": 577,
+    "thought_tokens": 0
+  },
+  "rows": [
+    {
+      "reference": "",
+      "observations": "b. Donations received totaling P22.599 million remained outstanding for more than 5 years due to the absence of Deeds of Donation or equivalent documents to support the basis of its utilization. These conditions adversely affect the fairness of the presentation of the Due to NGAs account in the FS, contrary to Paragraph 27 of IPSAS 1.",
+      "recommendations": "b. Together with implementing offices, ensure that MOAs and Deeds of Donation or other similar documents are duly safeguarded in support of transaction recorded in the books; a. In case of unavailability of MOAs, Deeds of Donation or other similar documents, immediately coordinate with corresponding NGA grantors/donors to obtain copies thereof; and c. Henceforth, ensure that fund transfers and its corresponding MOAs/TAs are strictly monitored.",
+      "action_plan": "",
+      "person_responsible": "",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    },
+    {
+      "reference": "AAR 2024 Observation No. 19 Page 148",
+      "observations": "19. The present monitoring mechanism for managing the delayed recording of transactions in the books was not effective, thereby resulting in frequent adjustments totaling P414.963 million, contrary to Paragraph 27 of IPSAS 1 and Paragraphs 46 and 47 of IPSAS 3. This resulted in the restatement of the FS, which may adversely affect future fiscal planning.",
+      "recommendations": "19.8.We recommended that Management: a.Require all departments to submit promptly the copies of AIR, DR, SOA, Billing Statements, Progress Billings, and other supporting documents to the OCAT for proper and timely recording of transactions in the books of the City; b.Require the OCAT to: •Formulate an effective monitoring system to anticipate and manage the delayed recording of transactions; •Implement clear deadlines and remedial actions to ensure timely accounting of transactions for accurate financial reporting for each period; and c.Strictly adhere to the provisions of Paragraph 27 of IPSAS 1 and Paragraphs 46 and 47 of IPSAS 3.",
+      "action_plan": "The OCAT committed to sending Quarterly Memos to all offices reminding them of the submission of DVs to eliminate the need for PPAs. The DEPW will initiate an internal review of its existing billing process with the objective of identifying bottlenecks and implementing measures to streamline and expedite the procedure. DEPW shall coordinate closely with the OCAT and will explore other collaborative measures that will help facilitate the timely submission of SOA, Billing statements, and other necessary supporting documents",
+      "person_responsible": "Concerned City Departments, OCAT",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    }
+  ],
+  "year": 2024,
+  "doc": "AAPSI",
+  "page": 19,
+  "model": "gemini-3.8-flash"
+}

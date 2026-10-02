@@ -1,0 +1,75 @@
+{
+  "seconds": 10.9,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1711,
+    "output_tokens": 903,
+    "thought_tokens": 0
+  },
+  "rows": [
+    {
+      "reference": "AAR 2023 Observation No. 6 Page 95",
+      "observations": "6. The City was unable to identify and appropriate various PPAs for LCCAP in CY 2023, which is not inconsonance with Section 14 of Republic Act (RA) No. 9729, otherwise known as the Climate Change Act of 2009, as amended.",
+      "recommendations": "We recommended and Management agreed to: 6.11.1. Promptly create the City's LCCAP Core Team in accordance with Pparagraph. 3.1.1 of DILG-MC No. 2014-135 and Section. 7 of the City's LCCAP to facilitate the proper planning, prioritization, funding, implementation and monitoring/assessment of proposed climate change PPAs; and",
+      "action_plan": "",
+      "person_responsible": "Office of the City Mayor",
+      "target_from": "",
+      "target_to": "",
+      "status": "Ongoing",
+      "reason_for_delay": "The management is currently in the process of creating the Core Team. The necessary documents will be submitted to COA once finalized and approved.",
+      "action_taken": ""
+    },
+    {
+      "reference": "",
+      "observations": "",
+      "recommendations": "6.11.2. Ensure that approved climate change PPAs are aligned with the City's LCCAP and funded from the City's IRA (now NTA) in accordance with Section. 14 of RA No. 9729.",
+      "action_plan": "",
+      "person_responsible": "Office of the City Mayor",
+      "target_from": "",
+      "target_to": "",
+      "status": "Ongoing",
+      "reason_for_delay": "",
+      "action_taken": ""
+    },
+    {
+      "reference": "CY 2022 AAR, Observation No. 6, Page 81",
+      "observations": "7. The City has not remitted P393.564 million representing the amounts withheld as of December 31, 2022 for the accounts of the BIR, GSIS, Pag-IBIG and PhilHealth, contrary to the appertaining legal prescriptions.",
+      "recommendations": "We reiterated our recommendation that Management direct the OCAT and CTO to remit the P393.564 million to the BIR, GSIS, Pag-IBIG and PhilHealth without further delay.",
+      "action_plan": "",
+      "person_responsible": "OCAT and CTO",
+      "target_from": "",
+      "target_to": "",
+      "status": "Ongoing",
+      "reason_for_delay": "Issues related to employees details and information (for Clarif Items) for GSIS. On the other hand the amount payable to BIR reflects the withholding taxes related to unpaid payable to different suppliers.",
+      "action_taken": "The OCAT in coordination with CTO is continuously remitting the remaining unremitted amount to date."
+    },
+    {
+      "reference": "CY 2021 AAR, Observation No. 4, Page 83",
+      "observations": "8. Seven hundred twenty-three (723) cases of double payment of emergency subsidy/financial assistance (FA) to beneficiaries in COVID-19 lockdown translated to a total payment of P8.424 million in excess of the amounts legally authorized.",
+      "recommendations": "We recommended that Management: a. Establish the accountability for and recover the excess payment of emergency subsidy and FA; and",
+      "action_plan": "",
+      "person_responsible": "Office of the Mayor/ Manila Department of Social Welfare/ City Legal Office",
+      "target_from": "",
+      "target_to": "",
+      "status": "Ongoing",
+      "reason_for_delay": "",
+      "action_taken": ""
+    },
+    {
+      "reference": "",
+      "observations": "",
+      "recommendations": "b. In coordination with the DSWD, supply the missing beneficiary information necessary in the full validation of the payments of the subject emergency subsidy/FA.",
+      "action_plan": "",
+      "person_responsible": "Office of the Mayor/ Manila Department of Social Welfare",
+      "target_from": "",
+      "target_to": "",
+      "status": "Ongoing",
+      "reason_for_delay": "",
+      "action_taken": ""
+    }
+  ],
+  "year": 2023,
+  "doc": "AAPSI",
+  "page": 6,
+  "model": "gemini-3.1-pro-preview"
+}

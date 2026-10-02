@@ -1,0 +1,39 @@
+{
+  "seconds": 58.0,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1716,
+    "output_tokens": 631,
+    "thought_tokens": 7561
+  },
+  "rows": [
+    {
+      "reference": "AAR 2024 Observation No. 8 Page 109",
+      "observations": "8. The following practices are not in accordance with Paragraph 66 of the IPSAS 17, and Sections 4.12 to 4.14, 5.7 to 5.8, 6 and 7 of COA Circular 2015-008 dated November 23, 2015: a. No-recognition of the depreciation expense and accumulated depreciation on the Infrastructure Assets (IA) - Road Networks account with a total cost of P2.32 billion;",
+      "recommendations": "8.18. We recommended that Management require: a. The DEPW to provide OCAT and CGSO complete information of IA-Road Networks, including road IDs, road names, components, descriptions, and cost segregation, to enable the accurate preparation of reports such as the Report on Local Road Network and the Report on Physical Count of the Road Network;",
+      "action_plan": "The CGSO stated that the City issued a memorandum directing the Inventory Committee to conduct a comprehensive Local Road Inventory and Road mapping. The OCAT commented that the physical count of all road network assets is still ongoing.",
+      "person_responsible": "",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    },
+    {
+      "reference": "",
+      "observations": "b. Non-preparation of the Report on Local Road Network due to the absence of data, such as the complete description and cost segregation of road components for the road projects coming from the DEPW; and c. Non-maintenance of the subsidiary records on components of road networks. Thus, the existence, accuracy, and validity of the balances of the IA - Road Networks account and its corresponding Depreciation Expense and Accumulated Depreciation account could not be established.",
+      "recommendations": "b. The OCAT to: Coordinate with DEPW and CGSO to establish the estimated useful life of the depreciable component of road networks and identify road lots; • Coordinate with CGSO to determine the acquisition date for items with incomplete information and update the Road Network Lapsing Schedule; • Recognize the depreciation and accumulate depreciation for the items under road networks and using the prescribed chart of accounts; and • Comply with Sections 4 to 8 of COA Circular No. 2015-008, Paragraph 27 IPSAS 1, Paragraph 59 of IPSAS 17.",
+      "action_plan": "",
+      "person_responsible": "",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    }
+  ],
+  "year": 2024,
+  "doc": "AAPSI",
+  "page": 8,
+  "model": "gemini-3.8-flash"
+}

@@ -1,0 +1,27 @@
+{
+  "seconds": 106.0,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1716,
+    "output_tokens": 662,
+    "thought_tokens": 14619
+  },
+  "rows": [
+    {
+      "reference": "AAR 2024 Observation No. 12 Page 125",
+      "observations": "12. The reliability and accuracy of the Construction in Progress (CIP) account balance totaling P4.086 billion cannot be ascertained due to: a. Non-reconciliation of the OCAT records and the CGSO RPCPPE of the CIP, with discrepancies amounting to P6.532 billion due to: • Projects appearing in the RPCPPE of CIP but were no recorded in the books, amounting to P0.106 billion; • Projects that have been completed but remain recorded under CIP and have not yet been reclassified to their corresponding asset accounts amounting to P2.097 billion; • The CIP account is credited for completed project However, the corresponding debit entry to initially recognize the project was not recorded, amounting to P0.241 billion; and • Double recording of transactions amounting to P0.178 billion. b. Non-maintenance of the CIP Ledger Card (CIPLC) for each project by the OCAT. These practices are not in accordance with Paragraph 27 of the IPSAS 1, Section 16 of Chapter 1 of Volume II of the MNGAS for LGUs, and Section 111 of PD No.1445. Thus, the fairness of the CIP account balance could not be established.",
+      "recommendations": "12.18. We recommended that Management direct the OCAT to: a. Analyze the CIP account and make appropriate adjustments to attain its fair presentation; b. Regularly coordinate with CGSO and other implementing offices to timely recognize the completion of projects and consider the formulation of guidelines that will address issues such as delayed processing of final billings by contractors to facilitate the timely and proper accounting treatment of CIP transactions; and c. To prepare and maintain the required CIPLC.",
+      "action_plan": "The OCAT is already working with the CGSO and the Inventory Team for the conduct and completion of the one-time cleansing of PPE. The double recording was already adjusted. They commit to ensure the establishment of the CIPLC for each project simultaneously with the one-time cleansing. The CGSO conveys its readiness to further enhance the coordination with concerned departments to ensure the timely and proper recognition of completed projects. Particular attention shall be given to the reinforcement of the internal processes, improvement of inter-office collaboration, and pursuit of any supplementary measures that may facilitate the accurate and prompt submission of requisite documents. Furthermore, they justified that the discrepancy was due to the different operational procedures of the two offices - namely, the accounting treatment applied by the OCAT and the technical monitoring and reporting methods they observed. Nonetheless, they are in close coordination with the OCAT to confirm the source of discrepancy and to ensure appropriate adjustments.",
+      "person_responsible": "OCAT, CGSO CGSO",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    }
+  ],
+  "year": 2024,
+  "doc": "AAPSI",
+  "page": 12,
+  "model": "gemini-3.8-flash"
+}

@@ -1,0 +1,75 @@
+{
+  "seconds": 6.4,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1711,
+    "output_tokens": 738,
+    "thought_tokens": 0
+  },
+  "rows": [
+    {
+      "reference": "",
+      "observations": "",
+      "recommendations": "2.9.1.2. Coordinate with the City General Services Office as to status of deliveries of goods and services and recognize the corresponding liability if no payment had been made; and",
+      "action_plan": "",
+      "person_responsible": "OCAT",
+      "target_from": "2023",
+      "target_to": "2024",
+      "status": "Fully Implemented",
+      "reason_for_delay": "",
+      "action_taken": "The OCAT is already in close coordination with CGSO regarding the status of deliveries of goods and services procured by the City for recording purposes"
+    },
+    {
+      "reference": "",
+      "observations": "",
+      "recommendations": "2.9.1.3. Maintain a separate SL for each contractor/supplier for proper monitoring of each outstanding payable and status of accounts.",
+      "action_plan": "",
+      "person_responsible": "OCAT",
+      "target_from": "2023",
+      "target_to": "2024",
+      "status": "Fully Implemented",
+      "reason_for_delay": "",
+      "action_taken": "The OCAT already undertaken actions to properly account the payables per Supplier."
+    },
+    {
+      "reference": "",
+      "observations": "",
+      "recommendations": "2.9.2. The City General Service Office to promptly inform the OCAT of deliveries of procured goods and services and furnish the latter with required documents to support the timely recording of transactions.",
+      "action_plan": "",
+      "person_responsible": "CGSO",
+      "target_from": "2023",
+      "target_to": "2024",
+      "status": "Fully Implemented",
+      "reason_for_delay": "",
+      "action_taken": "The OCAT is already in close coordination with CGSO regarding the status of deliveries of goods and services procured by the City for recording purposes"
+    },
+    {
+      "reference": "AAR 2023 Observation No. 3 Page 85",
+      "observations": "3. Insufficient Imposition of RPT and SET by the City due to: 1) misplaced application of the Assessment Levels (ALs) prescribed under Section 12 of Ordinance No. 8331, a Series of 2013; , and 2) omission of 1,130 RPUs in the Assessment Rolls (AR) contrary to Section 2, Chapter II, Manual on Real Property Appraisal and Assessment Operations (MRPAAO), , thereby diminishing the City's earnings to be utilized to finance its programs/projects/activities (PPAs).",
+      "recommendations": "The Office of the City Assessor – 3.16.1.1. Ensure that Assessment Levels and Assessed Values are accurately computed and provided;",
+      "action_plan": "",
+      "person_responsible": "Office of the City Assessor",
+      "target_from": "2024",
+      "target_to": "2024",
+      "status": "Ongoing",
+      "reason_for_delay": "",
+      "action_taken": "The City Assessor Office is currently reviewing the assessment levels of the purposes of proper RPT and SET imposition"
+    },
+    {
+      "reference": "",
+      "observations": "",
+      "recommendations": "3.16.1.2. Submit to the Auditor's Office the updated copies of Tax Declaration as proof of corrections/updates made to the 452 RPUs;",
+      "action_plan": "",
+      "person_responsible": "Office of the City Assessor",
+      "target_from": "2024",
+      "target_to": "2024",
+      "status": "Ongoing",
+      "reason_for_delay": "",
+      "action_taken": "The City Assessor's Office is currently in the process of completing the required Tax Declarations for audit. As of 31 July 2024, we are partially submitting 85 adjusted Tax Declaration We commit to submit the lacking documents as soon as possible"
+    }
+  ],
+  "year": 2023,
+  "doc": "AAPSI",
+  "page": 3,
+  "model": "gemini-3.8-flash"
+}

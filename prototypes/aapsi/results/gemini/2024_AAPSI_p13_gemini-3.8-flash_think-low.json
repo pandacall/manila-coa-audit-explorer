@@ -1,0 +1,39 @@
+{
+  "seconds": 5.0,
+  "finish_reason": "FinishReason.STOP",
+  "usage": {
+    "prompt_tokens": 1716,
+    "output_tokens": 729,
+    "thought_tokens": 0
+  },
+  "rows": [
+    {
+      "reference": "AAR 2024 Observation No. 13 Page 129",
+      "observations": "13. The reliability, existence and completeness of the AP account balance of P5.574 billion under the GF cannot be ascertained due to the discrepancy of P608.391 million between the balance of payables in the books and the confirmed amounts by various suppliers, contrary to Section 112 of PD No. 1445, and Paragraph 27 of IPSAS 1.",
+      "recommendations": "13.7. We recommended and management agreed that the OCAT will reconcile the confirmed payables balances from suppliers/contractors with the recorded amounts per books, and prepare the necessary adjustments to correct the figures.",
+      "action_plan": "The OCAT submitted proof that the names of the payees/supplier were already indicated to address observation A. Also, as of March 31, 2025, they have already drawn JEV Nos. 1002504008611, 1002502007047, 1002501006088, 1002501006089, 1002501006071, 1002501006073, 1002501006091, 1002501006072, 1002501005985, 1002504008677 to adjust the errors noted in observation B.",
+      "person_responsible": "OCAT",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    },
+    {
+      "reference": "AAR 2024 Observation No. 14 Page 130",
+      "observations": "14. The Due to BIR account amounting to P577.243 million could not be established due to the existence of: a. Unremitted/unreconciled taxes withheld, including those from prior years amounting to P491.145 million, which is not in compliance with BIR revenue regulations; and b. Abnormal (debit) SL balances totaling P527.375 million, contrary to IPSAS. Thus, the accuracy and fairness of the Due to BIR account cannot be ascertained.",
+      "recommendations": "14.18. We recommended that the Management direct the OCAT to: a. Conduct a comprehensive reconciliation of the account by matching withheld taxes with actual remittances and analyze long-outstanding abnormal balances. Subsequently, draw adjusting entries as necessary with sufficient supporting documents; b. Maintain a record that monitors the status of any unpaid employee compensation where taxes are already withheld; and c. Ensure that controls are in place to warrant that taxes are correctly computed and withheld, and that these are immediately remitted to the BIR when due.",
+      "action_plan": "The OCAT stated that a comprehensive reconciliation of the account is currently being undertaken and they will prepare the necessary adjusting entries once completed. They committed to resolve the issues raised promptly and prevent recurrence through improved coordination, timely posting of transactions and periodic reviews of all statutory accounts.",
+      "person_responsible": "OCAT",
+      "target_from": "",
+      "target_to": "",
+      "status": "",
+      "reason_for_delay": "",
+      "action_taken": ""
+    }
+  ],
+  "year": 2024,
+  "doc": "AAPSI",
+  "page": 13,
+  "model": "gemini-3.8-flash"
+}

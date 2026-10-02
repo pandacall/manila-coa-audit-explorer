@@ -19,6 +19,11 @@ dev = [
     "pytest>=8",
     "ruff>=0.6",
 ]
+prototype = [
+    "google-cloud-documentai>=3.16.0",
+    "pymupdf>=1.28.2",
+    "pypdf>=6.19.0",
+]
 
 [build-system]
 requires = ["hatchling"]
@@ -28,7 +33,7 @@ build-backend = "hatchling.build"
 packages = ["src/coa_explorer"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests", "prototypes"]
 
 [tool.ruff]
 line-length = 100
