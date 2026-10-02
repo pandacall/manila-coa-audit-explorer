@@ -37,3 +37,10 @@ footer { margin-top: 3rem; border-top: 1px solid var(--muted); padding-top: 1rem
 .recommendation { font-size: 0.95rem; }
 details { margin: 0.25rem 0 0.4rem; font-size: 0.9rem; }
 summary { cursor: pointer; color: var(--muted); }
+.attribution { color: var(--muted); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; margin: 0 0 0.2rem; }
+.plan { margin-bottom: 0.9rem; padding-left: 0.6rem; border-left: 3px solid var(--muted); font-size: 0.95rem; }
+.reported { font-style: italic; }
+.disagreement { color: var(--partial); font-weight: 600; }
+.city-said { margin-top: 1.5rem; }
+.city-said h2 { font-size: 1.05rem; margin-bottom: 0.25rem; }
+.status-none { color: var(--muted); }

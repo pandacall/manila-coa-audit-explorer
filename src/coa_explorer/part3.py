@@ -239,7 +239,16 @@ def _statuses(paragraphs: tuple[str, ...]) -> list[tuple[str, str | None]]:
 
 
 def _normalise(status: str) -> str:
-    match = _STATUS.match(status)
+    return normalise_status(status) or IMPLEMENTED
+
+
+def normalise_status(text: str) -> str | None:
+    """A printed status as Implemented, Partially Implemented or Not Implemented; None for any
+    other wording (Management's "Ongoing", say), which has no Status of Implementation equivalent.
+    """
+    match = _STATUS.match(text.strip())
+    if match is None:
+        return None
     prefix = (match.group(1) or "").strip().lower()
     if prefix == "partially":
         return PARTIAL

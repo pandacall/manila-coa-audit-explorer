@@ -14,7 +14,8 @@ from coa_explorer.models import ModelTurn, ToolCall
 from coa_explorer.search import Index
 from tests.fake_embedder import FakeEmbedder
 from tests.fixtures import write_fixture_records
-from tests.scripted import ScriptedAdapter, point, say, search, submit
+from tests.monitoring_fixtures import FIXTURE_MONITORING
+from tests.scripted import ScriptedAdapter, point, say, search, submit, submit_with_city
 
 IPSAS_5 = "2023-5-description-1"
 CITATION_5 = "CY 2023 AAR, Part II, Observation No. 5, pp. 71-73"
@@ -439,3 +440,125 @@ def test_an_absurdly_large_number_in_a_tool_argument_is_reported_to_the_model_no
     assert final(events)["type"] != "error"
     assert "error" in adapter.requests[1][1][-1].tool_results[0].content
     assert "error" in adapter.requests[2][1][-1].tool_results[0].content
+
+
+# --- "What the City said": Management's side, from the AAPSI and APMT ------------------------
+
+
+@pytest.fixture()
+def monitored_index(tmp_path):
+    records = write_fixture_records(tmp_path / "records", monitoring=FIXTURE_MONITORING)
+    build_index(records, tmp_path / "coa.sqlite", FakeEmbedder())
+    with Index.open(tmp_path / "coa.sqlite", FakeEmbedder()) as opened:
+        yield opened
+
+
+def test_what_the_city_said_is_shown_apart_with_its_own_citations(monitored_index):
+    adapter = ScriptedAdapter(
+        timeline_call(2022, 3),
+        submit_with_city(
+            "COA assessed the cash advances recommendation as not implemented.",
+            [point("COA assessed it as Not Implemented in the 2023 APMT.", "2023-APMT-1")],
+            [point("Management reported it as fully implemented.", "2023-AAPSI-1", "2023-APMT-1")],
+        ),
+    )
+
+    answer = Answer.model_validate(final(ask(monitored_index, adapter)))
+
+    assert [p.text for p in answer.city_said] == ["Management reported it as fully implemented."]
+    assert [c.text for c in answer.city_said[0].citations] == [
+        "CY 2023 AAPSI, CY 2022 Observation No. 3, p. 2",
+        "CY 2023 APMT, CY 2022 Observation No. 3, p. 2",
+    ]
+    assert [c.text for c in answer.key_points[0].citations] == [
+        "CY 2023 APMT, CY 2022 Observation No. 3, p. 2"
+    ]
+
+
+def test_a_what_the_city_said_point_without_a_citation_is_removed(monitored_index):
+    adapter = ScriptedAdapter(
+        timeline_call(2022, 3),
+        submit_with_city(
+            "Summary.",
+            [point("Grounded.", "2023-APMT-1")],
+            [point("Uncited claim.", "2023-AAPSI-99"), point("Cited claim.", "2023-AAPSI-1")],
+        ),
+    )
+
+    answer = Answer.model_validate(final(ask(monitored_index, adapter)))
+
+    assert [p.text for p in answer.city_said] == ["Cited claim."]
+
+
+def test_an_answer_without_what_the_city_said_has_none(monitored_index):
+    adapter = ScriptedAdapter(
+        timeline_call(2022, 3), submit("Summary.", [point("p", "2023-APMT-1")])
+    )
+
+    answer = Answer.model_validate(final(ask(monitored_index, adapter)))
+
+    assert answer.city_said == []
+
+
+def test_the_model_sees_the_disagreement_between_reported_status_and_COAs_status(monitored_index):
+    adapter = ScriptedAdapter(timeline_call(2022, 3), submit("s", [point("p", "2023-APMT-1")]))
+
+    ask(monitored_index, adapter)
+
+    _, messages, _ = adapter.requests[1]
+    timeline = messages[-1].tool_results[0].content["timeline"]
+    validation = timeline["steps"][0]["validations"][0]
+    assert validation["status"] == "Not Implemented"
+    assert validation["reported_status_text"] == "Fully Implemented"
+    assert validation["disagreement"] == (
+        "Management reported this as implemented; COA assessed it as not implemented"
+    )
+    assert timeline["steps"][0]["action_plans"][0]["action_plan"].startswith("Demand letters")
+
+
+def test_the_timeline_shown_with_the_answer_carries_the_action_plans_and_validations(
+    monitored_index,
+):
+    adapter = ScriptedAdapter(
+        timeline_call(2022, 3),
+        ModelTurn(
+            text=None,
+            tool_calls=[
+                ToolCall(
+                    "submit_answer",
+                    {
+                        "covered": True,
+                        "summary": "s",
+                        "key_points": [point("p", "2023-APMT-1")],
+                        "timelines": [{"origin_year": 2022, "origin_observation": 3}],
+                    },
+                )
+            ],
+        ),
+    )
+
+    events = ask(monitored_index, adapter)
+
+    step = final(events)["timelines"][0]["steps"][0]
+    assert step["action_plans"][0]["citation"] == "CY 2023 AAPSI, CY 2022 Observation No. 3, p. 2"
+    assert step["validations"][0]["disagreement"].startswith("Management reported this as")
+
+
+def test_the_model_can_search_the_aapsi_and_apmt_and_is_told_how_to_attribute_them(
+    monitored_index,
+):
+    adapter = ScriptedAdapter(
+        search("demand letters", parts=["AAPSI"]), submit("s", [point("p", "2023-AAPSI-1")])
+    )
+
+    ask(monitored_index, adapter)
+
+    system, messages, tools = adapter.requests[0]
+    parts = next(t for t in tools if t.name == "search").parameters["properties"]["parts"]
+    assert parts["items"]["enum"] == ["II", "III", "AAPSI", "APMT"]
+    assert "Reported Status" in system
+    assert "never merge" in system.lower()
+    assert "disagree" in system
+    results = adapter.requests[1][1][-1].tool_results[0].content
+    assert [r["id"] for r in results] == ["2023-AAPSI-1"]
+    assert results[0]["citation"] == "CY 2023 AAPSI, CY 2022 Observation No. 3, p. 2"

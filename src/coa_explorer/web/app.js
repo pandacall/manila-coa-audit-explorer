@@ -54,6 +54,43 @@ function FollowUp({ item }) {
   </div>`;
 }
 
+// One AAPSI row: Management's own account of its Action Plan. Its Reported Status is a claim by
+// Management, shown with Management's name on it and never styled as COA's Status of Implementation.
+function ActionPlan({ item }) {
+  const target = [item.target_from, item.target_to].filter(Boolean).join(" to ");
+  return html`<div class="plan">
+    <p class="attribution">Management's Action Plan (AAPSI)</p>
+    <p class="recommendation">${item.recommendation}</p>
+    ${item.action_plan && html`<p><strong>Action Plan:</strong> ${item.action_plan}</p>`}
+    ${item.person_responsible && html`<p><strong>Responsible:</strong> ${item.person_responsible}</p>`}
+    ${target && html`<p><strong>Target dates:</strong> ${target}</p>`}
+    ${item.reported_status_text &&
+    html`<p><strong>Management reported:</strong> <span class="reported">${item.reported_status_text}</span></p>`}
+    ${item.reason && html`<p><strong>Reason given:</strong> ${item.reason}</p>`}
+    ${item.action_taken && html`<p><strong>Action taken or to be taken:</strong> ${item.action_taken}</p>`}
+    <p class="citations"><${Chip} text=${item.citation} /></p>
+  </div>`;
+}
+
+// One APMT row: COA's validation. The status is COA's; where Management's Reported Status in the
+// same row differs, the disagreement is said outright.
+function Validation({ item }) {
+  return html`<div class="follow-up">
+    <p class="attribution">COA's validation (APMT)</p>
+    <p>
+      ${item.status_text &&
+      html`<span class=${"status status-" + slug(item.status || "none")}>COA: ${item.status || item.status_text}</span>`}
+      ${item.follow_up_date && html`<span class="note"> followed up ${item.follow_up_date}</span>`}
+    </p>
+    <p class="recommendation">${item.recommendation}</p>
+    ${item.disagreement && html`<p class="disagreement">${item.disagreement}.</p>`}
+    ${item.reported_status_text &&
+    html`<p class="note">Management reported: ${item.reported_status_text}</p>`}
+    ${item.remarks && html`<p><strong>COA's remarks:</strong> ${item.remarks}</p>`}
+    <p class="citations"><${Chip} text=${item.citation} /></p>
+  </div>`;
+}
+
 function Timeline({ timeline }) {
   const label = `CY ${timeline.origin_year} AAR, Observation No. ${timeline.origin_observation}`;
   return html`<section class="timeline">
@@ -70,8 +107,10 @@ function Timeline({ timeline }) {
       </li>
       ${timeline.steps.map(
         (step) => html`<li class="step" key=${step.aar_year}>
-          <h3>CY ${step.aar_year} AAR, Part III</h3>
+          <h3>CY ${step.aar_year} AAR</h3>
           ${step.follow_ups.map((item) => html`<${FollowUp} item=${item} key=${item.key} />`)}
+          ${(step.action_plans || []).map((item) => html`<${ActionPlan} item=${item} key=${item.key} />`)}
+          ${(step.validations || []).map((item) => html`<${Validation} item=${item} key=${item.key} />`)}
         </li>`
       )}
       ${timeline.steps.length === 0 &&
@@ -100,6 +139,21 @@ function Answer({ result }) {
         </li>`
       )}
     </ul>
+    ${result.city_said &&
+    result.city_said.length > 0 &&
+    html`<section class="city-said">
+      <h2>What the City said</h2>
+      <ul class="key-points">
+        ${result.city_said.map(
+          (point, i) => html`<li key=${i}>
+            <p>${point.text}</p>
+            <p class="citations">
+              ${point.citations.map((c) => html`<${Chip} key=${c.text} text=${c.text} title=${c.title} />`)}
+            </p>
+          </li>`
+        )}
+      </ul>
+    </section>`}
     ${(result.timelines || []).map(
       (timeline) => html`<${Timeline}
         timeline=${timeline}

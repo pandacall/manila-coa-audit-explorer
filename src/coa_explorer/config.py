@@ -15,6 +15,7 @@ class Settings:
     gcp_project_id: str
     gemini_location: str
     gemini_answer_model: str
+    gemini_extraction_model: str  # reads the scanned AAPSI and APMT tables
     gemini_embedding_model: str
     index_path: Path
 
@@ -31,6 +32,7 @@ def load_settings(env_file: Path = REPO_ROOT / ".env") -> Settings:
         gcp_project_id=env["GCP_PROJECT_ID"],
         gemini_location=env.get("GEMINI_LOCATION") or "global",
         gemini_answer_model=env["GEMINI_ANSWER_MODEL"],
+        gemini_extraction_model=env.get("GEMINI_EXTRACTION_MODEL") or env["GEMINI_ANSWER_MODEL"],
         gemini_embedding_model=env.get("GEMINI_EMBEDDING_MODEL") or "gemini-embedding-001",
         index_path=Path(env.get("COA_INDEX_PATH") or DEFAULT_INDEX),
     )
