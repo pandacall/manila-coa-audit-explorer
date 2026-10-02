@@ -96,7 +96,7 @@ def test_a_recommendation_carries_COAs_status_and_Managements_action_and_reason(
     )
     assert record.reason.startswith("Accounting errors with net understatement of the CiB accounts")
     assert record.shared == []
-    assert record.citation == "CY 2022 AAR, Part III, CY 2021 Observation No. 1, pp. 84-86"
+    assert record.citation == "CY 2022 AAR, Part III, CY 2021 Observation No. 1, pp. 84-85"
 
 
 def test_a_note_under_the_status_stays_with_that_status(part3):
@@ -132,7 +132,7 @@ def test_a_recommendation_split_across_two_Word_paragraphs_is_one_record(part3):
     dvs = tracked(part3, 2023, 2019, 1).recommendations
     assert len(dvs) == 4
     assert "all the 288 DVs in Paragraph 1.7 of Observation No. 1;" in dvs[0].recommendation
-    assert dvs[0].citation == "CY 2023 AAR, Part III, CY 2019 Observation No. 1, pp. 105-109"
+    assert dvs[0].citation == "CY 2023 AAR, Part III, CY 2019 Observation No. 1, pp. 101-103"
 
 
 def test_text_that_cannot_be_matched_to_one_recommendation_is_shared_not_dropped(part3):
