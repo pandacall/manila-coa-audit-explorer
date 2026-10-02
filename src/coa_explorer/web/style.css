@@ -37,3 +37,12 @@ footer { margin-top: 3rem; border-top: 1px solid var(--muted); padding-top: 1rem
 .recommendation { font-size: 0.95rem; }
 details { margin: 0.25rem 0 0.4rem; font-size: 0.9rem; }
 summary { cursor: pointer; color: var(--muted); }
+
+.feedback { margin-top: 1.5rem; color: var(--muted); font-size: 0.9rem; }
+.feedback button { padding: 0.1rem 0.5rem; margin-left: 0.25rem; background: none; border: 1px solid var(--muted); border-radius: 4px; }
+.feedback button[aria-pressed="true"] { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 20%, transparent); }
+.demo-limit { padding: 0.75rem 1rem; border-left: 4px solid var(--partial); }
+.demo-limit h2 { font-size: 1.1rem; margin: 0 0 0.5rem; }
+.demo-limit details { margin: 0.75rem 0; font-size: 1rem; }
+.demo-limit summary { color: inherit; font-weight: 600; }
+footer p { margin: 0 0 0.35rem; }

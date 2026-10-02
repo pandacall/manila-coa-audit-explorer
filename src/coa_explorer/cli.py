@@ -9,7 +9,13 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from coa_explorer import links, part2, part3
-from coa_explorer.config import DEFAULT_INDEX, REPO_ROOT, load_settings
+from coa_explorer.config import (
+    DEFAULT_INDEX,
+    DEFAULT_SAVED_ANSWERS,
+    REPO_ROOT,
+    Settings,
+    load_settings,
+)
 from coa_explorer.embedder import Embedder, GeminiEmbedder
 from coa_explorer.index import build_index, load_records
 
@@ -51,12 +57,26 @@ def main(argv: Sequence[str] | None = None, *, embedder: Embedder | None = None)
     serve = steps.add_parser("serve", help="run the web app locally")
     serve.add_argument("--host", default="127.0.0.1")
     serve.add_argument("--port", type=int, default=8000)
+    serve.add_argument(
+        "--no-demo-limits",
+        action="store_true",
+        help="skip the rate limits, daily cap, question log and feedback (no Firestore needed)",
+    )
+
+    examples = steps.add_parser(
+        "save-examples",
+        help="ask the example questions of the real model and save the answers shown when the"
+        " demo's daily cap is reached",
+    )
+    examples.add_argument("--out", type=Path, default=DEFAULT_SAVED_ANSWERS)
 
     args = parser.parse_args(argv)
     if args.step == "index":
         return index_step(args.records, args.out, embedder or gemini_embedder())
     if args.step == "serve":
-        return serve_step(args.host, args.port)
+        return serve_step(args.host, args.port, demo_limits=not args.no_demo_limits)
+    if args.step == "save-examples":
+        return save_examples_step(args.out)
     if args.step == "links":
         return links_step(args.records)
     return extract_step(args.reports, args.out, check=args.check)
@@ -140,24 +160,68 @@ def links_step(records: Path) -> int:
     return 0
 
 
-def serve_step(host: str, port: int) -> int:
+def answer_engine(settings: Settings):
     # Imported here so `extract` and `index` don't need Gemini or the web stack loaded.
-    import uvicorn
-
     from coa_explorer.answer import AnswerEngine
-    from coa_explorer.api import create_app
     from coa_explorer.gemini import GeminiAdapter
     from coa_explorer.search import Index
 
-    settings = load_settings()
     adapter = GeminiAdapter(
         project=settings.gcp_project_id,
         location=settings.gemini_location,
         model=settings.gemini_answer_model,
     )
-    index = Index.open(settings.index_path, gemini_embedder())
-    app = create_app(AnswerEngine(adapter, index))
-    uvicorn.run(app, host=host, port=port)
+    return AnswerEngine(adapter, Index.open(settings.index_path, gemini_embedder()))
+
+
+def demo_guard(settings: Settings):
+    from coa_explorer.demo import Demo, load_saved_answers
+    from coa_explorer.firestore_store import FirestoreStore
+
+    store = FirestoreStore(
+        project=settings.gcp_project_id,
+        database=settings.firestore_database,
+        questions_collection=settings.firestore_log_collection,
+        counters_collection=settings.firestore_limits_collection,
+        ttl_field=settings.firestore_ttl_field,
+    )
+    return Demo(
+        store,
+        salt=settings.ip_hash_salt,
+        hourly_limit=settings.hourly_limit_per_ip,
+        daily_cap=settings.daily_question_cap,
+        examples=load_saved_answers(DEFAULT_SAVED_ANSWERS),
+    )
+
+
+def serve_step(host: str, port: int, *, demo_limits: bool = True) -> int:
+    import uvicorn
+
+    from coa_explorer.api import create_app
+
+    settings = load_settings()
+    demo = None
+    if demo_limits and settings.firestore_database:
+        demo = demo_guard(settings)
+    else:
+        print("running without demo limits, question logging or feedback", file=sys.stderr)
+    uvicorn.run(create_app(answer_engine(settings), demo), host=host, port=port)
+    return 0
+
+
+def save_examples_step(out: Path) -> int:
+    from coa_explorer.answer import Answer
+    from coa_explorer.demo import EXAMPLE_QUESTIONS, SavedAnswer, save_answers
+
+    engine = answer_engine(load_settings())
+    saved = []
+    for question in EXAMPLE_QUESTIONS:
+        final = list(engine.ask(question))[-1]
+        answer = final if isinstance(final, Answer) else None
+        print(f"{'saved' if answer else 'no answer for'}: {question}")
+        saved.append(SavedAnswer(question=question, answer=answer))
+    save_answers(out, saved)
+    print(f"wrote {out}")
     return 0
 
 

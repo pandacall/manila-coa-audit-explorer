@@ -14,7 +14,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-from coa_explorer.models import Message, ModelAdapter, ToolCall, ToolResult, ToolSpec
+from coa_explorer.models import Message, ModelAdapter, ToolCall, ToolResult, ToolSpec, Usage
 from coa_explorer.search import DEFAULT_LIMIT, Index, Piece
 from coa_explorer.timeline import Timeline
 
@@ -239,8 +239,10 @@ class AnswerEngine:
         self._index = index
         self._max_search_rounds = max_search_rounds
 
-    def ask(self, question: str) -> Iterator[Event]:
-        """Yield `Status` updates while working, then exactly one `Answer` or `NotCovered`."""
+    def ask(self, question: str, usage: Usage | None = None) -> Iterator[Event]:
+        """Yield `Status` updates while working, then exactly one `Answer` or `NotCovered`.
+
+        The tokens the model reports using are added to `usage`, if given."""
         messages = [Message(role="user", text=question)]
         seen: dict[str, Piece] = {}
         timelines: dict[tuple[int, int], Timeline] = {}
@@ -249,6 +251,8 @@ class AnswerEngine:
             last_round = round_number == self._max_search_rounds
             tools = [SUBMIT_TOOL] if last_round else [SEARCH_TOOL, TIMELINE_TOOL, SUBMIT_TOOL]
             turn = self._adapter.generate(SYSTEM_PROMPT, messages, tools)
+            if usage is not None and turn.usage is not None:
+                usage.add(turn.usage)
             messages.append(
                 Message(role="model", text=turn.text, tool_calls=turn.tool_calls, raw=turn.raw)
             )
