@@ -188,7 +188,7 @@ finish() {
 # Produces:
 #   .env (git-ignored)  GCP_PROJECT_ID, GCP_REGION, GEMINI_LOCATION,
 #                       GEMINI_ANSWER_MODEL, GEMINI_JUDGE_MODEL,
-#                       GEMINI_EMBEDDING_MODEL, FIRESTORE_LOG_COLLECTION,
+#                       GEMINI_EMBEDDING_MODEL, FIRESTORE_DATABASE, FIRESTORE_LOG_COLLECTION,
 #                       FIRESTORE_TTL_FIELD, ARTIFACT_REPOSITORY (see .env.example)
 #   GitHub Actions variables (no secrets, no JSON keys):
 #                       GCP_PROJECT_ID, GCP_REGION,
@@ -211,6 +211,7 @@ DEPLOYER_SA_ID="coa-deployer"
 AR_REPO="coa-explorer"
 WIF_POOL="github"
 WIF_PROVIDER="github-actions"
+FIRESTORE_DB="coa-explorer"   # named database, so a shared project's (default) database is never touched
 LOG_COLLECTION="questions"
 TTL_FIELD="expire_at"
 TRIAL_END="2026-12-01"
@@ -348,7 +349,14 @@ grant_project_role() {
 say "Runtime account: what the deployed app runs as (calls Gemini, writes the question log)."
 ensure_sa "$RUNTIME_SA_ID" "$RUNTIME_SA" "COA Explorer runtime"
 grant_project_role "$RUNTIME_SA" roles/aiplatform.user
-grant_project_role "$RUNTIME_SA" roles/datastore.user
+# Firestore access is limited to the app's own database by an IAM condition, so the runtime
+# account can't read other apps' data in the same project.
+FIRESTORE_CONDITION="expression=resource.name == 'projects/$GCP_PROJECT_ID/databases/$FIRESTORE_DB',title=$FIRESTORE_DB-database-only"
+retry 5 gcloud projects add-iam-policy-binding "$GCP_PROJECT_ID" \
+  --member="serviceAccount:$RUNTIME_SA" --role=roles/datastore.user \
+  --condition="$FIRESTORE_CONDITION" >/dev/null \
+  || die "Couldn't grant Firestore access to $RUNTIME_SA."
+say "✓ $RUNTIME_SA → roles/datastore.user on database '$FIRESTORE_DB' only"
 
 printf '\n'
 say "Deployer account: what GitHub Actions impersonates to deploy."
@@ -437,23 +445,25 @@ pause "Press Enter to continue."
 
 # ── 7. Firestore ──────────────────────────────────────────────────────────
 stage "Create Firestore and the 30-day log expiry"
-if gcloud firestore databases describe --database='(default)' --project "$GCP_PROJECT_ID" >/dev/null 2>&1; then
-  existing_loc=$(gcloud firestore databases describe --database='(default)' --project "$GCP_PROJECT_ID" --format='value(locationId)')
-  say "✓ Firestore database already exists in $existing_loc"
+say "The app gets its own named database '$FIRESTORE_DB', separate from the project's (default) one."
+if gcloud firestore databases describe --database="$FIRESTORE_DB" --project "$GCP_PROJECT_ID" >/dev/null 2>&1; then
+  existing_loc=$(gcloud firestore databases describe --database="$FIRESTORE_DB" --project "$GCP_PROJECT_ID" --format='value(locationId)') \
+    || die "Couldn't read the location of database '$FIRESTORE_DB'."
+  say "✓ database '$FIRESTORE_DB' already exists in $existing_loc"
   [[ "$existing_loc" == "$REGION" ]] || warn "Expected $REGION. A database's location can't be changed; the app will still work but Cloud Run is planned for $REGION."
 else
-  say "Creating the (default) Firestore database in $REGION, native mode..."
-  gcloud firestore databases create --location="$REGION" --type=firestore-native --project "$GCP_PROJECT_ID" \
-    || die "Couldn't create the Firestore database."
+  say "Creating database '$FIRESTORE_DB' in $REGION, native mode..."
+  gcloud firestore databases create --database="$FIRESTORE_DB" --location="$REGION" --type=firestore-native \
+    --project "$GCP_PROJECT_ID" >/dev/null || die "Couldn't create the Firestore database."
   say "✓ database created"
 fi
 
 say "Enabling TTL: documents in '$LOG_COLLECTION' are deleted once their '$TTL_FIELD' timestamp passes."
 gcloud firestore fields ttls update "$TTL_FIELD" --collection-group="$LOG_COLLECTION" \
-  --enable-ttl --async --database='(default)' --project "$GCP_PROJECT_ID" >/dev/null 2>&1 \
+  --enable-ttl --async --database="$FIRESTORE_DB" --project "$GCP_PROJECT_ID" >/dev/null 2>&1 \
   && say "✓ TTL policy requested (Firestore finishes applying it in the background, up to ~30 min)" \
   || { warn "Couldn't (re)apply the TTL policy; it may already be enabled or still being created."
-       SKIPPED+=("Check the TTL policy: gcloud firestore fields ttls list --database='(default)'"); }
+       SKIPPED+=("Check the TTL policy: gcloud firestore fields ttls list --database=$FIRESTORE_DB"); }
 note "The app must write '$TTL_FIELD' = question time + 30 days on every logged question."
 pause "Press Enter to continue."
 
@@ -465,12 +475,15 @@ BILLING_ID=$(gcloud billing projects describe "$GCP_PROJECT_ID" --format='value(
 BILLING_ID="${BILLING_ID#billingAccounts/}"
 
 # Tell "no budget yet" apart from "couldn't list", so a failed check never creates a duplicate.
+# gcloud prints "Listed 0 items." on stderr, so keep stderr out of the captured stdout.
 LIST_FAILED=0
+LIST_ERR_FILE=$(mktemp)
 EXISTING_BUDGETS=$(gcloud billing budgets list --billing-account="$BILLING_ID" \
-  --filter="displayName=\"$BUDGET_NAME\"" --format='value(name)' 2>&1) || LIST_FAILED=1
+  --filter="displayName=\"$BUDGET_NAME\"" --format='value(name)' 2>"$LIST_ERR_FILE") || LIST_FAILED=1
+LIST_ERR=$(cat "$LIST_ERR_FILE"); rm -f "$LIST_ERR_FILE"
 
 if (( LIST_FAILED )); then
-  warn "Couldn't list budgets: $EXISTING_BUDGETS"
+  warn "Couldn't list budgets: $LIST_ERR"
   SKIPPED+=("Budget alerts: couldn't check for an existing budget; verify in the Billing console")
 elif [[ -n "$EXISTING_BUDGETS" ]]; then
   say "✓ budget '$BUDGET_NAME' already exists"
@@ -521,6 +534,14 @@ list_gemini_models() {
 pick_model() {
   local key="$1" prompt="$2" default="$3" code models input
   ask_default "$key" "$prompt" "$default"
+  # A model ID looks like gemini-3.8-flash. Reject anything else without echoing it, since a
+  # pasted API key must never be written to .env.
+  while [[ ! "${!key}" =~ ^gemini-[a-z0-9.-]+$ ]]; do
+    warn "That doesn't look like a model ID (expected e.g. $default). Don't paste API keys here."
+    printf '  %sModel ID: %s' "$BOLD" "$RESET"
+    read -r input || true
+    printf -v "$key" '%s' "${input:-$default}"
+  done
   while :; do
     code=$(gemini_http_code "${!key}")
     if [[ "$code" == "200" ]]; then say "✓ ${!key} answered (HTTP 200)"; return; fi
@@ -550,6 +571,7 @@ write_env GEMINI_LOCATION "global"
 write_env GEMINI_ANSWER_MODEL "$GEMINI_ANSWER_MODEL"
 write_env GEMINI_JUDGE_MODEL "$GEMINI_JUDGE_MODEL"
 write_env GEMINI_EMBEDDING_MODEL "$GEMINI_EMBEDDING_MODEL"
+write_env FIRESTORE_DATABASE "$FIRESTORE_DB"
 write_env FIRESTORE_LOG_COLLECTION "$LOG_COLLECTION"
 write_env FIRESTORE_TTL_FIELD "$TTL_FIELD"
 write_env ARTIFACT_REPOSITORY "$AR_REPO"
