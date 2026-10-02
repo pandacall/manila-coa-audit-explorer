@@ -11,6 +11,9 @@ piece per section, split on paragraph boundaries when long; a heading with no te
 carries the section's Citation. The letter and the statement have one section each, the whole
 document. (The codes are document codes, not all of them COA Parts.)
 
+The Financial Statements and Annexes are not pieces: every amount goes to the `financial_lines`
+table, in centavos, for `financial_lookup`.
+
 Each Prior Years' Recommendation in Part III becomes one piece (COA's Status of Implementation with
 Management's action and reason), plus a row in `follow_ups`. Each AAPSI row (Management's Action
 Plan and Reported Status) and each APMT row (COA's validation) becomes one piece, plus a row in
@@ -26,6 +29,7 @@ from __future__ import annotations
 import json
 import sqlite3
 from collections.abc import Iterator
+from decimal import Decimal
 from pathlib import Path
 
 import sqlite_vec
@@ -126,6 +130,23 @@ CREATE TABLE monitoring_rows (
     remarks TEXT,
     citation TEXT NOT NULL
 );
+CREATE TABLE financial_lines (
+    id INTEGER PRIMARY KEY,
+    key TEXT NOT NULL,
+    aar_year INTEGER NOT NULL,
+    source TEXT NOT NULL,
+    statement TEXT NOT NULL,
+    sheet TEXT NOT NULL,
+    sheet_row INTEGER NOT NULL,
+    fund TEXT NOT NULL,
+    section TEXT NOT NULL,
+    line_item TEXT NOT NULL,
+    column_name TEXT NOT NULL,
+    period INTEGER NOT NULL,
+    centavos INTEGER NOT NULL,
+    citation TEXT NOT NULL
+);
+CREATE INDEX financial_lines_year ON financial_lines (aar_year, statement);
 CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
 """
 
@@ -178,6 +199,7 @@ def build_index(records_dir: Path, db_path: Path, embedder: Embedder) -> int:
         for record in load_records(records_dir / folder).values()
     ]
     monitoring = load_monitoring(records_dir)
+    financial = load_records(records_dir / "financial")
     db_path.parent.mkdir(parents=True, exist_ok=True)
     db_path.unlink(missing_ok=True)
     with sqlite3.connect(db_path) as db:
@@ -224,6 +246,8 @@ def build_index(records_dir: Path, db_path: Path, embedder: Embedder) -> int:
                 for block in record["observations"]:
                     for row in block["rows"]:
                         add_monitoring_row(db, record["aar_year"], document, block, row)
+        for record in financial.values():
+            add_financial_lines(db, record)
         for link in build_links(part2, part3, monitoring):
             db.execute(
                 "INSERT INTO links VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -253,6 +277,33 @@ def build_index(records_dir: Path, db_path: Path, embedder: Embedder) -> int:
         (count,) = db.execute("SELECT count(*) FROM pieces").fetchone()
     db.close()
     return count
+
+
+def add_financial_lines(db: sqlite3.Connection, record: dict) -> None:
+    """The financial lines of one AAR, each amount in whole centavos so that sums are exact."""
+    db.executemany(
+        "INSERT INTO financial_lines (key, aar_year, source, statement, sheet, sheet_row, fund,"
+        " section, line_item, column_name, period, centavos, citation)"
+        f" VALUES ({', '.join('?' * 13)})",
+        [
+            (
+                line["key"],
+                record["aar_year"],
+                line["source"],
+                line["statement"],
+                line["sheet"],
+                line["row"],
+                line["fund"],
+                line["section"],
+                line["line_item"],
+                line["column"],
+                line["period"],
+                int(Decimal(line["amount"]) * 100),
+                line["citation"],
+            )
+            for line in record["lines"]
+        ],
+    )
 
 
 def front_matter_pieces(record: dict) -> Iterator[tuple]:

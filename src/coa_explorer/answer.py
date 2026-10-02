@@ -1,9 +1,13 @@
 """The answer engine: a tool-using loop that turns a question into a cited Answer.
 
-The model may call `search` and `timeline` over the index, then must finish with `submit_answer`.
+The model may call `search`, `timeline`, `financial_lookup` and `financial_change` over the index,
+then must finish with `submit_answer`.
 An answer can carry "What the City said" (Management Comment or Reported Status), cited like key
 points and shown apart from them. The model cites by piece id; the Citation text comes from the
-index, never from the model, and a key point may only cite pieces the model actually retrieved. Key
+index, never from the model, and a key point may only cite pieces (or financial figures) the model
+actually retrieved. Figures and the differences between years come from `financial_lookup`; the
+model never does arithmetic (`financial_change` works out a difference for two lines COA labelled
+differently in two years). Key
 points left without a Citation are removed, and an answer left with none is reported as not
 covered. A timeline shown with an answer is the one the `timeline` tool returned, not anything the
 model wrote.
@@ -11,11 +15,14 @@ model wrote.
 
 from __future__ import annotations
 
-from collections.abc import Iterator
+from collections.abc import Iterator, Mapping
+from dataclasses import dataclass
 from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from coa_explorer.financial import FUNDS, STATEMENT_NAMES
+from coa_explorer.financial_lookup import FinancialChange, FinancialLookup
 from coa_explorer.models import Message, ModelAdapter, ToolCall, ToolResult, ToolSpec, Usage
 from coa_explorer.search import DEFAULT_LIMIT, Index, Piece
 from coa_explorer.timeline import Timeline
@@ -46,7 +53,9 @@ Financial Statements are fairly presented. Two short documents open each AAR: th
 letter (part "TL"), in which COA sends the AAR to the Mayor, restating the opinion and, for most \
 years, the significant observations; and the Management Responsibility statement (part "MR"), in \
 which the City's own officials state that Management is responsible for the Financial Statements \
-and for the internal controls behind them. The statement is Management's, not COA's: attribute it.
+and for the internal controls behind them. The statement is Management's, not COA's: attribute \
+it. The Financial Statements (Part I) and the Annexes (Part IV, the same statements broken down \
+by Fund) hold the City's figures, and only `financial_lookup` reads them.
 For 2023 and 2024 there are two more documents: the AAPSI (part "AAPSI") is Management's own \
 report of its Action Plan for each Recommendation, with the person or department responsible, \
 target dates and the Reported Status Management claims; the APMT (part "APMT") is COA's \
@@ -77,7 +86,26 @@ with its own `id` and citation. Observations raised before 2020 have a timeline 
 AAR that tracks them. A step can also hold the AAPSI's `action_plans` (Management's account) and \
 the APMT's `validations` (COA's Status of Implementation). To review one year's backlog, `search` \
 with `parts` ["III"], that `years` filter and a `status`, and raise `limit`.
-- Answer ONLY from passages `search` and `timeline` returned. Never use outside knowledge, never \
+- For any question about an amount (cash, receipts, spending, assets, liabilities, net assets, \
+budget against actual, a change between years, a breakdown by Fund), call `financial_lookup`, not \
+`search`. Give it the line item in COA's words (such as "Cash and Cash Equivalents") and the \
+`years`; a year's figure is the one in that year's AAR. It returns exact amounts in Philippine \
+pesos, each figure with its `id` and citation, and `changes` between the years you asked for, \
+worked out by the tool. Never calculate, add, subtract, round, convert or estimate a figure \
+yourself: quote `display` (and `display_change`, `display_percent`) as given, so the amount \
+carries the peso sign and its unit, and cite the `id` of each figure you use (a change cites both \
+of its `ids`). Part I statements are for the City as a whole ("All Funds"); the Annexes give the \
+General Fund, the Special Education Fund and the Trust Fund: name the Fund each amount is for. The \
+budget statement (SCBAA) has Original budget, Final budget and Actual, and COA's "Difference \
+final budget and actual" (Final minus Actual: a positive difference means the actual amount fell \
+short of the budget). Annex labels differ from year to year (a Fund's cash may be "Total Cash" \
+in one year and "Total Cash and Cash Equivalents" in another): if you need a Fund breakdown and \
+only "All Funds" came back, look up again with other words. When you find the same line under \
+two labels in two years, pass the two figures' `id`s to `financial_change` and use what it \
+returns; never subtract them yourself. If no figure comes back, the reports have no such line: \
+say so.
+- Answer ONLY from passages `search` and `timeline` returned, and figures `financial_lookup` \
+returned. Never use outside knowledge, never \
 guess, never calculate or infer figures that the passages do not state. If the passages do not \
 address the question, submit with covered=false and say so plainly; suggest what the reports do \
 cover if you can. Questions about other cities, news, politics or people are out of scope: \
@@ -202,6 +230,74 @@ TIMELINE_TOOL = ToolSpec(
     },
 )
 
+FINANCIAL_LOOKUP_TOOL = ToolSpec(
+    name="financial_lookup",
+    description=(
+        "Exact peso amounts from the Financial Statements (Part I) and Annexes (Part IV) of the "
+        "2020-2024 AARs, found by the words of the line item. Each figure has an `id`, its "
+        "`citation` (statement and line item), its Fund and its amounts by column (the budget "
+        "statement has Original budget, Final budget, Actual and the difference columns). When "
+        "the line item is found in several of the `years`, `changes` gives the exact difference "
+        "and percentage from each year to the next, computed here. Amounts are in Philippine "
+        "pesos, exact to the centavo."
+    ),
+    parameters={
+        "type": "object",
+        "properties": {
+            "line_item": {
+                "type": "string",
+                "description": "The line item in COA's words, e.g. 'Cash and Cash Equivalents'.",
+            },
+            "years": {
+                "type": "array",
+                "items": {"type": "integer"},
+                "description": "AAR years (2020-2024); each gives that year's own figure.",
+            },
+            "statement": {
+                "type": "string",
+                "enum": list(STATEMENT_NAMES),
+                "description": (
+                    "Restrict to one statement: SFPo (Financial Position), SFPe (Financial "
+                    "Performance), SCNAE (Changes in Net Assets/Equity), SCF (Cash Flows) or "
+                    "SCBAA (Comparison of Budget and Actual Amounts)."
+                ),
+            },
+            "fund": {
+                "type": "string",
+                "enum": list(FUNDS),
+                "description": (
+                    "Restrict to one Fund. 'All Funds' is the City as a whole (Part I, and each "
+                    "Annex's Total column). Leave out to get both, with the Fund breakdown."
+                ),
+            },
+        },
+        "required": ["line_item", "years"],
+    },
+)
+
+FINANCIAL_CHANGE_TOOL = ToolSpec(
+    name="financial_change",
+    description=(
+        "The exact change between two lines `financial_lookup` returned, for when COA labelled "
+        "the same line differently in two years so that `changes` could not pair them. Both "
+        "must be for the same Fund and statement and from different years, and you vouch that "
+        "they are the same item. Returns the difference and percentage for each amount column "
+        "they share, computed here."
+    ),
+    parameters={
+        "type": "object",
+        "properties": {
+            "from_id": {"type": "string", "description": "The `id` of one figure."},
+            "to_id": {"type": "string", "description": "The `id` of the other figure."},
+            "column": {
+                "type": "string",
+                "description": "Only this column, e.g. 'Actual'; default every shared amount.",
+            },
+        },
+        "required": ["from_id", "to_id"],
+    },
+)
+
 SUBMIT_TOOL = ToolSpec(
     name="submit_answer",
     description="Finish: submit the final answer. Call exactly once.",
@@ -269,6 +365,14 @@ SUBMIT_TOOL = ToolSpec(
 )
 
 
+@dataclass(frozen=True)
+class Source:
+    """What a key point may cite: a piece or a financial figure the model was shown."""
+
+    citation: str
+    title: str
+
+
 class Citation(BaseModel):
     text: str = Field(
         description="COA's format, e.g. 'CY 2023 AAR, Part II, Observation No. 5, p. 71' or "
@@ -325,11 +429,22 @@ class AnswerEngine:
         """
         messages = [Message(role="user", text=question)]
         seen = retrieved if retrieved is not None else {}
+        figures: dict[str, Source] = {}  # financial figures the model was shown, by id
         timelines: dict[tuple[int, int], Timeline] = {}
         nudged = False
         for round_number in range(self._max_search_rounds + 1):
             last_round = round_number == self._max_search_rounds
-            tools = [SUBMIT_TOOL] if last_round else [SEARCH_TOOL, TIMELINE_TOOL, SUBMIT_TOOL]
+            tools = (
+                [SUBMIT_TOOL]
+                if last_round
+                else [
+                    SEARCH_TOOL,
+                    TIMELINE_TOOL,
+                    FINANCIAL_LOOKUP_TOOL,
+                    FINANCIAL_CHANGE_TOOL,
+                    SUBMIT_TOOL,
+                ]
+            )
             turn = self._adapter.generate(SYSTEM_PROMPT, messages, tools)
             if usage is not None and turn.usage is not None:
                 usage.add(turn.usage)
@@ -345,24 +460,37 @@ class AnswerEngine:
             results = []
             for call in turn.tool_calls:
                 if call.name == "submit_answer":
-                    yield finalise(call.args, seen, timelines)
+                    yield finalise(call.args, {**seen, **figures}, timelines)
                     return
                 if call.name in ARGUMENT_ERRORS and not last_round:
                     yield Status(message=status_message(call))
                     try:
-                        content = (
-                            self._run_search(call, seen)
-                            if call.name == "search"
-                            else self._run_timeline(call, seen, timelines)
-                        )
-                    except (TypeError, ValueError, KeyError, OverflowError):
+                        content = self._run_tool(call, seen, figures, timelines)
+                    except (TypeError, ValueError, KeyError, OverflowError) as error:
                         # Tell the model what was wrong so it can retry, instead of failing.
                         content = {"error": ARGUMENT_ERRORS[call.name]}
+                        if isinstance(error, ToolError):
+                            content["error"] = str(error)
                     results.append(ToolResult(call, content))
                 else:
                     results.append(ToolResult(call, {"error": f"unknown tool {call.name}"}))
             messages.append(Message(role="tool", tool_results=results))
         yield NotCovered(message=NOT_COVERED_DEFAULT)
+
+    def _run_tool(
+        self,
+        call: ToolCall,
+        seen: dict[str, Piece],
+        figures: dict[str, Source],
+        timelines: dict[tuple[int, int], Timeline],
+    ) -> list[dict] | dict:
+        if call.name == "search":
+            return self._run_search(call, seen)
+        if call.name == "financial_lookup":
+            return self._run_financial_lookup(call, figures)
+        if call.name == "financial_change":
+            return self._run_financial_change(call, figures)
+        return self._run_timeline(call, seen, timelines)
 
     def _run_search(self, call: ToolCall, seen: dict[str, Piece]) -> list[dict]:
         args = call.args
@@ -393,6 +521,42 @@ class AnswerEngine:
                 )
         return passages
 
+    def _run_financial_lookup(self, call: ToolCall, figures: dict[str, Source]) -> dict:
+        args = call.args
+        years = args["years"]
+        if not isinstance(years, list):
+            raise TypeError("years must be a list")
+        fund = args.get("fund")
+        if fund is not None and fund not in FUNDS:
+            raise ToolError(f"unknown fund {fund!r}; use one of {', '.join(FUNDS)}")
+        statement = args.get("statement")
+        if statement is not None and statement not in STATEMENT_NAMES:
+            raise ToolError(
+                f"unknown statement {statement!r}; use one of {', '.join(STATEMENT_NAMES)}"
+            )
+        result = self._index.financial_lookup(
+            str(args["line_item"]),
+            years=[int(year) for year in years],
+            statement=statement,
+            fund=fund,
+        )
+        for figure in result.figures:
+            figures[figure.key] = Source(
+                figure.citation, f"{figure.line_item} ({STATEMENT_NAMES[figure.statement]})"
+            )
+        return financial_content(result)
+
+    def _run_financial_change(self, call: ToolCall, figures: dict[str, Source]) -> dict:
+        from_id, to_id = str(call.args["from_id"]), str(call.args["to_id"])
+        for key in (from_id, to_id):
+            if key not in figures:
+                raise ToolError(f"{key} was not returned by financial_lookup; look it up first")
+        try:
+            changes = self._index.financial_change(from_id, to_id, call.args.get("column"))
+        except ValueError as error:
+            raise ToolError(str(error)) from error
+        return {"units": FIGURES_UNITS, "changes": [change_content(c) for c in changes]}
+
     def _run_timeline(
         self, call: ToolCall, seen: dict[str, Piece], timelines: dict[tuple[int, int], Timeline]
     ) -> dict:
@@ -408,6 +572,53 @@ class AnswerEngine:
         return {"timeline": timeline.model_dump(mode="json")}
 
 
+FIGURES_UNITS = (
+    "Philippine pesos (₱), exact to the centavo. Quote `display` as given; never calculate."
+)
+
+
+def financial_content(result: FinancialLookup) -> dict:
+    """What the model is shown of a lookup: amounts as exact decimal strings, and in pesos."""
+    return {
+        "units": FIGURES_UNITS,
+        "figures": [
+            {
+                "id": figure.key,
+                "citation": figure.citation,
+                "year": figure.aar_year,
+                "statement": figure.statement,
+                "printed_in": figure.source,
+                "fund": figure.fund,
+                "section": figure.section,
+                "line_item": figure.line_item,
+                "amounts": {column: str(amount) for column, amount in figure.amounts.items()},
+                "display": figure.display,
+            }
+            for figure in result.figures
+        ],
+        "changes": [change_content(change) for change in result.changes],
+    }
+
+
+def change_content(change: FinancialChange) -> dict:
+    return {
+        "statement": change.statement,
+        "fund": change.fund,
+        "section": change.section,
+        "line_item": change.line_item,
+        "column": change.column,
+        "from_year": change.from_year,
+        "to_year": change.to_year,
+        "from": str(change.from_amount),
+        "to": str(change.to_amount),
+        "change": str(change.change),
+        "percent": None if change.percent is None else str(change.percent),
+        "display_change": change.display_change,
+        "display_percent": change.display_percent,
+        "ids": list(change.keys),
+    }
+
+
 def as_list(value) -> list[str]:
     """A list of strings from a model argument that may be a bare string or missing."""
     return [str(item) for item in ([value] if isinstance(value, str) else value or [])]
@@ -419,10 +630,24 @@ ARGUMENT_ERRORS = {
         "integers, status one of the three Status of Implementation values"
     ),
     "timeline": "origin_year and origin_observation must be integers",
+    "financial_lookup": (
+        "line_item must be a string, years a list of integers, statement one of SFPo, SFPe, "
+        "SCNAE, SCF, SCBAA, fund one of the listed Funds"
+    ),
+    "financial_change": "from_id and to_id must be ids of figures financial_lookup returned",
 }
 
 
+class ToolError(ValueError):
+    """A tool call the engine can explain to the model, so that it can correct itself."""
+
+
 def status_message(call: ToolCall) -> str:
+    if call.name == "financial_change":
+        years = [str(call.args.get(key, "")).split("-")[0] for key in ("from_id", "to_id")]
+        return f"Working out the change between CY {years[0]} and CY {years[1]}"
+    if call.name == "financial_lookup":
+        return f"Looking up “{call.args.get('line_item', '')}” in the financial statements"
     if call.name == "timeline":
         args = call.args
         return (
@@ -433,7 +658,7 @@ def status_message(call: ToolCall) -> str:
 
 
 def finalise(
-    args: dict, seen: dict[str, Piece], timelines: dict[tuple[int, int], Timeline]
+    args: dict, seen: Mapping[str, Piece | Source], timelines: dict[tuple[int, int], Timeline]
 ) -> Answer | NotCovered:
     """Validate the model's submitted answer against what it retrieved."""
     if args.get("covered") is not True:
@@ -451,7 +676,7 @@ def finalise(
     )
 
 
-def cited_points(raw_points: object, seen: dict[str, Piece]) -> list[KeyPoint]:
+def cited_points(raw_points: object, seen: Mapping[str, Piece | Source]) -> list[KeyPoint]:
     """The points whose `sources` name pieces the model retrieved; the rest are dropped."""
     points = []
     for raw in raw_points if isinstance(raw_points, list) else []:
@@ -460,10 +685,10 @@ def cited_points(raw_points: object, seen: dict[str, Piece]) -> list[KeyPoint]:
         citations: dict[str, Citation] = {}
         sources = raw.get("sources") or []
         for source in [sources] if isinstance(sources, str) else sources:
-            piece = seen.get(source)
-            if piece:
+            cited = seen.get(source)
+            if cited:
                 citations.setdefault(
-                    piece.citation, Citation(text=piece.citation, title=piece.title)
+                    cited.citation, Citation(text=cited.citation, title=cited.title)
                 )
         text = clip(str(raw.get("text") or ""), MAX_KEY_POINT_CHARS)
         if text and citations:

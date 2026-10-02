@@ -28,8 +28,8 @@ human-readable JSON to `data/extracted/`:
 `executive_summary/<year>.json`, `auditors_report/<year>.json` (one record per section),
 `transmittal_letter/<year>.json`, `management_responsibility/<year>.json` (one section each),
 `part2/<year>.json`, `part3/<year>.json` (one record per Prior Years' Recommendation, with COA's
-Status of Implementation, Management's action and the reason given) and `link-report.json`.
-Re-running produces no diff. To check that the committed
+Status of Implementation, Management's action and the reason given), `financial/<year>.json` (see
+below) and `link-report.json`. Re-running produces no diff. To check that the committed
 records are current without writing anything (exit code 1 if they are stale):
 
 ```bash
@@ -93,6 +93,26 @@ transcription unless you pass `--overwrite`, because it may hold a reviewer's co
 the PDF's real pages; the CY 2021 picture is page 1 and the "Copy furnished" list Word holds as text
 is page 2 (derived, ADR-0001). See `data/reviewed/README.md` and ADR-0004.
 
+### Financial Statements and Annexes
+
+The two spreadsheets of each AAR (Part I's five statements and Part IV's Annexes) become long-format
+lines in `financial/<year>.json`: one amount per line, with its statement (SFPo, SFPe, SCNAE, SCF,
+SCBAA), where it is printed (Part I, or an Annex), its Fund, the headings above it, its line item,
+its column and its Citation ("CY 2022 AAR, Part I, Statement of Financial Position, Cash and Cash
+Equivalents"). Part I is for the City as a whole ("All Funds"); the Annexes give the General Fund,
+the Special Education Fund and the Trust Fund too. The budget statement's columns are Original
+budget, Final budget, Actual and COA's two difference columns; Part I's other statements also keep
+the prior-year comparative column. Amounts are exact to the centavo, taken from the values Excel
+last cached for each formula (a formula with no cached value stops the extraction).
+
+A sheet is a statement because its title says so, not because of its name or position, so the
+swapped Annex lettering of 2023 and the unprefixed sheet names of 2024 need no special cases. Hidden
+working sheets (2022's `NFS`, `PPE`, `Restatement` ...) are never read; the record's
+`ignored_sheets` lists them. Rows with an amount but no label (balance checks, scratch sums below a
+table) are skipped. Line items are as COA printed them, typos included, and a label wrapped over two
+rows is joined. The tests check that the Fund columns of every Annex add up to its Total column and
+that each year's statement of financial position balances.
+
 ## Extracting the AAPSI and APMT (scanned)
 
 The 2023 and 2024 AAPSI (Management's Action Plans and Reported Status) and APMT (COA's validation
@@ -136,7 +156,14 @@ timeline: when the observation was raised and COA's Status of Implementation in 
 with Management's action kept apart and attributed. For 2023 and 2024 the timeline also shows
 Management's Action Plan and Reported Status (AAPSI) and COA's validation (APMT) as separate,
 attributed entries, and says where Management's Reported Status and COA's Status of Implementation
-disagree; an answer can carry a "What the City said" section. The page loads React from a CDN, so it needs
+disagree; an answer can carry a "What the City said" section. Questions about amounts ("How much cash
+did Manila have at the end of 2022?", "How did actual spending compare to budget in 2023?") go to the
+`financial_lookup` tool, which returns the exact peso amount, by Fund where the Annexes give one,
+cited to the statement and line item, and works out the difference between years itself; the model
+never does the arithmetic. Where COA labelled a line differently in two years (an Annex's "Total
+Cash" becomes "Total Cash and Cash Equivalents"), the model pairs the two lines and the
+`financial_change` tool computes the difference. Each year's figure is the one printed in that
+year's own AAR, so a later AAR that restated it is not reflected. The page loads React from a CDN, so it needs
 internet.
 The answer model is `GEMINI_ANSWER_MODEL`; change it in `.env` to compare models.
 
