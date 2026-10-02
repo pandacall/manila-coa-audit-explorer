@@ -19,11 +19,13 @@ RUN uv sync --locked --no-dev
 
 # Where config.DEFAULT_INDEX looks for it.
 COPY build/coa.sqlite ./build/coa.sqlite
+# Shown when the demo's daily cap is reached (config.DEFAULT_SAVED_ANSWERS).
+COPY data/saved-answers.json ./data/saved-answers.json
 
 RUN useradd --system --no-create-home app
 USER app
 
-# Cloud Run sets PORT; the project settings (GCP_PROJECT_ID, GEMINI_*) arrive as env vars.
+# Cloud Run sets PORT; the project settings (GCP_PROJECT_ID, GEMINI_*, FIRESTORE_*) arrive as env vars.
 EXPOSE 8080
 ENV PORT=8080
 CMD ["coa-explorer", "serve", "--host", "0.0.0.0"]

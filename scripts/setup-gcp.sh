@@ -214,6 +214,7 @@ WIF_POOL="github"
 WIF_PROVIDER="github-actions"
 FIRESTORE_DB="coa-explorer"   # named database, so a shared project's (default) database is never touched
 LOG_COLLECTION="questions"
+LIMITS_COLLECTION="limits"   # rate-limit and daily-cap counters; expire like the log
 TTL_FIELD="expire_at"
 TRIAL_END="2026-12-01"
 
@@ -467,7 +468,14 @@ gcloud firestore fields ttls update "$TTL_FIELD" --collection-group="$LOG_COLLEC
   && say "✓ TTL policy requested (Firestore finishes applying it in the background, up to ~30 min)" \
   || { warn "Couldn't (re)apply the TTL policy; it may already be enabled or still being created."
        SKIPPED+=("Check the TTL policy: gcloud firestore fields ttls list --database=$FIRESTORE_DB"); }
-note "The app must write '$TTL_FIELD' = question time + 30 days on every logged question."
+say "Enabling TTL on '$LIMITS_COLLECTION' too: the hashed-IP and daily counters expire within hours."
+gcloud firestore fields ttls update "$TTL_FIELD" --collection-group="$LIMITS_COLLECTION" \
+  --enable-ttl --async --database="$FIRESTORE_DB" --project "$GCP_PROJECT_ID" >/dev/null 2>&1 \
+  && say "✓ TTL policy requested for '$LIMITS_COLLECTION'" \
+  || { warn "Couldn't (re)apply the TTL policy on '$LIMITS_COLLECTION'; it may already be enabled."
+       SKIPPED+=("Check the TTL policies: gcloud firestore fields ttls list --database=$FIRESTORE_DB"); }
+note "The app writes '$TTL_FIELD' = question time + 30 days on every logged question, and a"
+note "short expiry on every counter."
 pause "Press Enter to continue."
 
 # ── 8. Budget alerts ──────────────────────────────────────────────────────

@@ -46,6 +46,8 @@ jobs:
       GEMINI_LOCATION: ${{ vars.GEMINI_LOCATION || 'global' }}
       GEMINI_ANSWER_MODEL: ${{ vars.GEMINI_ANSWER_MODEL || 'gemini-3.8-flash' }}
       GEMINI_EMBEDDING_MODEL: ${{ vars.GEMINI_EMBEDDING_MODEL || 'gemini-embedding-001' }}
+      # The demo limits and question log need this database; `serve` refuses to start without it.
+      FIRESTORE_DATABASE: ${{ vars.FIRESTORE_DATABASE || 'coa-explorer' }}
       IMAGE: ${{ vars.GCP_REGION || 'us-central1' }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_ARTIFACT_REPOSITORY || 'coa-explorer' }}/coa-explorer:${{ github.sha }}
     steps:
       - uses: actions/checkout@v7.0.1
@@ -80,7 +82,7 @@ jobs:
             --min-instances 0 \
             --max-instances 2 \
             --memory 1Gi \
-            --set-env-vars "GCP_PROJECT_ID=$GCP_PROJECT_ID,GEMINI_LOCATION=$GEMINI_LOCATION,GEMINI_ANSWER_MODEL=$GEMINI_ANSWER_MODEL,GEMINI_EMBEDDING_MODEL=$GEMINI_EMBEDDING_MODEL"
+            --set-env-vars "GCP_PROJECT_ID=$GCP_PROJECT_ID,GEMINI_LOCATION=$GEMINI_LOCATION,GEMINI_ANSWER_MODEL=$GEMINI_ANSWER_MODEL,GEMINI_EMBEDDING_MODEL=$GEMINI_EMBEDDING_MODEL,FIRESTORE_DATABASE=$FIRESTORE_DATABASE"
           url=$(gcloud run services describe "$SERVICE" --project "$GCP_PROJECT_ID" \
             --region "$REGION" --format 'value(status.url)')
           echo "SERVICE_URL=$url" >> "$GITHUB_ENV"

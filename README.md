@@ -96,6 +96,28 @@ with Management's action kept apart and attributed. The page loads React from a 
 internet.
 The answer model is `GEMINI_ANSWER_MODEL`; change it in `.env` to compare models.
 
+## Public-demo limits, logging and feedback
+
+`serve` guards the app for a public demo and needs `FIRESTORE_DATABASE` (see `.env.example`); it
+refuses to start without it rather than run unguarded. `serve --no-demo-limits` skips all of this,
+and needs no Firestore.
+
+- **Rate limit**: `HOURLY_LIMIT_PER_IP` questions an hour per visitor (default 10), keyed on a salted
+  hash of the IP (`IP_HASH_SALT`; set the same value on every instance). The IP is only used for
+  this counter and is never stored with a logged question.
+- **Daily cap**: `DAILY_QUESTION_CAP` questions a day across all visitors (default 300, UTC days),
+  counted in Firestore, so it is right across instances and restarts. Over either limit,
+  `POST /api/ask` answers 429 with one `rate_limited` or `demo_limit` event and never calls the
+  model. When capped, the page shows "Demo limit reached for today" with the example questions and
+  their saved answers (`data/saved-answers.json`, regenerated against the real model with
+  `uv run coa-explorer save-examples`). If Firestore can't be reached the demo fails closed (503).
+- **Question log**: each question is logged to Firestore with its outcome, Citations, latency and
+  token counts; no IP and no user ID. Records expire 30 days after the question
+  (`scripts/setup-gcp.sh` creates the TTL policies). The final streamed event carries the logged
+  `question_id`; a failed log write never costs the visitor their answer.
+- **Feedback**: 👍/👎 on an answer is sent to `POST /api/feedback`
+  (`{"question_id": "...", "rating": "up" | "down"}`) and stored on the logged question.
+
 The page streams from `POST /api/ask` (`{"question": "..."}`), which returns newline-delimited
 JSON: `status` events while the model searches, then one `answer` (with its `timelines`, if any),
 `not_covered` or `error` event.

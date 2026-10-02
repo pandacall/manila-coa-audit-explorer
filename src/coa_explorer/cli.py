@@ -8,11 +8,23 @@ import os
 import sys
 from collections.abc import Sequence
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from coa_explorer import front_matter, links, part2, part3, smoke
-from coa_explorer.config import DEFAULT_INDEX, DEFAULT_REVIEWED, REPO_ROOT, load_settings
+from coa_explorer.config import (
+    DEFAULT_INDEX,
+    DEFAULT_REVIEWED,
+    DEFAULT_SAVED_ANSWERS,
+    REPO_ROOT,
+    Settings,
+    load_settings,
+)
 from coa_explorer.embedder import Embedder, GeminiEmbedder
 from coa_explorer.index import build_index, load_records
+
+if TYPE_CHECKING:  # the Gemini and web stacks are imported lazily, only by the steps that need them
+    from coa_explorer.answer import AnswerEngine
+    from coa_explorer.demo import Demo
 
 DEFAULT_REPORTS = REPO_ROOT / "coa-audit-reports"
 DEFAULT_OUT = REPO_ROOT / "data" / "extracted"
@@ -61,6 +73,18 @@ def main(argv: Sequence[str] | None = None, *, embedder: Embedder | None = None)
     serve.add_argument("--host", default="127.0.0.1")
     # Cloud Run says which port to listen on through $PORT.
     serve.add_argument("--port", type=int, default=int(os.environ.get("PORT", 8000)))
+    serve.add_argument(
+        "--no-demo-limits",
+        action="store_true",
+        help="skip the rate limits, daily cap, question log and feedback (no Firestore needed)",
+    )
+
+    examples = steps.add_parser(
+        "save-examples",
+        help="ask the example questions of the real model and save the answers shown when the"
+        " demo's daily cap is reached",
+    )
+    examples.add_argument("--out", type=Path, default=DEFAULT_SAVED_ANSWERS)
 
     check = steps.add_parser("smoke", help="ask a running app a question and check the answer")
     check.add_argument("--url", required=True, help="base URL of the running app")
@@ -73,7 +97,9 @@ def main(argv: Sequence[str] | None = None, *, embedder: Embedder | None = None)
     if args.step == "index":
         return index_step(args.records, args.out, embedder or gemini_embedder())
     if args.step == "serve":
-        return serve_step(args.host, args.port)
+        return serve_step(args.host, args.port, demo_limits=not args.no_demo_limits)
+    if args.step == "save-examples":
+        return save_examples_step(args.out)
     if args.step == "links":
         return links_step(args.records)
     if args.step == "smoke":
@@ -184,24 +210,80 @@ def smoke_step(url: str, question: str, timeout: float) -> int:
     return 1 if problems else 0
 
 
-def serve_step(host: str, port: int) -> int:
-    # Imported here so `extract` and `index` don't need Gemini or the web stack loaded.
-    import uvicorn
-
+def answer_engine(settings: Settings) -> AnswerEngine:
     from coa_explorer.answer import AnswerEngine
-    from coa_explorer.api import create_app
     from coa_explorer.gemini import GeminiAdapter
     from coa_explorer.search import Index
 
-    settings = load_settings()
     adapter = GeminiAdapter(
         project=settings.gcp_project_id,
         location=settings.gemini_location,
         model=settings.gemini_answer_model,
     )
-    index = Index.open(settings.index_path, gemini_embedder())
-    app = create_app(AnswerEngine(adapter, index))
-    uvicorn.run(app, host=host, port=port)
+    return AnswerEngine(adapter, Index.open(settings.index_path, gemini_embedder()))
+
+
+def build_demo(settings: Settings) -> Demo:
+    from coa_explorer.demo import Demo, load_saved_answers
+    from coa_explorer.firestore_store import FirestoreStore
+
+    store = FirestoreStore(
+        project=settings.gcp_project_id,
+        database=settings.firestore_database,
+        questions_collection=settings.firestore_log_collection,
+        counters_collection=settings.firestore_limits_collection,
+        ttl_field=settings.firestore_ttl_field,
+    )
+    examples = load_saved_answers(DEFAULT_SAVED_ANSWERS)
+    if not examples:
+        print(
+            f"warning: no saved answers at {DEFAULT_SAVED_ANSWERS}; the capped page will show no"
+            " examples. Run `coa-explorer save-examples`.",
+            file=sys.stderr,
+        )
+    return Demo(
+        store,
+        salt=settings.ip_hash_salt,
+        hourly_limit=settings.hourly_limit_per_ip,
+        daily_cap=settings.daily_question_cap,
+        examples=examples,
+    )
+
+
+def serve_step(host: str, port: int, *, demo_limits: bool = True) -> int:
+    import uvicorn
+
+    from coa_explorer.api import create_app
+
+    settings = load_settings()
+    demo = None
+    if demo_limits:
+        if not settings.firestore_database:
+            # Fail closed: a public deployment missing this setting must not run unguarded.
+            raise SystemExit(
+                "FIRESTORE_DATABASE is not set, so the demo limits and question log have nowhere"
+                " to live. Set it (see .env.example), or pass --no-demo-limits to run without."
+            )
+        demo = build_demo(settings)
+    else:
+        print("running without demo limits, question logging or feedback", file=sys.stderr)
+    uvicorn.run(create_app(answer_engine(settings), demo), host=host, port=port)
+    return 0
+
+
+def save_examples_step(out: Path) -> int:
+    from coa_explorer.answer import Answer
+    from coa_explorer.demo import EXAMPLE_QUESTIONS, SavedAnswer, save_answers
+
+    engine = answer_engine(load_settings())
+    saved = []
+    for question in EXAMPLE_QUESTIONS:
+        final = list(engine.ask(question))[-1]
+        answer = final if isinstance(final, Answer) else None
+        print(f"{'saved' if answer else 'no answer for'}: {question}")
+        saved.append(SavedAnswer(question=question, answer=answer))
+    save_answers(out, saved)
+    print(f"wrote {out}")
     return 0
 
 
