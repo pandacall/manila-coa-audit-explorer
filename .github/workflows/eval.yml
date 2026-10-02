@@ -1,0 +1,70 @@
+name: Evaluation
+
+# A small evaluation on every pull request: the first few approved reference items go through the
+# real answer model and the Gemini Pro batch judge. It reports; it does not gate the merge.
+# Authenticates to GCP with Workload Identity Federation, as an account that can only call Gemini
+# and use the evaluation bucket (not the deployer), using the variables that scripts/setup-gcp.sh
+# sets. There are no keys or secrets. With no approved reference items there is nothing to score,
+# so the job skips the GCP steps.
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: eval-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  eval:
+    # A pull request from a fork gets no OIDC token, and only this repository may use GCP.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+      GEMINI_LOCATION: global
+      GEMINI_ANSWER_MODEL: ${{ vars.GEMINI_ANSWER_MODEL }}
+      GEMINI_JUDGE_MODEL: ${{ vars.GEMINI_JUDGE_MODEL }}
+      EVAL_BATCH_BUCKET: ${{ vars.GCP_EVAL_BATCH_BUCKET }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+
+      - run: uv sync --locked
+
+      - name: Count approved reference items
+        id: approved
+        run: echo "count=$(grep -c '"approved": true' data/eval/reference.json || true)" >> "$GITHUB_OUTPUT"
+
+      - uses: google-github-actions/auth@v2
+        if: steps.approved.outputs.count != '0'
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_EVAL_SERVICE_ACCOUNT }}
+
+      - name: Build the index
+        if: steps.approved.outputs.count != '0'
+        run: uv run coa-explorer index
+
+      - name: Evaluate the first 5 approved reference items
+        if: steps.approved.outputs.count != '0'
+        run: uv run coa-explorer eval --limit 5 --out build/eval
+
+      - name: Report results
+        if: always()
+        run: |
+          if [ -f build/eval/summary.md ]; then
+            cat build/eval/summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: eval-results
+          path: build/eval/
+          if-no-files-found: ignore

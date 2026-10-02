@@ -1,0 +1,182 @@
+{
+  "items": [
+    {
+      "id": "cash-in-bank-2023",
+      "question": "What did COA say about the City of Manila's cash in bank in 2023?",
+      "language": "en",
+      "question_type": "observation",
+      "expected_citations": [
+        "CY 2023 AAR, Part II, Observation No. 1, pp. 71-75"
+      ],
+      "key_facts": [
+        "COA could not establish the accuracy of the P9.237 billion Cash-in-Bank balance as of December 31, 2023",
+        "There was an unreconciled variance of P106.634 million between the book balances and the bank confirmations",
+        "Unadjusted book reconciling items accumulated over several years totalled P182.123 million",
+        "The cause was lapses in preparing and submitting Bank Reconciliation Statements"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "cash-advances-2021",
+      "question": "How much in cash advances had the City of Manila not settled in 2021?",
+      "language": "en",
+      "question_type": "observation",
+      "expected_citations": [
+        "CY 2021 AAR, Part II, Observation No. 2, pp. 79-80"
+      ],
+      "key_facts": [
+        "Unliquidated cash advances totalled P182.725 million",
+        "P95.424 million of that was owed by employees who had retired, resigned, died or gone AWOL",
+        "Management adhered to COA's recommendations"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "gad-programs-2022",
+      "question": "How many Gender and Development programs did the City not carry out in 2022?",
+      "language": "en",
+      "question_type": "observation",
+      "expected_citations": [
+        "CY 2022 AAR, Part II, Observation No. 5, pp. 79-80"
+      ],
+      "key_facts": [
+        "The City had not implemented 43 of its 188 Gender and Development programs, projects and activities",
+        "COA recommended a catch-up plan for the 43 unimplemented activities"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "revenue-shortfall-2024",
+      "question": "Did the City of Manila meet its revenue targets in 2024?",
+      "language": "en",
+      "question_type": "observation",
+      "expected_citations": [
+        "CY 2024 AAR, Part II, Observation No. 20, pp. 151-153"
+      ],
+      "key_facts": [
+        "The City fell short of its revenue projections by P6.783 billion, or 36.67 percent",
+        "The City had projected revenue of P18.497 billion",
+        "COA attributed the shortfall to insufficient periodic monitoring and review of underperforming income accounts"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "double-payment-subsidy-2021",
+      "question": "Ano ang sinabi ng COA tungkol sa double payment ng emergency subsidy sa Maynila noong 2021?",
+      "language": "fil",
+      "question_type": "observation",
+      "expected_citations": [
+        "CY 2021 AAR, Part II, Observation No. 4, pp. 83-86"
+      ],
+      "key_facts": [
+        "There were 723 cases of double payment of the COVID-19 emergency subsidy or financial assistance",
+        "The double payments came to P8.424 million in excess of the authorised amounts",
+        "COA recommended establishing accountability for the excess payments and recovering them"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "district-hospitals-property-2024",
+      "question": "What problems did COA find with equipment at Manila's district hospitals in 2024?",
+      "language": "en",
+      "question_type": "observation",
+      "expected_citations": [
+        "CY 2024 AAR, Part II, Observation No. 11, pp. 122-126"
+      ],
+      "key_facts": [
+        "Unserviceable property and semi-expendable items worth P74.131 million at the six City District Hospitals remained undisposed",
+        "Unserviceable items worth P45.867 million could no longer be traced in the books",
+        "Semi-expendable items worth P1.128 million were inappropriately reported in the Waste Materials Report"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "hospital-charges-2022",
+      "question": "What did COA observe about PhilHealth hospital charges collected by Manila's hospitals in 2022?",
+      "language": "en",
+      "question_type": "observation",
+      "expected_citations": [
+        "CY 2022 AAR, Part II, Observation No. 4, pp. 78-79"
+      ],
+      "key_facts": [
+        "Hospital Charges collected from PhilHealth totalling P550.494 million remained unutilized at year-end",
+        "The utilization rate for 2022 was only 25 per cent"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "dialysis-joint-venture-2020",
+      "question": "What was wrong with the City's joint venture agreement for the dialysis center, according to COA?",
+      "language": "en",
+      "question_type": "observation",
+      "expected_citations": [
+        "CY 2020 AAR, Part II, Observation No. 3, pp. 74-79"
+      ],
+      "key_facts": [
+        "The joint venture was with B. Braun Avitum Philippines for a dialysis center at the Gat Andres Bonifacio Memorial Medical Center",
+        "The agreement lacked certain provisions prescribed in City Ordinance No. 8346",
+        "COA found some of its stipulations unclear, inadequate and disadvantageous to the City"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "unremitted-withholdings-2023",
+      "question": "Magkano ang hindi pa naire-remit ng Maynila sa BIR, GSIS, Pag-IBIG at PhilHealth noong 2023?",
+      "language": "fil",
+      "question_type": "observation",
+      "expected_citations": [
+        "CY 2023 AAR, Part II, Observation No. 5, pp. 84-86"
+      ],
+      "key_facts": [
+        "P472.416 million withheld for CY 2023 had not been remitted",
+        "The amounts were due to the BIR, GSIS, Pag-IBIG and PhilHealth"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "property-tax-assessment-2023",
+      "question": "What does 2023 Observation No. 3 say?",
+      "language": "en",
+      "question_type": "observation",
+      "expected_citations": [
+        "CY 2023 AAR, Part II, Observation No. 3, pp. 77-81"
+      ],
+      "key_facts": [
+        "The City insufficiently imposed Real Property Tax and Special Education Tax",
+        "The assessed values of 452 real property units were understated by misapplying assessment levels",
+        "1,130 real property units were omitted from the Assessment Rolls"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "other-city-budget",
+      "question": "What did COA say about Quezon City's budget?",
+      "language": "en",
+      "question_type": "observation",
+      "expected_citations": [],
+      "key_facts": [],
+      "unanswerable": true,
+      "approved": true
+    },
+    {
+      "id": "mayoral-election",
+      "question": "Sino ang nanalo bilang alkalde ng Maynila sa halalan noong 2025?",
+      "language": "fil",
+      "question_type": "observation",
+      "expected_citations": [],
+      "key_facts": [],
+      "unanswerable": true,
+      "approved": true
+    }
+  ]
+}

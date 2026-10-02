@@ -122,11 +122,13 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "fastapi" },
+    { name = "google-auth" },
     { name = "google-cloud-firestore" },
     { name = "google-genai" },
     { name = "pillow" },
     { name = "pypdf" },
     { name = "pypdfium2" },
+    { name = "requests" },
     { name = "sqlite-vec" },
     { name = "uvicorn" },
 ]
@@ -141,11 +143,13 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "fastapi", specifier = ">=0.142.2" },
+    { name = "google-auth", specifier = ">=2.40" },
     { name = "google-cloud-firestore", specifier = ">=2.34.0" },
     { name = "google-genai", specifier = ">=2.26" },
     { name = "pillow", specifier = ">=12.3.0" },
     { name = "pypdf", specifier = ">=6.19.0" },
     { name = "pypdfium2", specifier = ">=5.13.0" },
+    { name = "requests", specifier = ">=2.32" },
     { name = "sqlite-vec", specifier = ">=0.1.9" },
     { name = "uvicorn", specifier = ">=0.30" },
 ]
