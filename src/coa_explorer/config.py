@@ -34,6 +34,10 @@ class Settings:
     # Keys the hashed IP in the rate-limit counters. Set it so every instance hashes the same way;
     # left unset, each process picks its own and the hourly limit applies per instance.
     ip_hash_salt: str = ""
+    # Only the evaluation harness needs these.
+    gemini_judge_model: str | None = None
+    eval_batch_bucket: str | None = None
+    gemini_batch_location: str | None = None
 
 
 def load_settings(
@@ -65,6 +69,9 @@ def load_settings(
         hourly_limit_per_ip=int(env.get("HOURLY_LIMIT_PER_IP") or 10),
         daily_question_cap=int(env.get("DAILY_QUESTION_CAP") or 300),
         ip_hash_salt=env.get("IP_HASH_SALT") or secrets.token_hex(16),
+        gemini_judge_model=env.get("GEMINI_JUDGE_MODEL") or None,
+        eval_batch_bucket=env.get("EVAL_BATCH_BUCKET") or None,
+        gemini_batch_location=env.get("GEMINI_BATCH_LOCATION") or None,
     )
 
 
