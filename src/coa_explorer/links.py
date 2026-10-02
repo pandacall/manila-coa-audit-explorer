@@ -1,7 +1,8 @@
-"""Link each Part III reference to its Originating Observation in Part II, and report the result.
+"""Link each Part III, AAPSI and APMT reference to its Originating Observation in Part II.
 
-Every block of Part III rows names an earlier Audit Observation. When that observation lies in the
-2020-2024 collection the block is `linked` to it; when it predates the collection it is
+Every block of Part III rows names an earlier Audit Observation, and so does every block of AAPSI
+and APMT rows (which may also name an observation of their own AAR). When that observation lies
+in the 2020-2024 collection the block is `linked` to it; when it predates the collection it is
 `out_of_collection` (still shown, cited to the AAR that tracks it); anything else is `unmatched`
 and reported with the reason. Nothing is dropped and no match is guessed.
 
@@ -17,6 +18,7 @@ from dataclasses import asdict, dataclass
 LINKED = "linked"
 OUT_OF_COLLECTION = "out_of_collection"
 UNMATCHED = "unmatched"
+PART_III = "Part III"
 
 
 @dataclass(frozen=True)
@@ -30,6 +32,7 @@ class Link:
     origin_citation: str | None  # the Part II Citation, when linked
     cited_pages: tuple[int, int] | None  # pages COA cites in Part III
     derived_pages: tuple[int, int] | None  # pages derived for the Part II observation (ADR-0001)
+    document: str = PART_III  # which table the reference is in: Part III, AAPSI or APMT
 
     @property
     def drift(self) -> int | None:
@@ -43,10 +46,16 @@ class Link:
         return self.derived_pages[0] - self.cited_pages[0]
 
 
-def build_links(part2: Mapping[int, dict], part3: Mapping[int, dict]) -> list[Link]:
-    """One Link per tracked observation of every Part III, in AAR and table order.
+def build_links(
+    part2: Mapping[int, dict],
+    part3: Mapping[int, dict],
+    monitoring: Mapping[str, Mapping[int, dict]] | None = None,
+) -> list[Link]:
+    """One Link per tracked observation of every Part III, then of each AAPSI and APMT.
 
-    `part2` and `part3` are the extracted records (as `to_dict` writes them) keyed by AAR year.
+    `part2` and `part3` are the extracted records (as `to_dict` writes them) keyed by AAR year;
+    `monitoring` maps "AAPSI" and "APMT" to their records keyed by AAR year. Links are in AAR and
+    table order. Unlike Part III, an AAPSI or APMT may name an observation of its own AAR.
     """
     observations = {
         (year, o["number"]): o for year, record in part2.items() for o in record["observations"]
@@ -56,6 +65,10 @@ def build_links(part2: Mapping[int, dict], part3: Mapping[int, dict]) -> list[Li
     for tracked_in in sorted(part3):
         for tracked in part3[tracked_in]["observations"]:
             links.append(_link(tracked_in, tracked, observations, part2, first_year))
+    for document, records in (monitoring or {}).items():
+        for tracked_in in sorted(records):
+            for tracked in records[tracked_in]["observations"]:
+                links.append(_link(tracked_in, tracked, observations, part2, first_year, document))
     return links
 
 
@@ -65,6 +78,7 @@ def _link(
     observations: Mapping[tuple[int, int], dict],
     part2: Mapping[int, dict],
     first_year: int | None,
+    document: str = PART_III,
 ) -> Link:
     year, number = tracked["origin_year"], tracked["origin_observation"]
     start, end = tracked["origin_page_start"], tracked["origin_page_end"]
@@ -83,11 +97,12 @@ def _link(
             derived_pages=(
                 (observation["page_start"], observation["page_end"]) if observation else None
             ),
+            document=document,
         )
 
     if year is None or number is None:
         return link(UNMATCHED, "the reference does not give an AAR year and observation number")
-    if year >= tracked_in:
+    if year > tracked_in or (year == tracked_in and document == PART_III):
         return link(UNMATCHED, f"CY {year} is not before the CY {tracked_in} AAR that cites it")
     if first_year is not None and year < first_year:
         return link(OUT_OF_COLLECTION, f"the CY {year} AAR is not in the {first_year}-2024 set")
@@ -111,6 +126,7 @@ def report(links: list[Link]) -> dict:
         "page_drift": [
             {
                 "tracked_in": link.tracked_in,
+                "document": link.document,
                 "origin": f"CY {link.origin_year} Observation No. {link.origin_observation}",
                 "cited_pages": list(link.cited_pages),
                 "derived_pages": list(link.derived_pages),

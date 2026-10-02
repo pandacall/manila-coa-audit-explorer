@@ -48,6 +48,25 @@ Where a Word cell's paragraphs cannot be matched one-to-one with the recommendat
 whole cell text is attached to each recommendation it covers and the column is named in the record's
 `shared` list, so nothing is dropped and nothing is guessed.
 
+## Extracting the AAPSI and APMT (scanned)
+
+The 2023 and 2024 AAPSI (Management's Action Plans and Reported Status) and APMT (COA's validation
+of them, with COA's Status of Implementation) are scans. Gemini reads them page by page into the
+table's columns (ADR-0003); this needs the same GCP access as `serve`, costs a few cents, and is
+not part of `extract` or `extract --check`:
+
+```bash
+uv run coa-explorer extract-aapsi
+```
+
+It writes `aapsi/<year>.json` and `apmt/<year>.json` under `data/extracted/` (one block of rows per
+Reference, each row cited to its real PDF page) and `monitoring-link-report.json`. Each page is read
+twice; pages whose readings differ are listed in the record's `review_notes`. **Review the records
+against the scans before committing them**, starting with those pages: Gemini normalises small
+punctuation and, rarely, drops a phrase. The command will not overwrite existing records (which may
+hold your corrections) without `--overwrite`. `coa-explorer links` prints how the AAPSI and APMT
+references link to Part II, which are out of the collection and which are unmatched.
+
 ## Asking questions locally
 
 Needs the settings from `scripts/setup-gcp.sh` in `.env` (`GCP_PROJECT_ID`, `GEMINI_LOCATION`,
@@ -67,7 +86,10 @@ and with no year named returns the newest year first. Open http://127.0.0.1:8000
 about Part II or about whether the City acted on COA's recommendations, and the page shows the
 summary and key points, each with Citation chips in COA's format. A follow-up question also shows a
 timeline: when the observation was raised and COA's Status of Implementation in each later AAR,
-with Management's action kept apart and attributed. The page loads React from a CDN, so it needs
+with Management's action kept apart and attributed. For 2023 and 2024 the timeline also shows
+Management's Action Plan and Reported Status (AAPSI) and COA's validation (APMT) as separate,
+attributed entries, and says where Management's Reported Status and COA's Status of Implementation
+disagree; an answer can carry a "What the City said" section. The page loads React from a CDN, so it needs
 internet.
 The answer model is `GEMINI_ANSWER_MODEL`; change it in `.env` to compare models.
 
