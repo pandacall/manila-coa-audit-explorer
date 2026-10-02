@@ -8,13 +8,14 @@ import sys
 from collections.abc import Sequence
 from pathlib import Path
 
+from coa_explorer import links, part2, part3
 from coa_explorer.config import DEFAULT_INDEX, REPO_ROOT, load_settings
 from coa_explorer.embedder import Embedder, GeminiEmbedder
-from coa_explorer.index import build_index
-from coa_explorer.part2 import extract_year
+from coa_explorer.index import build_index, load_records
 
 DEFAULT_REPORTS = REPO_ROOT / "coa-audit-reports"
-DEFAULT_OUT = REPO_ROOT / "data" / "extracted" / "part2"
+DEFAULT_OUT = REPO_ROOT / "data" / "extracted"
+LINK_REPORT = "link-report.json"
 YEARS = (2020, 2021, 2022, 2023, 2024)
 
 
@@ -23,9 +24,13 @@ def main(argv: Sequence[str] | None = None, *, embedder: Embedder | None = None)
     parser = argparse.ArgumentParser(prog="coa-explorer", description=__doc__)
     steps = parser.add_subparsers(dest="step", required=True)
 
-    extract = steps.add_parser("extract", help="extract Part II Audit Observations to JSON records")
+    extract = steps.add_parser(
+        "extract", help="extract Part II and Part III into JSON records, and report their links"
+    )
     extract.add_argument("--reports", type=Path, default=DEFAULT_REPORTS, help="raw AAR folder")
-    extract.add_argument("--out", type=Path, default=DEFAULT_OUT, help="where the records go")
+    extract.add_argument(
+        "--out", type=Path, default=DEFAULT_OUT, help="where part2/, part3/ and the report go"
+    )
     extract.add_argument(
         "--check",
         action="store_true",
@@ -35,10 +40,13 @@ def main(argv: Sequence[str] | None = None, *, embedder: Embedder | None = None)
     index = steps.add_parser(
         "index", help="build the SQLite search index (keyword and embeddings) from the records"
     )
-    index.add_argument(
-        "--records", type=Path, default=DEFAULT_OUT, help="extracted Part II records"
-    )
+    index.add_argument("--records", type=Path, default=DEFAULT_OUT, help="extracted records")
     index.add_argument("--out", type=Path, default=DEFAULT_INDEX, help="the SQLite file to write")
+
+    link = steps.add_parser(
+        "links", help="print how Part III references link to Part II, with unmatched ones and drift"
+    )
+    link.add_argument("--records", type=Path, default=DEFAULT_OUT, help="extracted records")
 
     serve = steps.add_parser("serve", help="run the web app locally")
     serve.add_argument("--host", default="127.0.0.1")
@@ -49,19 +57,40 @@ def main(argv: Sequence[str] | None = None, *, embedder: Embedder | None = None)
         return index_step(args.records, args.out, embedder or gemini_embedder())
     if args.step == "serve":
         return serve_step(args.host, args.port)
+    if args.step == "links":
+        return links_step(args.records)
     return extract_step(args.reports, args.out, check=args.check)
 
 
 def extract_step(reports: Path, out: Path, *, check: bool = False) -> int:
+    part2_records = {year: part2.extract_year(reports, year) for year in YEARS}
+    part3_records = {year: part3.extract_year(reports, year) for year in YEARS}
+    link_report = links.report(
+        links.build_links(
+            {year: record.to_dict() for year, record in part2_records.items()},
+            {year: record.to_dict() for year, record in part3_records.items()},
+        )
+    )
+    outputs = {
+        **{
+            Path("part2") / f"{year}.json": record.to_dict()
+            for year, record in part2_records.items()
+        },
+        **{
+            Path("part3") / f"{year}.json": record.to_dict()
+            for year, record in part3_records.items()
+        },
+        Path(LINK_REPORT): link_report,
+    }
     stale: list[str] = []
-    for year in YEARS:
-        text = render(extract_year(reports, year).to_dict())
-        target = out / f"{year}.json"
+    for relative, record in outputs.items():
+        text = render(record)
+        target = out / relative
         if check:
             if not target.exists() or target.read_text(encoding="utf-8") != text:
-                stale.append(target.name)
+                stale.append(relative.as_posix())
             continue
-        out.mkdir(parents=True, exist_ok=True)
+        target.parent.mkdir(parents=True, exist_ok=True)
         # newline="" keeps the line endings identical on every platform, so reruns never diff.
         with target.open("w", encoding="utf-8", newline="") as f:
             f.write(text)
@@ -84,6 +113,30 @@ def gemini_embedder() -> GeminiEmbedder:
 def index_step(records: Path, out: Path, embedder: Embedder) -> int:
     count = build_index(records, out, embedder)
     print(f"indexed {count} pieces into {out}")
+    return 0
+
+
+def links_step(records: Path) -> int:
+    part2_records = load_records(records / "part2")
+    part3_records = load_records(records / "part3")
+    result = links.report(links.build_links(part2_records, part3_records))
+    counts = result["counts"]
+    print(
+        f"{sum(counts.values())} Part III references: {counts[links.LINKED]} linked to Part II,"
+        f" {counts[links.OUT_OF_COLLECTION]} out of the collection,"
+        f" {counts[links.UNMATCHED]} unmatched"
+    )
+    for item in result["unmatched"]:
+        print(f"unmatched: CY {item['tracked_in']} Part III, {item['reference']}: {item['reason']}")
+    drifts = [d["drift"] for d in result["page_drift"]]
+    if drifts:
+        print(
+            f"derived Part II starting page vs COA's citation: {len(drifts)} links, drift from"
+            f" {min(drifts)} to {max(drifts)} pages"
+        )
+    for d in result["page_drift"]:
+        if d["drift"]:
+            print(f"  CY {d['tracked_in']} Part III cites {d['origin']}: drift {d['drift']:+d}")
     return 0
 
 

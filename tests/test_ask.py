@@ -10,6 +10,7 @@ from fastapi.testclient import TestClient
 from coa_explorer.answer import Answer, AnswerEngine, NotCovered
 from coa_explorer.api import create_app
 from coa_explorer.index import build_index
+from coa_explorer.models import ModelTurn, ToolCall
 from coa_explorer.search import Index
 from tests.fake_embedder import FakeEmbedder
 from tests.fixtures import write_fixture_records
@@ -193,6 +194,175 @@ def test_covered_must_be_a_real_boolean_and_sources_a_list(index):
     assert [c.text for c in answer.key_points[0].citations] == [CITATION_5]
 
 
+# --- Follow-up timelines (Part III) ---------------------------------------------------------
+
+CASH_ADVANCES_2023 = "2023-III-1"
+CASH_ADVANCES_2024 = "2024-III-1"
+
+
+def timeline_call(year: int, observation: int) -> ModelTurn:
+    args = {"origin_year": year, "origin_observation": observation}
+    return ModelTurn(text=None, tool_calls=[ToolCall("timeline", args)])
+
+
+def submit_with_timelines(summary, key_points, timelines):
+    turn = submit(summary, key_points)
+    turn.tool_calls[0].args["timelines"] = timelines
+    return turn
+
+
+def test_a_follow_up_question_is_answered_with_a_timeline_the_tool_assembled(index):
+    adapter = ScriptedAdapter(
+        search("cash advances", parts=["III"]),
+        timeline_call(2022, 3),
+        submit_with_timelines(
+            "COA's Status of Implementation went from partial to not implemented.",
+            [
+                point(
+                    "In 2023 COA recorded the recommendation as partially implemented.",
+                    CASH_ADVANCES_2023,
+                ),
+                point("By 2024 COA recorded it as not implemented.", CASH_ADVANCES_2024),
+            ],
+            [{"origin_year": 2022, "origin_observation": 3}],
+        ),
+    )
+
+    events = ask(index, adapter, "Did Manila act on COA's recommendations about cash advances?")
+
+    assert [e["type"] for e in events[:-1]] == ["status", "status"]
+    assert "Observation No. 3" in events[1]["message"]
+    answer = Answer.model_validate(final(events))
+    assert [c.text for c in answer.key_points[0].citations] == [
+        "CY 2023 AAR, Part III, CY 2022 Observation No. 3, p. 91"
+    ]
+    (timeline,) = answer.timelines
+    assert timeline.raised.citation == "CY 2022 AAR, Part II, Observation No. 3, p. 73"
+    assert [(s.aar_year, s.follow_ups[0].status) for s in timeline.steps] == [
+        (2023, "Partially Implemented"),
+        (2024, "Not Implemented"),
+    ]
+    assert timeline.steps[0].follow_ups[0].management_action.startswith("The City liquidated")
+
+
+def test_the_model_sees_the_timeline_with_an_id_and_citation_for_every_step(index):
+    adapter = ScriptedAdapter(timeline_call(2022, 3), submit("s", [point("p", CASH_ADVANCES_2024)]))
+
+    ask(index, adapter)
+
+    _, messages, tools = adapter.requests[1]
+    assert {"search", "timeline", "submit_answer"} == {t.name for t in adapter.requests[0][2]}
+    timeline = messages[-1].tool_results[0].content["timeline"]
+    assert [f["key"] for step in timeline["steps"] for f in step["follow_ups"]] == [
+        CASH_ADVANCES_2023,
+        CASH_ADVANCES_2024,
+    ]
+    assert timeline["steps"][0]["follow_ups"][0]["status"] == "Partially Implemented"
+
+
+def test_search_results_name_the_observation_so_the_model_can_ask_for_its_timeline(index):
+    adapter = ScriptedAdapter(search("cash advances"), submit("s", [point("p", IPSAS_5)]))
+
+    ask(index, adapter)
+
+    results = adapter.requests[1][1][-1].tool_results[0].content
+    part_iii = next(r for r in results if r["id"] == CASH_ADVANCES_2023)
+    assert (part_iii["origin_year"], part_iii["origin_observation"]) == (2022, 3)
+
+
+def test_search_can_filter_one_years_follow_up_by_status(index):
+    adapter = ScriptedAdapter(
+        search("", years=[2024], parts=["III"], status="Not Implemented", limit=25),
+        submit("s", [point("p", CASH_ADVANCES_2024)]),
+    )
+
+    answer = Answer.model_validate(final(ask(index, adapter)))
+
+    results = adapter.requests[1][1][-1].tool_results[0].content
+    assert [r["id"] for r in results] == [CASH_ADVANCES_2024]
+    assert answer.key_points[0].citations[0].text.startswith("CY 2024 AAR, Part III")
+
+
+def test_a_timeline_the_model_never_retrieved_is_not_shown(index):
+    adapter = ScriptedAdapter(
+        search("cash advances"),
+        submit_with_timelines(
+            "s",
+            [point("p", CASH_ADVANCES_2023)],
+            [
+                {"origin_year": 2022, "origin_observation": 3},
+                {"origin_year": 1, "origin_observation": "x"},
+                "junk",
+            ],
+        ),
+    )
+
+    answer = Answer.model_validate(final(ask(index, adapter)))
+
+    assert answer.timelines == []
+
+
+def test_at_most_three_timelines_are_shown(index):
+    adapter = ScriptedAdapter(
+        timeline_call(2022, 3),
+        timeline_call(2019, 4),
+        timeline_call(2023, 5),
+        timeline_call(2023, 1),
+        submit_with_timelines(
+            "s",
+            [point("p", CASH_ADVANCES_2023)],
+            [
+                {"origin_year": 2022, "origin_observation": 3},
+                {"origin_year": 2019, "origin_observation": 4},
+                {"origin_year": 2023, "origin_observation": 5},
+                {"origin_year": 2023, "origin_observation": 1},
+            ],
+        ),
+    )
+
+    answer = Answer.model_validate(final(ask(index, adapter)))
+
+    assert [(t.origin_year, t.origin_observation) for t in answer.timelines] == [
+        (2022, 3),
+        (2019, 4),
+        (2023, 5),
+    ]
+
+
+def test_a_timeline_for_an_unknown_observation_is_reported_to_the_model_not_fatal(index):
+    adapter = ScriptedAdapter(
+        timeline_call(2021, 99),
+        ModelTurn(text=None, tool_calls=[ToolCall("timeline", {"origin_year": "later"})]),
+        timeline_call(2022, 3),
+        submit("s", [point("p", CASH_ADVANCES_2023)]),
+    )
+
+    events = ask(index, adapter)
+
+    assert final(events)["type"] == "answer"
+    assert "nothing on CY 2021" in adapter.requests[1][1][-1].tool_results[0].content["error"]
+    assert "must be integers" in adapter.requests[2][1][-1].tool_results[0].content["error"]
+
+
+def test_a_pre_2020_observation_is_shown_cited_to_the_aars_that_track_it(index):
+    adapter = ScriptedAdapter(
+        timeline_call(2019, 4),
+        submit_with_timelines(
+            "s",
+            [point("Not implemented in 2023.", "2023-III-2")],
+            [{"origin_year": 2019, "origin_observation": 4}],
+        ),
+    )
+
+    answer = Answer.model_validate(final(ask(index, adapter)))
+
+    (timeline,) = answer.timelines
+    assert timeline.in_collection is False and timeline.raised is None
+    assert [c.text for c in answer.key_points[0].citations] == [
+        "CY 2023 AAR, Part III, CY 2019 Observation No. 4, p. 92"
+    ]
+
+
 def test_a_hit_gives_the_model_the_whole_observation_to_cite(index):
     adapter = ScriptedAdapter(
         search("Section 89"),  # only the description matches
@@ -244,7 +414,7 @@ def test_the_model_can_filter_by_year_part_and_observation_number(index):
     _, messages, _ = adapter.requests[1]
     assert {p["citation"] for p in messages[-1].tool_results[0].content} == {CITATION_5}
     _, messages, _ = adapter.requests[2]
-    assert messages[-1].tool_results[0].content == []
+    assert {p["id"] for p in messages[-1].tool_results[0].content} == {"2023-III-1", "2024-III-1"}
 
 
 def test_the_model_is_told_to_name_the_years_a_topic_appeared_in(index):

@@ -1,8 +1,9 @@
-"""The `search` retrieval tool: hybrid keyword + vector search over the AARs.
+"""The retrieval tools: hybrid keyword + vector `search` over the AARs, and `timeline`.
 
 Every result carries a complete Citation. Keyword (FTS5) and vector (sqlite-vec) matches are merged
 into one ranking; a hit on any piece of an Audit Observation can be expanded to the whole
-observation.
+observation. `timeline` follows one Audit Observation's Recommendations through the later AARs'
+Part III.
 """
 
 from __future__ import annotations
@@ -17,6 +18,7 @@ import sqlite_vec
 
 from coa_explorer.embedder import Embedder
 from coa_explorer.index import load_vec_extension
+from coa_explorer.timeline import Timeline, assemble_timeline
 
 DEFAULT_LIMIT = 5  # Audit Observations per search
 CANDIDATES = 50  # pieces taken from each of keyword and vector search before merging
@@ -34,7 +36,10 @@ class Piece:
     key: str  # stable id the model cites, e.g. "2023-5-description-1"
     aar_year: int
     part: str
-    observation_number: int | None
+    observation_number: int | None  # the Part II Audit Observation number; None in Part III
+    origin_year: int | None  # the observation this piece is about, for a timeline
+    origin_observation: int | None
+    status: str | None  # COA's Status of Implementation, for a Part III piece
     kind: str
     title: str
     text: str
@@ -98,18 +103,20 @@ class Index:
         years: list[int] | None = None,
         parts: list[str] | None = None,
         observation: int | None = None,
+        status: str | None = None,
         limit: int = DEFAULT_LIMIT,
     ) -> list[Piece]:
         """Matching pieces from at most `limit` Audit Observations, grouped by observation.
 
         Keyword and vector matches are merged into one ranking (reciprocal rank fusion). `years`,
-        `parts` and `observation` (an observation number) narrow the search; with no query words,
-        an observation filter alone is a direct lookup returning that observation's pieces in
+        `parts` ("II", "III"), `observation` (a Part II observation number) and `status` (COA's
+        Status of Implementation, for Part III) narrow the search; with no query words, the filters
+        alone are a direct lookup, an observation filter returning that observation's pieces in
         reading order. With no `years`, observations are ordered newest year first (most relevant
         first within a year); with `years`, most relevant first.
         """
         match = fts_query(query)
-        if not match and observation is None:
+        if not match and observation is None and not parts and not status:
             return []
         where, params = [], []
         if years:
@@ -121,6 +128,9 @@ class Index:
         if observation is not None:
             where.append("pieces.observation_number = ?")
             params.append(observation)
+        if status:
+            where.append("pieces.status = ?")
+            params.append(status)
         if match:
             ranked = reciprocal_rank_fusion(
                 self._keyword_ids(match, where, params),
@@ -136,7 +146,7 @@ class Index:
         for piece in pieces:
             hits.setdefault(observation_key(piece), set()).add(piece.key)
         result = []
-        for (year, part, number), matched in hits.items():
+        for (year, part, number, _), matched in hits.items():
             if number is None:
                 whole = [piece for piece in pieces if piece.key in matched]
             else:
@@ -203,6 +213,15 @@ class Index:
         by_id = {row["id"]: piece_from(row) for row in rows}
         return [by_id[i] for i in ids]
 
+    def piece(self, key: str) -> Piece | None:
+        row = self._db.execute("SELECT * FROM pieces WHERE key = ?", (key,)).fetchone()
+        return piece_from(row) if row else None
+
+    def timeline(self, origin_year: int, origin_observation: int) -> Timeline | None:
+        """How COA's Status of Implementation for one Audit Observation's Recommendations changed
+        in each later AAR, or None if neither Part II nor any Part III mentions it."""
+        return assemble_timeline(self._db, origin_year, origin_observation)
+
 
 def reciprocal_rank_fusion(*rankings: list[int]) -> list[int]:
     """Merge ranked id lists: an id scores the sum of 1/(K + rank) over the lists it appears in."""
@@ -214,7 +233,12 @@ def reciprocal_rank_fusion(*rankings: list[int]) -> list[int]:
 
 
 def observation_key(piece: Piece) -> tuple:
-    return (piece.aar_year, piece.part, piece.observation_number)
+    """What a piece is part of: a Part II observation, or the earlier observation a Part III block
+    of rows follows up (Part III pieces have no observation number of their own)."""
+    origin = (
+        (piece.origin_year, piece.origin_observation) if piece.observation_number is None else None
+    )
+    return (piece.aar_year, piece.part, piece.observation_number, origin)
 
 
 def group_by_observation(pieces: list[Piece], limit: int, *, newest_first: bool) -> list[Piece]:

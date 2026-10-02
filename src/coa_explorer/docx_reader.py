@@ -34,10 +34,18 @@ class Paragraph:
 
 
 @dataclass(frozen=True)
+class TableRow:
+    cells: tuple[tuple[str, ...], ...]  # each cell as its paragraphs' text, in order
+    page: int  # page on which the row's text begins
+    end_page: int
+
+
+@dataclass(frozen=True)
 class Table:
     markdown: str
     page: int
     end_page: int
+    rows: tuple[TableRow, ...] = ()  # every row of the table, empty ones included
 
 
 Block = Paragraph | Table
@@ -441,9 +449,12 @@ class _Reader:
     def _read_table(self, table: ET.Element) -> None:
         start = len(self._blocks)
         rows: list[list[str]] = []
+        table_rows: list[TableRow] = []
         first_page = self._pages.page
         for row in table.findall(W + "tr"):
             cells: list[str] = []
+            cell_paragraphs: list[tuple[str, ...]] = []
+            row_first = row_last = None
             for cell in row.findall(W + "tc"):
                 before = len(self._blocks)
                 self._read_children(cell)
@@ -453,11 +464,23 @@ class _Reader:
                 span = _int_attr(_child(cell, "tcPr", "gridSpan"), "val") or 1
                 cells.append(text)
                 cells.extend([""] * (span - 1))
+                cell_paragraphs.append(tuple(_block_text(b) for b in added))
+                cell_paragraphs.extend([()] * (span - 1))
+                for block in added:
+                    row_first = block.page if row_first is None else min(row_first, block.page)
+                    row_last = block.end_page if row_last is None else max(row_last, block.end_page)
             rows.append(cells)
+            table_rows.append(
+                TableRow(
+                    tuple(cell_paragraphs),
+                    row_first if row_first is not None else self._pages.page,
+                    row_last if row_last is not None else self._pages.page,
+                )
+            )
         del self._blocks[start:]
         markdown = _markdown_table(rows)
         if markdown:
-            self._blocks.append(Table(markdown, first_page, self._pages.page))
+            self._blocks.append(Table(markdown, first_page, self._pages.page, tuple(table_rows)))
 
 
 def _walk(para: ET.Element) -> Iterator[ET.Element]:
