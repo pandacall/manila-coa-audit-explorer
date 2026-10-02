@@ -12,7 +12,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from coa_explorer import aapsi, front_matter, links, part2, part3, smoke
+from coa_explorer import aapsi, financial, front_matter, links, part2, part3, smoke
 from coa_explorer.config import (
     DEFAULT_INDEX,
     DEFAULT_REVIEWED,
@@ -55,8 +55,8 @@ def main(
 
     extract = steps.add_parser(
         "extract",
-        help="extract the Executive Summary, Auditor's Report, Part II and Part III into JSON"
-        " records, and report the links of Part III",
+        help="extract the Executive Summary, Auditor's Report, Part II, Part III and the financial"
+        " lines into JSON records, and report the links of Part III",
     )
     extract.add_argument("--reports", type=Path, default=DEFAULT_REPORTS, help="raw AAR folder")
     extract.add_argument(
@@ -174,6 +174,7 @@ def extract_step(
     }
     part2_records = {year: part2.extract_year(reports, year) for year in YEARS}
     part3_records = {year: part3.extract_year(reports, year) for year in YEARS}
+    financial_records = {year: financial.extract_year(reports, year) for year in YEARS}
     link_report = links.report(
         links.build_links(
             {year: record.to_dict() for year, record in part2_records.items()},
@@ -196,6 +197,10 @@ def extract_step(
         **{
             Path("part3") / f"{year}.json": record.to_dict()
             for year, record in part3_records.items()
+        },
+        **{
+            Path("financial") / f"{year}.json": record.to_dict()
+            for year, record in financial_records.items()
         },
         Path(LINK_REPORT): link_report,
     }

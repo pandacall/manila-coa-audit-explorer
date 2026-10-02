@@ -13,6 +13,7 @@ RECORD_FILES = [
     *(f"part3/{y}.json" for y in YEARS),
     *(f"executive_summary/{y}.json" for y in YEARS),
     *(f"auditors_report/{y}.json" for y in YEARS),
+    *(f"financial/{y}.json" for y in YEARS),
     "link-report.json",
 ]
 
@@ -33,6 +34,17 @@ def test_extract_writes_one_readable_record_file_per_year_and_part(tmp_path):
     assert [s["label"] for s in summary["sections"]] == list("ABCDEFG")
     report = json.loads((tmp_path / "auditors_report" / "2023.json").read_text(encoding="utf-8"))
     assert report["text_source"].startswith("reviewed transcription")
+    financial_2022 = json.loads((tmp_path / "financial" / "2022.json").read_text(encoding="utf-8"))
+    cash = [
+        line
+        for line in financial_2022["lines"]
+        if line["source"] == "Part I"
+        and line["statement"] == "SFPo"
+        and line["line_item"] == "Cash and Cash Equivalents"
+        and line["column"] == "Amount"
+    ]
+    assert [line["amount"] for line in cash] == ["8325730232.46"]
+    assert "NFS" in {sheet["sheet"] for sheet in financial_2022["ignored_sheets"]}
     # Human-readable: indented, with real characters rather than escapes.
     text = (tmp_path / "part2" / "2024.json").read_text(encoding="utf-8")
     assert "\n  " in text

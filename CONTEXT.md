@@ -91,11 +91,18 @@ Management's explanatory disclosures supporting the Financial Statements, part o
 A supporting schedule in Part IV, typically a statement broken down by fund.
 
 **Fund**:
-A separately accounted pool of City money, chiefly the General Fund (GF) and the Special Education Fund (SEF).
+A separately accounted pool of City money: the General Fund (GF), the Special Education Fund (SEF) and the Trust Fund. Part I's statements are for the City as a whole ("All Funds"); an Annex breaks the same statement down by Fund and adds a Total column.
+
+**Financial line**:
+One amount from the Financial Statements or an Annex: its AAR year, statement, Fund, line item and column (the budget statement has Original budget, Final budget, Actual and COA's two difference columns). Amounts come from the spreadsheets and are never computed by the model; differences between years are computed by the `financial_lookup` tool.
+
+**Figure**:
+What `financial_lookup` returns for a line item in one AAR: one printed line of a statement for one Fund, with its amount in each column (so one Figure holds several Financial lines). It has an id the model cites and a Citation. Differences between years compare Figures like for like: the same statement, printed in the same place, for the same Fund.
 
 ### Answers
 
 **Citation**:
 A pointer from an answer to its source, written the way COA cites itself: AAR year, Part, Audit Observation number where applicable, and page — e.g. "CY 2023 AAR, Part II, Observation No. 5, p. 71", or for a Part III row, "CY 2023 AAR, Part III, CY 2022 Observation No. 3, p. 93" (the AAR whose Part III it is, then the Originating Observation it follows up), and for an AAPSI or APMT row, "CY 2023 APMT, CY 2022 Observation No. 3, p. 2" (the document, the Originating Observation, and the page of the scanned PDF, which prints none of its own).
 For the Executive Summary the exact anchor is its section letter and the page is a Roman numeral, "CY 2023 AAR, Executive Summary, Section E, p. iii"; for the Auditor's Report, which sits in Part I, "CY 2022 AAR, Part I, Auditor's Report, pp. 2-3".
+For a Financial line it names the statement and the line item, with the Annex where the line comes from an Annex and the headings above it when the line item is printed more than once: "CY 2022 AAR, Part I, Statement of Financial Position, Cash and Cash Equivalents", "CY 2024 AAR, Part IV, Annex A, Statement of Financial Position, Total Cash and Cash Equivalents". Spreadsheets have no page numbers, so there is none.
 _Avoid_: source link (and "Reference", which is Part III's column)
