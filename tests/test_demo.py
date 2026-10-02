@@ -394,3 +394,17 @@ def test_saved_answers_survive_a_round_trip_and_a_missing_file_is_just_empty(tmp
         SavedAnswer(question="q?", answer=answer)
     ]
     assert load_saved_answers(tmp_path / "missing.json") == []
+
+
+def test_serving_without_a_firestore_database_fails_closed_unless_opted_out(monkeypatch):
+    from coa_explorer.cli import main
+
+    monkeypatch.setenv("GCP_PROJECT_ID", "p")
+    monkeypatch.setenv("GEMINI_ANSWER_MODEL", "m")
+    monkeypatch.setenv("FIRESTORE_DATABASE", "")
+
+    with pytest.raises(SystemExit) as stopped:
+        main(["serve"])
+
+    assert "FIRESTORE_DATABASE" in str(stopped.value)
+    assert "--no-demo-limits" in str(stopped.value)

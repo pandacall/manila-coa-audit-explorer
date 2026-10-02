@@ -55,7 +55,7 @@ class Store(Protocol):
 
     def save_question(self, question_id: str, record: dict) -> None: ...
 
-    def rate_question(self, question_id: str, rating: str) -> bool:
+    def rate_question(self, question_id: str, rating: Rating) -> bool:
         """Store the rating on the logged question; False if there is no such question."""
 
 

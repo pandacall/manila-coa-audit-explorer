@@ -79,7 +79,7 @@ def create_app(engine: AnswerEngine, demo: Demo | None = None) -> FastAPI:
     def feedback(request: FeedbackRequest) -> None:
         """Store a 👍/👎 against the logged question it is about."""
         try:
-            found = demo is not None and demo.rate(request.question_id, request.rating)
+            found = bool(demo) and demo.rate(request.question_id, request.rating)
         except Exception:
             log.exception("could not store feedback")
             raise HTTPException(503, "Could not save your feedback.") from None

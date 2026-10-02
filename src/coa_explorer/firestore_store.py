@@ -13,6 +13,8 @@ from datetime import datetime
 from google.api_core.exceptions import NotFound
 from google.cloud import firestore
 
+from coa_explorer.demo import Rating
+
 
 class FirestoreStore:
     def __init__(
@@ -39,7 +41,7 @@ class FirestoreStore:
         record[self._ttl_field] = record.pop("expire_at")
         self._questions.document(question_id).set(record)
 
-    def rate_question(self, question_id: str, rating: str) -> bool:
+    def rate_question(self, question_id: str, rating: Rating) -> bool:
         try:
             self._questions.document(question_id).update({"rating": rating})
         except NotFound:
@@ -48,7 +50,7 @@ class FirestoreStore:
 
 
 @firestore.transactional
-def _take(transaction, ref, limit: int, expiry: dict) -> bool:
+def _take(transaction: firestore.Transaction, ref, limit: int, expiry: dict) -> bool:
     snapshot = ref.get(transaction=transaction)
     count = snapshot.get("count") if snapshot.exists else 0
     if count >= limit:

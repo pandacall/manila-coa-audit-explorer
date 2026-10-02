@@ -70,8 +70,9 @@ The answer model is `GEMINI_ANSWER_MODEL`; change it in `.env` to compare models
 
 ## Public-demo limits, logging and feedback
 
-`serve` also guards the app for a public demo when `FIRESTORE_DATABASE` is set (see `.env.example`);
-`serve --no-demo-limits` skips all of it, and needs no Firestore.
+`serve` guards the app for a public demo and needs `FIRESTORE_DATABASE` (see `.env.example`); it
+refuses to start without it rather than run unguarded. `serve --no-demo-limits` skips all of this,
+and needs no Firestore.
 
 - **Rate limit**: `HOURLY_LIMIT_PER_IP` questions an hour per visitor (default 10), keyed on a salted
   hash of the IP (`IP_HASH_SALT`; set the same value on every instance). The IP is only used for
