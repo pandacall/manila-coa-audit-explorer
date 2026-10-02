@@ -234,12 +234,21 @@ FIXTURE_PART3 = {
 
 
 def write_fixture_records(
-    directory: Path, years: dict[int, dict] | None = None, part3: dict[int, dict] | None = None
+    directory: Path,
+    years: dict[int, dict] | None = None,
+    part3: dict[int, dict] | None = None,
+    monitoring: dict[str, dict[int, dict]] | None = None,
 ) -> Path:
-    """Write Part II (and Part III) records in the layout `coa-explorer extract` writes."""
+    """Write Part II, Part III and (when given) AAPSI/APMT records in the layout
+    `coa-explorer extract` and `extract-aapsi` write. `monitoring` maps "AAPSI" and "APMT" to
+    their records by AAR year."""
     if part3 is None:
         part3 = FIXTURE_PART3 if years is None else {}
-    for part, records in (("part2", years or FIXTURE_YEARS), ("part3", part3)):
+    for part, records in (
+        ("part2", years or FIXTURE_YEARS),
+        ("part3", part3),
+        *((document.lower(), by_year) for document, by_year in (monitoring or {}).items()),
+    ):
         (directory / part).mkdir(parents=True, exist_ok=True)
         for year, record in records.items():
             (directory / part / f"{year}.json").write_text(json.dumps(record), encoding="utf-8")

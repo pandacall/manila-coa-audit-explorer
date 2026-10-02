@@ -39,6 +39,16 @@ def submit(
     return ModelTurn(text=None, tool_calls=[ToolCall("submit_answer", args)])
 
 
+def submit_with_city(summary: str, key_points: list[dict], city_said: list[dict]) -> ModelTurn:
+    args = {
+        "covered": True,
+        "summary": summary,
+        "key_points": key_points,
+        "city_said": city_said,
+    }
+    return ModelTurn(text=None, tool_calls=[ToolCall("submit_answer", args)])
+
+
 def say(text: str) -> ModelTurn:
     return ModelTurn(text=text, tool_calls=[])
 

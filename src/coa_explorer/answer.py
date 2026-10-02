@@ -1,10 +1,12 @@
 """The answer engine: a tool-using loop that turns a question into a cited Answer.
 
 The model may call `search` and `timeline` over the index, then must finish with `submit_answer`.
-The model cites by piece id; the Citation text comes from the index, never from the model, and a
-key point may only cite pieces the model actually retrieved. Key points left without a Citation are
-removed, and an answer left with none is reported as not covered. A timeline shown with an answer
-is the one the `timeline` tool returned, not anything the model wrote.
+An answer can carry "What the City said" (Management Comment or Reported Status), cited like key
+points and shown apart from them. The model cites by piece id; the Citation text comes from the
+index, never from the model, and a key point may only cite pieces the model actually retrieved. Key
+points left without a Citation are removed, and an answer left with none is reported as not
+covered. A timeline shown with an answer is the one the `timeline` tool returned, not anything the
+model wrote.
 """
 
 from __future__ import annotations
@@ -20,6 +22,7 @@ from coa_explorer.timeline import Timeline
 
 MAX_SUMMARY_CHARS = 600
 MAX_KEY_POINTS = 6
+MAX_CITY_SAID = 4
 MAX_TIMELINES = 3
 MAX_SEARCH_RESULTS = 25
 MAX_KEY_POINT_CHARS = 500
@@ -34,7 +37,11 @@ You answer questions about the Commission on Audit's (COA) Annual Audit Reports 
 City of Manila, 2020-2024, for ordinary residents, journalists and students. Part II holds each \
 year's Audit Observations and Recommendations. Part III holds, for each AAR, COA's Status of \
 Implementation of Prior Years' Recommendations (Implemented, Partially Implemented or Not \
-Implemented), with Management's action and the reason given for partial or non-implementation.
+Implemented), with Management's action and the reason given for partial or non-implementation. \
+For 2023 and 2024 there are two more documents: the AAPSI (part "AAPSI") is Management's own \
+report of its Action Plan for each Recommendation, with the person or department responsible, \
+target dates and the Reported Status Management claims; the APMT (part "APMT") is COA's \
+validation of it, with COA's own Status of Implementation.
 
 How to work
 - Call `search` to find passages. Search again with different words, or a year or observation \
@@ -53,8 +60,9 @@ you used.
 call `timeline` with the `origin_year` and `origin_observation` printed on its results. It returns \
 when the observation was raised and COA's Status of Implementation in each later AAR, each step \
 with its own `id` and citation. Observations raised before 2020 have a timeline too, cited to the \
-AAR that tracks them. To review one year's backlog, `search` with `parts` ["III"], that `years` \
-filter and a `status`, and raise `limit`.
+AAR that tracks them. A step can also hold the AAPSI's `action_plans` (Management's account) and \
+the APMT's `validations` (COA's Status of Implementation). To review one year's backlog, `search` \
+with `parts` ["III"], that `years` filter and a `status`, and raise `limit`.
 - Answer ONLY from passages `search` and `timeline` returned. Never use outside knowledge, never \
 guess, never calculate or infer figures that the passages do not state. If the passages do not \
 address the question, submit with covered=false and say so plainly; suggest what the reports do \
@@ -64,6 +72,10 @@ covered=false.
 five key points.
 - Every key point must list the `id`s of the passages that support it in `sources`. A key point \
 without sources will be deleted.
+- When the question is about what the City said or did, include `city_said`: Management Comment, \
+Action Plans and Reported Status, each point attributed to Management ("Management said ...", \
+"Management reported ...") and each with its `sources`. Leave it out when there is nothing to \
+report.
 - To show a timeline with your answer, list it in `timelines` (at most three); the page displays \
 it in full, so key points should summarise it, not repeat it.
 
@@ -80,13 +92,19 @@ passage records one, present it fairly and attribute it to Management.
 it did (the "Management action" in Part III) is Management's own account: attribute it \
 ("Management said ..."), and never present it as COA's finding or as proof the recommendation was \
 implemented.
+- Management's Reported Status (the AAPSI's status column, repeated in the APMT) is a claim by \
+Management. Never merge it with COA's Status of Implementation: give them separately, each \
+attributed. When a `validation` has a `disagreement`, point it out in your answer, e.g. \
+"Management reported this as implemented; COA assessed it as partially implemented". Management's \
+"Ongoing" has no COA equivalent: do not call it a disagreement.
 """
 
 SEARCH_TOOL = ToolSpec(
     name="search",
     description=(
         "Search COA's Annual Audit Reports on the City of Manila, by exact words or by meaning: "
-        "Part II Audit Observations and Part III follow-up of Prior Years' Recommendations. "
+        "Part II Audit Observations, Part III follow-up of Prior Years' Recommendations, and the "
+        "2023-2024 AAPSI (Management's Action Plans) and APMT (COA's validation of them). "
         "Returns passages, each with an `id`, its `citation` and the observation it is about "
         "(`origin_year`, `origin_observation`, for the `timeline` tool); with no `years` filter "
         "they are ordered newest year first."
@@ -105,8 +123,11 @@ SEARCH_TOOL = ToolSpec(
             },
             "parts": {
                 "type": "array",
-                "items": {"type": "string", "enum": ["II", "III"]},
-                "description": "Restrict to Part II (observations) and/or Part III (follow-up).",
+                "items": {"type": "string", "enum": ["II", "III", "AAPSI", "APMT"]},
+                "description": (
+                    "Restrict to Part II (observations), Part III (follow-up), the AAPSI "
+                    "(Management's Action Plans) and/or the APMT (COA's validation)."
+                ),
             },
             "observation": {
                 "type": "integer",
@@ -115,7 +136,9 @@ SEARCH_TOOL = ToolSpec(
             "status": {
                 "type": "string",
                 "enum": ["Implemented", "Partially Implemented", "Not Implemented"],
-                "description": "Restrict Part III results to this COA Status of Implementation.",
+                "description": (
+                    "Restrict Part III and APMT results to this COA Status of Implementation."
+                ),
             },
             "limit": {
                 "type": "integer",
@@ -134,8 +157,9 @@ TIMELINE_TOOL = ToolSpec(
     description=(
         "How one Audit Observation's Recommendations were followed up: when it was raised "
         "(Part II, if in the 2020-2024 AARs) and COA's Status of Implementation in each later "
-        "AAR's Part III, with Management's action and reason. Works for observations raised "
-        "before 2020."
+        "AAR's Part III, with Management's action and reason, plus Management's Action Plan "
+        "and Reported Status (AAPSI) and COA's validation (APMT) where there are any, with any "
+        "disagreement between the two statuses. Works for observations raised before 2020."
     ),
     parameters={
         "type": "object",
@@ -179,6 +203,25 @@ SUBMIT_TOOL = ToolSpec(
                     "required": ["text", "sources"],
                 },
             },
+            "city_said": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "text": {"type": "string"},
+                        "sources": {
+                            "type": "array",
+                            "items": {"type": "string"},
+                            "description": "ids of the supporting passages returned by search.",
+                        },
+                    },
+                    "required": ["text", "sources"],
+                },
+                "description": (
+                    "What the City said: Management Comment, Action Plan or Reported Status, "
+                    "attributed to Management."
+                ),
+            },
             "timelines": {
                 "type": "array",
                 "items": {
@@ -217,6 +260,7 @@ class Answer(BaseModel):
     type: Literal["answer"] = "answer"
     summary: str = Field(max_length=MAX_SUMMARY_CHARS)
     key_points: list[KeyPoint] = Field(min_length=1, max_length=MAX_KEY_POINTS)
+    city_said: list[KeyPoint] = Field(default_factory=list, max_length=MAX_CITY_SAID)
     timelines: list[Timeline] = Field(default_factory=list, max_length=MAX_TIMELINES)
 
 
@@ -366,8 +410,24 @@ def finalise(
     if args.get("covered") is not True:
         message = clip(str(args.get("not_covered_message") or ""), MAX_NOT_COVERED_CHARS)
         return NotCovered(message=message or NOT_COVERED_DEFAULT)
-    key_points = []
-    for raw in args.get("key_points") or []:
+    key_points = cited_points(args.get("key_points"), seen)
+    if not key_points:
+        return NotCovered(message=NOT_COVERED_DEFAULT)
+    summary = clip(str(args.get("summary") or ""), MAX_SUMMARY_CHARS)
+    return Answer(
+        summary=summary,
+        key_points=key_points[:MAX_KEY_POINTS],
+        city_said=cited_points(args.get("city_said"), seen)[:MAX_CITY_SAID],
+        timelines=chosen_timelines(args.get("timelines"), timelines),
+    )
+
+
+def cited_points(raw_points: object, seen: dict[str, Piece]) -> list[KeyPoint]:
+    """The points whose `sources` name pieces the model retrieved; the rest are dropped."""
+    points = []
+    for raw in raw_points if isinstance(raw_points, list) else []:
+        if not isinstance(raw, dict):
+            continue
         citations: dict[str, Citation] = {}
         sources = raw.get("sources") or []
         for source in [sources] if isinstance(sources, str) else sources:
@@ -378,15 +438,8 @@ def finalise(
                 )
         text = clip(str(raw.get("text") or ""), MAX_KEY_POINT_CHARS)
         if text and citations:
-            key_points.append(KeyPoint(text=text, citations=list(citations.values())))
-    if not key_points:
-        return NotCovered(message=NOT_COVERED_DEFAULT)
-    summary = clip(str(args.get("summary") or ""), MAX_SUMMARY_CHARS)
-    return Answer(
-        summary=summary,
-        key_points=key_points[:MAX_KEY_POINTS],
-        timelines=chosen_timelines(args.get("timelines"), timelines),
-    )
+            points.append(KeyPoint(text=text, citations=list(citations.values())))
+    return points
 
 
 def chosen_timelines(
