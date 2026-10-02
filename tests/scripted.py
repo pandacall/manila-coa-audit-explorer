@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from collections.abc import Callable
 
 from coa_explorer.models import Message, ModelTurn, ToolCall, ToolSpec
@@ -59,3 +60,20 @@ def say(text: str) -> ModelTurn:
 
 def point(text: str, *sources: str) -> dict:
     return {"text": text, "sources": list(sources)}
+
+
+class ScriptedBatchModel:
+    """A scripted batch judge: answers every prompt of a batch with `reply(prompt)`'s JSON."""
+
+    def __init__(self, reply: Callable[[str], dict | str | None]):
+        self._reply = reply
+        self.batches: list[tuple[str, list[str]]] = []
+
+    def generate_batch(self, system: str, prompts: list[str]) -> list[str | None]:
+        self.batches.append((system, list(prompts)))
+        replies = [self._reply(prompt) for prompt in prompts]
+        return [r if r is None or isinstance(r, str) else json.dumps(r) for r in replies]
+
+
+def verdict(supported: list[bool], covered: list[bool]) -> dict:
+    return {"supported": supported, "facts_covered": covered}

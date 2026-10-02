@@ -15,7 +15,7 @@ model wrote.
 
 from __future__ import annotations
 
-from collections.abc import Iterator
+from collections.abc import Iterator, Mapping
 from dataclasses import dataclass
 from typing import Literal
 
@@ -24,7 +24,7 @@ from pydantic import BaseModel, Field
 from coa_explorer.financial import FUNDS, STATEMENT_NAMES
 from coa_explorer.financial_lookup import FinancialChange, FinancialLookup
 from coa_explorer.models import Message, ModelAdapter, ToolCall, ToolResult, ToolSpec, Usage
-from coa_explorer.search import DEFAULT_LIMIT, Index
+from coa_explorer.search import DEFAULT_LIMIT, Index, Piece
 from coa_explorer.timeline import Timeline
 
 MAX_SUMMARY_CHARS = 600
@@ -407,12 +407,20 @@ class AnswerEngine:
         self._index = index
         self._max_search_rounds = max_search_rounds
 
-    def ask(self, question: str, usage: Usage | None = None) -> Iterator[Event]:
+    def ask(
+        self,
+        question: str,
+        usage: Usage | None = None,
+        retrieved: dict[str, Piece] | None = None,
+    ) -> Iterator[Event]:
         """Yield `Status` updates while working, then exactly one `Answer` or `NotCovered`.
 
-        The tokens the model reports using are added to `usage`, if given."""
+        The tokens the model reports using are added to `usage`, if given. Pass a dict as
+        `retrieved` to learn which pieces (by id) the model was shown.
+        """
         messages = [Message(role="user", text=question)]
-        seen: dict[str, Source] = {}
+        seen = retrieved if retrieved is not None else {}
+        figures: dict[str, Source] = {}  # financial figures the model was shown, by id
         timelines: dict[tuple[int, int], Timeline] = {}
         nudged = False
         for round_number in range(self._max_search_rounds + 1):
@@ -443,12 +451,12 @@ class AnswerEngine:
             results = []
             for call in turn.tool_calls:
                 if call.name == "submit_answer":
-                    yield finalise(call.args, seen, timelines)
+                    yield finalise(call.args, {**seen, **figures}, timelines)
                     return
                 if call.name in ARGUMENT_ERRORS and not last_round:
                     yield Status(message=status_message(call))
                     try:
-                        content = self._run_tool(call, seen, timelines)
+                        content = self._run_tool(call, seen, figures, timelines)
                     except (TypeError, ValueError, KeyError, OverflowError) as error:
                         # Tell the model what was wrong so it can retry, instead of failing.
                         content = {"error": ARGUMENT_ERRORS[call.name]}
@@ -461,17 +469,21 @@ class AnswerEngine:
         yield NotCovered(message=NOT_COVERED_DEFAULT)
 
     def _run_tool(
-        self, call: ToolCall, seen: dict[str, Source], timelines: dict[tuple[int, int], Timeline]
+        self,
+        call: ToolCall,
+        seen: dict[str, Piece],
+        figures: dict[str, Source],
+        timelines: dict[tuple[int, int], Timeline],
     ) -> list[dict] | dict:
         if call.name == "search":
             return self._run_search(call, seen)
         if call.name == "financial_lookup":
-            return self._run_financial_lookup(call, seen)
+            return self._run_financial_lookup(call, figures)
         if call.name == "financial_change":
-            return self._run_financial_change(call, seen)
+            return self._run_financial_change(call, figures)
         return self._run_timeline(call, seen, timelines)
 
-    def _run_search(self, call: ToolCall, seen: dict[str, Source]) -> list[dict]:
+    def _run_search(self, call: ToolCall, seen: dict[str, Piece]) -> list[dict]:
         args = call.args
         observation = args.get("observation")
         hits = self._index.search(
@@ -485,7 +497,7 @@ class AnswerEngine:
         passages = []
         for whole in self._index.expand(hits):
             for piece in whole.pieces:
-                seen[piece.key] = Source(piece.citation, piece.title)
+                seen[piece.key] = piece
                 passages.append(
                     {
                         "id": piece.key,
@@ -500,7 +512,7 @@ class AnswerEngine:
                 )
         return passages
 
-    def _run_financial_lookup(self, call: ToolCall, seen: dict[str, Source]) -> dict:
+    def _run_financial_lookup(self, call: ToolCall, figures: dict[str, Source]) -> dict:
         args = call.args
         years = args["years"]
         if not isinstance(years, list):
@@ -520,15 +532,15 @@ class AnswerEngine:
             fund=fund,
         )
         for figure in result.figures:
-            seen[figure.key] = Source(
+            figures[figure.key] = Source(
                 figure.citation, f"{figure.line_item} ({STATEMENT_NAMES[figure.statement]})"
             )
         return financial_content(result)
 
-    def _run_financial_change(self, call: ToolCall, seen: dict[str, Source]) -> dict:
+    def _run_financial_change(self, call: ToolCall, figures: dict[str, Source]) -> dict:
         from_id, to_id = str(call.args["from_id"]), str(call.args["to_id"])
         for key in (from_id, to_id):
-            if key not in seen:
+            if key not in figures:
                 raise ToolError(f"{key} was not returned by financial_lookup; look it up first")
         try:
             changes = self._index.financial_change(from_id, to_id, call.args.get("column"))
@@ -537,7 +549,7 @@ class AnswerEngine:
         return {"units": FIGURES_UNITS, "changes": [change_content(c) for c in changes]}
 
     def _run_timeline(
-        self, call: ToolCall, seen: dict[str, Source], timelines: dict[tuple[int, int], Timeline]
+        self, call: ToolCall, seen: dict[str, Piece], timelines: dict[tuple[int, int], Timeline]
     ) -> dict:
         year, observation = int(call.args["origin_year"]), int(call.args["origin_observation"])
         timeline = self._index.timeline(year, observation)
@@ -547,7 +559,7 @@ class AnswerEngine:
         for key in timeline.keys:  # the model may cite any step it was shown
             piece = self._index.piece(key)
             if piece:
-                seen[key] = Source(piece.citation, piece.title)
+                seen[key] = piece
         return {"timeline": timeline.model_dump(mode="json")}
 
 
@@ -637,7 +649,7 @@ def status_message(call: ToolCall) -> str:
 
 
 def finalise(
-    args: dict, seen: dict[str, Source], timelines: dict[tuple[int, int], Timeline]
+    args: dict, seen: Mapping[str, Piece | Source], timelines: dict[tuple[int, int], Timeline]
 ) -> Answer | NotCovered:
     """Validate the model's submitted answer against what it retrieved."""
     if args.get("covered") is not True:
@@ -655,7 +667,7 @@ def finalise(
     )
 
 
-def cited_points(raw_points: object, seen: dict[str, Source]) -> list[KeyPoint]:
+def cited_points(raw_points: object, seen: Mapping[str, Piece | Source]) -> list[KeyPoint]:
     """The points whose `sources` name pieces the model retrieved; the rest are dropped."""
     points = []
     for raw in raw_points if isinstance(raw_points, list) else []:
