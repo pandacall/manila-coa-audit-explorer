@@ -205,6 +205,13 @@ finish() {
 # (e.g. principalSet://iam.googleapis.com/...); switch that off.
 export MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL='*'
 
+# On Windows, Git Bash finds gcloud's sh launcher, which can pick a Python that lacks gcloud's
+# bundled libraries ("No module named six") or hand Windows Python a /c/... path that the setting
+# above stops MSYS converting. gcloud.cmd is Windows' own launcher and has neither problem.
+if command -v gcloud.cmd >/dev/null 2>&1; then
+  gcloud() { gcloud.cmd "$@"; }
+fi
+
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 TOTAL_STAGES=11
