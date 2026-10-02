@@ -169,6 +169,8 @@ class MonitoringDocument:
     document: str
     source_file: str
     pdf_pages: int
+    # "pending" until a human has checked the rows against the scan and set it to "reviewed".
+    human_review: str = "pending"
     observations: list[MonitoringObservation] = field(default_factory=list)
     # Pages where two readings of the scan disagree, for the human reviewer to check first.
     review_notes: list[dict] = field(default_factory=list)

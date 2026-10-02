@@ -110,8 +110,9 @@ class Index:
         """Matching pieces from at most `limit` Audit Observations, grouped by observation.
 
         Keyword and vector matches are merged into one ranking (reciprocal rank fusion). `years`,
-        `parts` ("II", "III"), `observation` (a Part II observation number) and `status` (COA's
-        Status of Implementation, for Part III) narrow the search; with no query words, the filters
+        `parts` ("II", "III", "AAPSI", "APMT"), `observation` (a Part II number; the other Parts
+        have none) and `status` (COA's Status of Implementation, for Part III and APMT) narrow the
+        search; with no query words, the filters
         alone are a direct lookup, an observation filter returning that observation's pieces in
         reading order. With no `years`, observations are ordered newest year first (most relevant
         first within a year); with `years`, most relevant first.

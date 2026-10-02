@@ -433,3 +433,14 @@ def test_the_2023_apmt_records_Management_and_COA_apart_for_the_first_recommenda
         "Not Implemented",
     )
     assert first["follow_up_date"] == "July 31, 2024"
+
+
+def test_the_committed_records_say_whether_a_human_has_reviewed_them():
+    # Set to "reviewed" by whoever checks the rows against the scans; until then it is pending.
+    states = {
+        committed(document, year)["human_review"]
+        for document in (AAPSI, APMT)
+        for year in (2023, 2024)
+    }
+
+    assert states <= {"pending", "reviewed"}
