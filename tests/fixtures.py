@@ -360,6 +360,98 @@ FIXTURE_AUDITORS_REPORTS = {
 }
 
 
+def note(year: int, number: int, title: str, passages: list[tuple[int, int, str]]) -> dict:
+    """One Note to Financial Statements with its passages, each given as (first page, last page,
+    text)."""
+
+    def cite(start: int, end: int) -> str:
+        where = f"p. {start}" if start == end else f"pp. {start}-{end}"
+        return f"CY {year} AAR, Part I, Notes to Financial Statements, Note {number}, {where}"
+
+    first = min(start for start, _, _ in passages)
+    last = max(end for _, end, _ in passages)
+    return {
+        "number": number,
+        "title": title,
+        "page_start": first,
+        "page_end": last,
+        "citation": cite(first, last),
+        "passages": [
+            {"page_start": s, "page_end": e, "citation": cite(s, e), "text": text}
+            for s, e, text in passages
+        ],
+    }
+
+
+def notes_record(year: int, notes: list[dict]) -> dict:
+    return {
+        "aar_year": year,
+        "document": "Notes to Financial Statements",
+        "source_file": f"fixture/{year}.docx",
+        "text_source": "Word document",
+        "notes": notes,
+    }
+
+
+CASH_TABLE_2022 = (
+    "| Accounts | 2022 | 2021 |\n| --- | --- | --- |\n| Cash on Hand |  |  |\n"
+    "| Cash Local Treasury | 74,452,994.15 | 24,328,888.58 |\n"
+    "| Total | 8,325,730,232.46 | 10,852,325,069.13 |"
+)
+
+FIXTURE_NOTES = {
+    2022: notes_record(
+        2022,
+        [
+            note(
+                2022,
+                4,
+                "Cash and Cash Equivalents",
+                [
+                    (
+                        33,
+                        34,
+                        CASH_TABLE_2022
+                        + "\n\nThe Cash Local Treasury accounts for the cash received "
+                        "by the City Treasurer's Office for deposit to the Authorized Government "
+                        "Depository Bank.",
+                    )
+                ],
+            ),
+            note(
+                2022,
+                12,
+                "Financial Liabilities (Current)",
+                [(51, 51, "Payables are the accounts owed to suppliers at year end.")],
+            ),
+        ],
+    ),
+    2023: notes_record(
+        2023,
+        [
+            note(
+                2023,
+                4,
+                "Cash and Cash Equivalents",
+                [
+                    (
+                        30,
+                        30,
+                        "| Accounts | 2023 | 2022 |\n| --- | --- | --- |\n"
+                        "| Total | 9,304,414,447.87 | 8,325,730,232.46 |",
+                    ),
+                    (
+                        31,
+                        31,
+                        "The decrease is due to the termination of the time deposit accounts.",
+                    ),
+                ],
+            ),
+        ],
+    ),
+}
+
+
 def write_fixture_records(
     directory: Path,
     years: dict[int, dict] | None = None,
@@ -367,11 +459,13 @@ def write_fixture_records(
     summaries: dict[int, dict] | None = None,
     auditors_reports: dict[int, dict] | None = None,
     monitoring: dict[str, dict[int, dict]] | None = None,
+    notes: dict[int, dict] | None = None,
 ) -> Path:
     """Write Part II, Part III, the Executive Summary, the Auditor's Report and (when given)
     AAPSI/APMT records in the layout `coa-explorer extract` and `extract-aapsi` write. Only the
     default fixtures include the Executive Summary and Auditor's Report. `monitoring` maps "AAPSI"
-    and "APMT" to their records by AAR year."""
+    and "APMT" to their records by AAR year. `notes` (by AAR year, none by default) are the Notes
+    to Financial Statements."""
     if part3 is None:
         part3 = FIXTURE_PART3 if years is None else {}
     if summaries is None:
@@ -383,6 +477,7 @@ def write_fixture_records(
         ("part3", part3),
         ("executive_summary", summaries),
         ("auditors_report", auditors_reports),
+        ("notes", notes or {}),
         *((document.lower(), by_year) for document, by_year in (monitoring or {}).items()),
     ):
         (directory / part).mkdir(parents=True, exist_ok=True)

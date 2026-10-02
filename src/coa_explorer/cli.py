@@ -10,7 +10,7 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from coa_explorer import aapsi, front_matter, links, part2, part3, smoke
+from coa_explorer import aapsi, front_matter, links, notes, part2, part3, smoke
 from coa_explorer.config import (
     DEFAULT_INDEX,
     DEFAULT_REVIEWED,
@@ -47,8 +47,8 @@ def main(
 
     extract = steps.add_parser(
         "extract",
-        help="extract the Executive Summary, Auditor's Report, Part II and Part III into JSON"
-        " records, and report the links of Part III",
+        help="extract the Executive Summary, Auditor's Report, Notes to Financial Statements,"
+        " Part II and Part III into JSON records, and report the links of Part III",
     )
     extract.add_argument("--reports", type=Path, default=DEFAULT_REPORTS, help="raw AAR folder")
     extract.add_argument(
@@ -147,6 +147,7 @@ def extract_step(
     auditors_reports = {
         year: front_matter.extract_auditors_report(reports, year, reviewed) for year in YEARS
     }
+    notes_records = {year: notes.extract_notes(reports, year, reviewed) for year in YEARS}
     part2_records = {year: part2.extract_year(reports, year) for year in YEARS}
     part3_records = {year: part3.extract_year(reports, year) for year in YEARS}
     link_report = links.report(
@@ -163,6 +164,10 @@ def extract_step(
         **{
             Path("auditors_report") / f"{year}.json": record.to_dict()
             for year, record in auditors_reports.items()
+        },
+        **{
+            Path("notes") / f"{year}.json": record.to_dict()
+            for year, record in notes_records.items()
         },
         **{
             Path("part2") / f"{year}.json": record.to_dict()

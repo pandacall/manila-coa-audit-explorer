@@ -42,7 +42,10 @@ The Executive Summary (search it with `parts` ["ES"]) is COA's own overview of t
 City's financial and operational highlights, the scope of the audit, a summary of the audit \
 opinion and significant observations, and the status of prior years' recommendations. The \
 Auditor's Report (Part I; search it with `parts` ["I"]) is COA's formal opinion on whether the \
-Financial Statements are fairly presented.
+Financial Statements are fairly presented. The Notes to Financial Statements (part "NOTES") \
+explain what lies behind the figures: the accounting policies, then a Note for each kind of \
+account with a table of its amounts and the reasons for the changes. Amounts in the Notes are in \
+Philippine pesos unless a Note says otherwise.
 For 2023 and 2024 there are two more documents: the AAPSI (part "AAPSI") is Management's own \
 report of its Action Plan for each Recommendation, with the person or department responsible, \
 target dates and the Reported Status Management claims; the APMT (part "APMT") is COA's \
@@ -66,6 +69,11 @@ you get the Executive Summary's sections in reading order, each with its own cit
 opinion on the Financial Statements, `search` `parts` ["I"] with the `years` filter: the \
 "Qualified Opinion" (or other opinion) section states the opinion, and the section on its bases \
 gives the matters behind it.
+- To explain a figure or account, `search` `parts` ["NOTES"] with the year: each hit is a passage \
+of one Note, cited by Note and page, and a Note's tables arrive as markdown. To read a Note by \
+its number, search with an empty query, `parts` ["NOTES"], `years` and `observation` set to the \
+Note number. A Note's amounts are exactly as COA printed them: quote them as written and never \
+add, subtract or compare them yourself.
 - To find out whether Manila acted on a recommendation, find the observation with `search`, then \
 call `timeline` with the `origin_year` and `origin_observation` printed on its results. It returns \
 when the observation was raised and COA's Status of Implementation in each later AAR, each step \
@@ -118,8 +126,8 @@ SEARCH_TOOL = ToolSpec(
     description=(
         "Search COA's Annual Audit Reports on the City of Manila, by exact words or by meaning: "
         "Part II Audit Observations, Part III follow-up of Prior Years' Recommendations, the "
-        "Executive Summary, the Auditor's Report, and the 2023-2024 AAPSI (Management's Action "
-        "Plans) and APMT (COA's validation of them). "
+        "Executive Summary, the Auditor's Report, the Notes to Financial Statements, and the "
+        "2023-2024 AAPSI (Management's Action Plans) and APMT (COA's validation of them). "
         "Returns passages, each with an `id`, its `citation` and the observation it is about "
         "(`origin_year`, `origin_observation`, for the `timeline` tool); with no `years` filter "
         "they are ordered newest year first."
@@ -138,16 +146,23 @@ SEARCH_TOOL = ToolSpec(
             },
             "parts": {
                 "type": "array",
-                "items": {"type": "string", "enum": ["ES", "I", "II", "III", "AAPSI", "APMT"]},
+                "items": {
+                    "type": "string",
+                    "enum": ["ES", "I", "NOTES", "II", "III", "AAPSI", "APMT"],
+                },
                 "description": (
-                    "Restrict to the Executive Summary (ES), the Auditor's Report (I), Part II "
-                    "(observations), Part III (follow-up), the AAPSI (Management's Action Plans) "
-                    "and/or the APMT (COA's validation)."
+                    "Restrict to the Executive Summary (ES), the Auditor's Report (I), the Notes "
+                    "to Financial Statements (NOTES), Part II (observations), Part III "
+                    "(follow-up), the AAPSI (Management's Action Plans) and/or the APMT (COA's "
+                    "validation)."
                 ),
             },
             "observation": {
                 "type": "integer",
-                "description": "Restrict to this Part II Audit Observation number.",
+                "description": (
+                    "Restrict to this Part II Audit Observation number, or with parts [NOTES] "
+                    "this Note number."
+                ),
             },
             "status": {
                 "type": "string",
@@ -263,11 +278,12 @@ SUBMIT_TOOL = ToolSpec(
 class Citation(BaseModel):
     text: str = Field(
         description="COA's format, e.g. 'CY 2023 AAR, Part II, Observation No. 5, p. 71' or "
-        "'CY 2023 AAR, Executive Summary, Section E, p. iii'"
+        "'CY 2023 AAR, Executive Summary, Section E, p. iii' or "
+        "'CY 2023 AAR, Part I, Notes to Financial Statements, Note 4, p. 30'"
     )
     title: str = Field(
-        description="Title of the Audit Observation, or of the Executive Summary or Auditor's "
-        "Report section"
+        description="Title of the Audit Observation, of the Executive Summary or Auditor's "
+        "Report section, or of the Note"
     )
 
 

@@ -498,6 +498,7 @@ def test_the_model_is_told_about_the_executive_summary_and_the_auditors_report(i
     assert search_tool.parameters["properties"]["parts"]["items"]["enum"] == [
         "ES",
         "I",
+        "NOTES",
         "II",
         "III",
         "AAPSI",
@@ -618,7 +619,7 @@ def test_the_model_can_search_the_aapsi_and_apmt_and_is_told_how_to_attribute_th
 
     system, messages, tools = adapter.requests[0]
     parts = next(t for t in tools if t.name == "search").parameters["properties"]["parts"]
-    assert parts["items"]["enum"] == ["ES", "I", "II", "III", "AAPSI", "APMT"]
+    assert parts["items"]["enum"] == ["ES", "I", "NOTES", "II", "III", "AAPSI", "APMT"]
     assert "Reported Status" in system
     assert "never merge" in system.lower()
     assert "disagree" in system

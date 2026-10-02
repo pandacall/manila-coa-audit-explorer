@@ -13,6 +13,7 @@ RECORD_FILES = [
     *(f"part3/{y}.json" for y in YEARS),
     *(f"executive_summary/{y}.json" for y in YEARS),
     *(f"auditors_report/{y}.json" for y in YEARS),
+    *(f"notes/{y}.json" for y in YEARS),
     "link-report.json",
 ]
 
@@ -33,6 +34,9 @@ def test_extract_writes_one_readable_record_file_per_year_and_part(tmp_path):
     assert [s["label"] for s in summary["sections"]] == list("ABCDEFG")
     report = json.loads((tmp_path / "auditors_report" / "2023.json").read_text(encoding="utf-8"))
     assert report["text_source"].startswith("reviewed transcription")
+    notes = json.loads((tmp_path / "notes" / "2021.json").read_text(encoding="utf-8"))
+    assert len(notes["notes"]) == 33
+    assert notes["notes"][3]["passages"][0]["citation"].startswith("CY 2021 AAR, Part I, Notes to")
     # Human-readable: indented, with real characters rather than escapes.
     text = (tmp_path / "part2" / "2024.json").read_text(encoding="utf-8")
     assert "\n  " in text
