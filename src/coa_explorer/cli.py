@@ -3,24 +3,43 @@
 from __future__ import annotations
 
 import argparse
+import functools
 import json
 import sys
 from collections.abc import Sequence
+from datetime import UTC, datetime
 from pathlib import Path
 
 from coa_explorer import links, part2, part3
+from coa_explorer.answer import AnswerEngine
 from coa_explorer.config import DEFAULT_INDEX, REPO_ROOT, load_settings
 from coa_explorer.embedder import Embedder, GeminiEmbedder
+from coa_explorer.evaluate import BatchModel, evaluate
+from coa_explorer.gemini import GeminiAdapter
+from coa_explorer.gemini_judge import GeminiBatchJudge
 from coa_explorer.index import build_index, load_records
+from coa_explorer.models import ModelAdapter
+from coa_explorer.reference import ReferenceFileError, load_reference
+from coa_explorer.report import write_report
+from coa_explorer.search import Index
 
 DEFAULT_REPORTS = REPO_ROOT / "coa-audit-reports"
 DEFAULT_OUT = REPO_ROOT / "data" / "extracted"
+DEFAULT_REFERENCE = REPO_ROOT / "data" / "eval" / "reference.json"
+DEFAULT_EVAL_OUT = REPO_ROOT / "build" / "eval"
 LINK_REPORT = "link-report.json"
 YEARS = (2020, 2021, 2022, 2023, 2024)
 
 
-def main(argv: Sequence[str] | None = None, *, embedder: Embedder | None = None) -> int:
-    """Run a step. `embedder` replaces Gemini for `index` (tests pass a fake)."""
+def main(
+    argv: Sequence[str] | None = None,
+    *,
+    embedder: Embedder | None = None,
+    adapter: ModelAdapter | None = None,
+    judge: BatchModel | None = None,
+) -> int:
+    """Run a step. `embedder`, `adapter` and `judge` replace Gemini for `index` and `eval`
+    (tests pass fakes)."""
     parser = argparse.ArgumentParser(prog="coa-explorer", description=__doc__)
     steps = parser.add_subparsers(dest="step", required=True)
 
@@ -48,6 +67,21 @@ def main(argv: Sequence[str] | None = None, *, embedder: Embedder | None = None)
     )
     link.add_argument("--records", type=Path, default=DEFAULT_OUT, help="extracted records")
 
+    evaluation = steps.add_parser(
+        "eval",
+        help="score the approved reference items: retrieval, Citations, faithfulness, refusals",
+    )
+    evaluation.add_argument("--reference", type=Path, default=DEFAULT_REFERENCE)
+    evaluation.add_argument("--index", type=Path, help="the SQLite index (default: COA_INDEX_PATH)")
+    evaluation.add_argument(
+        "--out", type=Path, default=DEFAULT_EVAL_OUT, help="where results.json and summary.md go"
+    )
+    evaluation.add_argument("--answer-model", help="default: GEMINI_ANSWER_MODEL")
+    evaluation.add_argument("--judge-model", help="default: GEMINI_JUDGE_MODEL")
+    evaluation.add_argument(
+        "--limit", type=int, help="score only the first N approved items (the small CI subset)"
+    )
+
     serve = steps.add_parser("serve", help="run the web app locally")
     serve.add_argument("--host", default="127.0.0.1")
     serve.add_argument("--port", type=int, default=8000)
@@ -55,6 +89,8 @@ def main(argv: Sequence[str] | None = None, *, embedder: Embedder | None = None)
     args = parser.parse_args(argv)
     if args.step == "index":
         return index_step(args.records, args.out, embedder or gemini_embedder())
+    if args.step == "eval":
+        return eval_step(args, embedder, adapter, judge)
     if args.step == "serve":
         return serve_step(args.host, args.port)
     if args.step == "links":
@@ -140,14 +176,72 @@ def links_step(records: Path) -> int:
     return 0
 
 
+def eval_step(
+    args: argparse.Namespace,
+    embedder: Embedder | None,
+    adapter: ModelAdapter | None,
+    judge: BatchModel | None,
+) -> int:
+    try:
+        items = load_reference(args.reference)
+    except ReferenceFileError as error:
+        print(error, file=sys.stderr)
+        return 2
+    approved = [item for item in items if item.approved]
+    scored = approved[: args.limit] if args.limit is not None else approved
+
+    # Settings are only read for what was not passed in, so tests need no GCP configuration.
+    settings = functools.cache(load_settings)
+    answer_model = args.answer_model or settings().gemini_answer_model
+    judge_model = args.judge_model or settings().gemini_judge_model
+    if not judge_model:
+        print("no judge model: set GEMINI_JUDGE_MODEL or pass --judge-model", file=sys.stderr)
+        return 2
+    index_path = args.index or settings().index_path
+    if adapter is None:
+        adapter = GeminiAdapter(
+            project=settings().gcp_project_id,
+            location=settings().gemini_location,
+            model=answer_model,
+        )
+    if judge is None and scored:
+        if not settings().eval_batch_bucket:
+            print(
+                "batch judging needs a Cloud Storage bucket: set EVAL_BATCH_BUCKET"
+                " (scripts/setup-gcp.sh creates one)",
+                file=sys.stderr,
+            )
+            return 2
+        judge = GeminiBatchJudge(
+            project=settings().gcp_project_id,
+            location=settings().gemini_batch_location or settings().gemini_location,
+            model=judge_model,
+            bucket=settings().eval_batch_bucket,
+        )
+    with Index.open(index_path, embedder or gemini_embedder()) as index:
+        evaluation = evaluate(
+            scored, AnswerEngine(adapter, index), judge, progress=lambda m: print(m, flush=True)
+        )
+    run = {
+        "answer_model": answer_model,
+        "judge_model": judge_model,
+        "reference": args.reference.name,
+        "items_in_file": len(items),
+        "approved": len(approved),
+        "scored": len(scored),
+        "limit": args.limit,
+        "finished_at": datetime.now(UTC).isoformat(timespec="seconds"),
+    }
+    write_report(args.out, run, evaluation)
+    print(f"wrote {args.out / 'results.json'} and {args.out / 'summary.md'}")
+    return 0
+
+
 def serve_step(host: str, port: int) -> int:
     # Imported here so `extract` and `index` don't need Gemini or the web stack loaded.
     import uvicorn
 
-    from coa_explorer.answer import AnswerEngine
     from coa_explorer.api import create_app
-    from coa_explorer.gemini import GeminiAdapter
-    from coa_explorer.search import Index
 
     settings = load_settings()
     adapter = GeminiAdapter(

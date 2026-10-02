@@ -189,12 +189,14 @@ finish() {
 #   .env (git-ignored)  GCP_PROJECT_ID, GCP_REGION, GEMINI_LOCATION,
 #                       GEMINI_ANSWER_MODEL, GEMINI_JUDGE_MODEL,
 #                       GEMINI_EMBEDDING_MODEL, FIRESTORE_DATABASE, FIRESTORE_LOG_COLLECTION,
-#                       FIRESTORE_TTL_FIELD, ARTIFACT_REPOSITORY (see .env.example)
+#                       FIRESTORE_TTL_FIELD, ARTIFACT_REPOSITORY, EVAL_BATCH_BUCKET
+#                       (see .env.example)
 #   GitHub Actions variables (no secrets, no JSON keys):
 #                       GCP_PROJECT_ID, GCP_REGION,
 #                       GCP_WORKLOAD_IDENTITY_PROVIDER,
 #                       GCP_DEPLOYER_SERVICE_ACCOUNT,
-#                       GCP_RUNTIME_SERVICE_ACCOUNT, GCP_ARTIFACT_REPOSITORY
+#                       GCP_RUNTIME_SERVICE_ACCOUNT, GCP_ARTIFACT_REPOSITORY,
+#                       GCP_EVAL_BATCH_BUCKET, GEMINI_ANSWER_MODEL, GEMINI_JUDGE_MODEL
 # ──────────────────────────────────────────────────────────────────────────
 
 # Git Bash on Windows rewrites arguments that look like POSIX paths
@@ -203,7 +205,7 @@ export MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL='*'
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
-TOTAL_STAGES=10
+TOTAL_STAGES=11
 
 REGION="us-central1"
 RUNTIME_SA_ID="coa-runtime"
@@ -388,6 +390,30 @@ say "Images go under: $AR_IMAGE_PREFIX/<image>:<tag>"
 note "The deployer account can already push here (Artifact Registry Writer, granted in stage 4)."
 note "Storage beyond 0.5 GB is billed (about \$0.10/GB-month); the image is small."
 set_var GCP_ARTIFACT_REPOSITORY "$AR_REPO"
+pause "Press Enter to continue."
+
+# ── 5b. Evaluation batch bucket ───────────────────────────────────────────
+stage "Create the evaluation batch bucket"
+say "The evaluation's judge model (Gemini Pro) runs as a Vertex AI batch job, and batch jobs read"
+say "their requests from, and write their replies to, Cloud Storage."
+EVAL_BUCKET="$GCP_PROJECT_ID-coa-eval"
+if gcloud storage buckets describe "gs://$EVAL_BUCKET" --project "$GCP_PROJECT_ID" >/dev/null 2>&1; then
+  say "✓ bucket gs://$EVAL_BUCKET already exists"
+else
+  gcloud storage buckets create "gs://$EVAL_BUCKET" --location="$REGION"     --uniform-bucket-level-access --project "$GCP_PROJECT_ID"     || die "Couldn't create the evaluation bucket."
+  say "✓ created gs://$EVAL_BUCKET in $REGION"
+fi
+# The files are scratch: each run writes new ones, so old ones expire after a week.
+EVAL_LIFECYCLE=$(mktemp)
+printf '{"rule":[{"action":{"type":"Delete"},"condition":{"age":7}}]}' > "$EVAL_LIFECYCLE"
+gcloud storage buckets update "gs://$EVAL_BUCKET" --lifecycle-file="$EVAL_LIFECYCLE"   --project "$GCP_PROJECT_ID" >/dev/null   && say "✓ objects expire after 7 days"   || SKIPPED+=("Expiry for gs://$EVAL_BUCKET (set a 7-day delete rule in the console)")
+rm -f "$EVAL_LIFECYCLE"
+say "CI runs a small evaluation on pull requests, so the deployer account may call Gemini and use the bucket."
+grant_project_role "$DEPLOYER_SA" roles/aiplatform.user
+retry 5 gcloud storage buckets add-iam-policy-binding "gs://$EVAL_BUCKET"   --member="serviceAccount:$DEPLOYER_SA" --role=roles/storage.objectAdmin   --project "$GCP_PROJECT_ID" >/dev/null   || die "Couldn't grant $DEPLOYER_SA access to the evaluation bucket."
+say "✓ $DEPLOYER_SA → roles/storage.objectAdmin on gs://$EVAL_BUCKET only"
+note "Vertex AI's own service agent reads and writes the bucket for the batch job."
+set_var GCP_EVAL_BATCH_BUCKET "$EVAL_BUCKET"
 pause "Press Enter to continue."
 
 # ── 6. Workload Identity Federation ───────────────────────────────────────
@@ -575,6 +601,10 @@ write_env FIRESTORE_DATABASE "$FIRESTORE_DB"
 write_env FIRESTORE_LOG_COLLECTION "$LOG_COLLECTION"
 write_env FIRESTORE_TTL_FIELD "$TTL_FIELD"
 write_env ARTIFACT_REPOSITORY "$AR_REPO"
+write_env EVAL_BATCH_BUCKET "$EVAL_BUCKET"
+# CI reads the model names from variables, so changing one is a settings change, not a code change.
+set_var GEMINI_ANSWER_MODEL "$GEMINI_ANSWER_MODEL"
+set_var GEMINI_JUDGE_MODEL "$GEMINI_JUDGE_MODEL"
 
 pause "Press Enter to continue."
 

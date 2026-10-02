@@ -17,6 +17,10 @@ class Settings:
     gemini_answer_model: str
     gemini_embedding_model: str
     index_path: Path
+    # Only the evaluation harness needs these.
+    gemini_judge_model: str | None = None
+    eval_batch_bucket: str | None = None
+    gemini_batch_location: str | None = None
 
 
 def load_settings(env_file: Path = REPO_ROOT / ".env") -> Settings:
@@ -33,6 +37,9 @@ def load_settings(env_file: Path = REPO_ROOT / ".env") -> Settings:
         gemini_answer_model=env["GEMINI_ANSWER_MODEL"],
         gemini_embedding_model=env.get("GEMINI_EMBEDDING_MODEL") or "gemini-embedding-001",
         index_path=Path(env.get("COA_INDEX_PATH") or DEFAULT_INDEX),
+        gemini_judge_model=env.get("GEMINI_JUDGE_MODEL") or None,
+        eval_batch_bucket=env.get("EVAL_BATCH_BUCKET") or None,
+        gemini_batch_location=env.get("GEMINI_BATCH_LOCATION") or None,
     )
 
 

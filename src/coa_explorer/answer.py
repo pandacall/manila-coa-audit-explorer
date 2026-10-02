@@ -239,10 +239,13 @@ class AnswerEngine:
         self._index = index
         self._max_search_rounds = max_search_rounds
 
-    def ask(self, question: str) -> Iterator[Event]:
-        """Yield `Status` updates while working, then exactly one `Answer` or `NotCovered`."""
+    def ask(self, question: str, retrieved: dict[str, Piece] | None = None) -> Iterator[Event]:
+        """Yield `Status` updates while working, then exactly one `Answer` or `NotCovered`.
+
+        Pass a dict as `retrieved` to learn which pieces (by id) the model was shown.
+        """
         messages = [Message(role="user", text=question)]
-        seen: dict[str, Piece] = {}
+        seen = retrieved if retrieved is not None else {}
         timelines: dict[tuple[int, int], Timeline] = {}
         nudged = False
         for round_number in range(self._max_search_rounds + 1):
