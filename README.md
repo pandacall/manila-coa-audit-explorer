@@ -56,12 +56,16 @@ uv run coa-explorer index   # builds build/coa.sqlite from data/extracted/ (git-
 uv run coa-explorer serve   # http://127.0.0.1:8000
 ```
 
-`index` needs no GCP access; rebuild it whenever the extracted records change. Open
-http://127.0.0.1:8000, ask a question about Part II or about whether the City acted on COA's
-recommendations, and the page shows the summary and key points, each with Citation chips in COA's
-format. A follow-up question also shows a timeline: when the observation was raised and COA's Status
-of Implementation in each later AAR, with Management's action kept apart and attributed. The page
-loads React from a CDN, so it needs internet.
+`index` embeds every piece with `GEMINI_EMBEDDING_MODEL` (gemini-embedding-001, 768 dimensions) on
+Vertex AI, so it needs the same GCP access as `serve` and takes about half a minute; rebuild it
+whenever the extracted records or the embedding model change. Search merges keyword (FTS5) and
+vector (sqlite-vec) matches into one ranking, can be narrowed by year, Part or observation number,
+and with no year named returns the newest year first. Open http://127.0.0.1:8000, ask a question
+about Part II or about whether the City acted on COA's recommendations, and the page shows the
+summary and key points, each with Citation chips in COA's format. A follow-up question also shows a
+timeline: when the observation was raised and COA's Status of Implementation in each later AAR,
+with Management's action kept apart and attributed. The page loads React from a CDN, so it needs
+internet.
 The answer model is `GEMINI_ANSWER_MODEL`; change it in `.env` to compare models.
 
 The page streams from `POST /api/ask` (`{"question": "..."}`), which returns newline-delimited
@@ -73,3 +77,9 @@ Manila?" (cited answer), "Did Manila comply with IPSAS 1 in its financial statem
 (cited answer across 2022-2024), "What did COA say about Quezon City's budget?" (not covered), and a
 Filipino question about 2023 Observation No. 5 (cited answer, but in English; answering in the
 question's language is a later ticket).
+
+Hybrid search verified against real Gemini (2026-10-02) with: "Did the city ever fail to collect
+money that employees borrowed and never paid back?" (everyday wording; cited answer from the
+cash-advance and GSIS-loan observations), "What does 2023 Observation No. 5 say?" (direct lookup),
+"What did COA say about Quezon City's budget?" (not covered), and "Which years did COA raise
+problems with the City's bank account balances?" (cited answer naming each year).

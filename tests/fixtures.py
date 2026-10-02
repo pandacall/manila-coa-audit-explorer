@@ -170,10 +170,10 @@ FIXTURE_PART3 = {
                         "Partially Implemented",
                         "Liquidate all cash advances promptly.",
                         management_action="The City liquidated P8 million of the advances.",
-                        reason="P4.5 million remained unliquidated at year end.",
+                        reason="P4.5 million was owed at year end.",
                     )
                 ],
-                summary="Cash advances of P12.5 million were unliquidated at year end.",
+                summary="Cash advances of P12.5 million had not been settled by year end.",
             ),
             tracked_observation(
                 2023,
@@ -208,10 +208,10 @@ FIXTURE_PART3 = {
                         "Not Implemented",
                         "Liquidate all cash advances promptly.",
                         status_note="Reiterated in Part II, Observation No. 14, Page 130",
-                        reason="Advances of P6 million remained unliquidated.",
+                        reason="Advances of P6 million were owed.",
                     )
                 ],
-                summary="Cash advances of P12.5 million were unliquidated at year end.",
+                summary="Cash advances of P12.5 million had not been settled by year end.",
             ),
             tracked_observation(
                 2024,

@@ -9,6 +9,7 @@ import pytest
 from coa_explorer.index import build_index
 from coa_explorer.search import Index
 from tests import fixtures as fx
+from tests.fake_embedder import FakeEmbedder
 
 COMMITTED = Path(__file__).resolve().parents[1] / "data" / "extracted"
 
@@ -16,7 +17,7 @@ COMMITTED = Path(__file__).resolve().parents[1] / "data" / "extracted"
 @pytest.fixture()
 def index(tmp_path):
     records = fx.write_fixture_records(tmp_path / "records")
-    build_index(records, tmp_path / "coa.sqlite")
+    build_index(records, tmp_path / "coa.sqlite", FakeEmbedder())
     with Index.open(tmp_path / "coa.sqlite") as opened:
         yield opened
 
@@ -38,7 +39,7 @@ def test_a_part_iii_piece_labels_whose_words_each_part_is(index):
     assert "Status of Implementation (COA): Partially Implemented" in piece.text
     assert "Management action: The City liquidated P8 million of the advances." in piece.text
     assert "Reason for partial or non-implementation: P4.5 million" in piece.text
-    assert "Observation: Cash advances of P12.5 million were unliquidated" in piece.text
+    assert "Observation: Cash advances of P12.5 million had not been settled" in piece.text
 
 
 def test_the_status_filter_lists_one_years_recommendations_with_that_status(index):
@@ -82,7 +83,7 @@ def test_a_timeline_keeps_COAs_status_apart_from_Managements_account(index):
 
     assert in_2023.status == "Partially Implemented"  # COA's Status of Implementation
     assert in_2023.management_action == "The City liquidated P8 million of the advances."
-    assert in_2023.reason == "P4.5 million remained unliquidated at year end."
+    assert in_2023.reason == "P4.5 million was owed at year end."
     assert "Partially" not in in_2023.management_action
     note = index.timeline(2022, 3).steps[1].follow_ups[0].status_note
     assert note == "Reiterated in Part II, Observation No. 14, Page 130"
@@ -139,7 +140,7 @@ def test_a_reference_that_matches_no_observation_is_kept_in_its_own_timeline(tmp
         )
     }
     records = fx.write_fixture_records(tmp_path / "records", fx.FIXTURE_YEARS, part3)
-    build_index(records, tmp_path / "coa.sqlite")
+    build_index(records, tmp_path / "coa.sqlite", FakeEmbedder())
 
     with Index.open(tmp_path / "coa.sqlite") as built:
         timeline = built.timeline(2022, 9)
@@ -160,7 +161,7 @@ def test_text_printed_once_for_several_recommendations_is_marked_shared(tmp_path
     )
     part3 = {2023: fx.part3_record(2023, [fx.tracked_observation(2023, 2022, 3, [shared])])}
     records = fx.write_fixture_records(tmp_path / "records", fx.FIXTURE_YEARS, part3)
-    build_index(records, tmp_path / "coa.sqlite")
+    build_index(records, tmp_path / "coa.sqlite", FakeEmbedder())
 
     with Index.open(tmp_path / "coa.sqlite") as built:
         assert built.timeline(2022, 3).steps[0].follow_ups[0].shared == ["management_action"]
@@ -169,15 +170,26 @@ def test_text_printed_once_for_several_recommendations_is_marked_shared(tmp_path
 @pytest.fixture(scope="module")
 def real_index(tmp_path_factory):
     db = tmp_path_factory.mktemp("index") / "coa.sqlite"
-    build_index(COMMITTED, db)
+    build_index(COMMITTED, db, FakeEmbedder())
     with Index.open(db) as opened:
         yield opened
 
 
-def test_every_part_iii_recommendation_is_indexed_with_COAs_totals(real_index):
-    for year, total in {2020: 79, 2021: 58, 2022: 53, 2023: 53, 2024: 27}.items():
-        pieces = real_index.search("", years=[year], parts=["III"], limit=500)
-        assert len(pieces) == total, year
+def test_every_part_iii_recommendation_is_indexed_by_status_with_COAs_totals(real_index):
+    statuses = ("Implemented", "Partially Implemented", "Not Implemented")
+    totals = {
+        2020: (23, 32, 24),
+        2021: (17, 25, 16),
+        2022: (8, 27, 18),
+        2023: (44, 0, 9),
+        2024: (17, 0, 10),
+    }
+    for year, expected in totals.items():
+        found = tuple(
+            len(real_index.search("", years=[year], parts=["III"], status=s, limit=500))
+            for s in statuses
+        )
+        assert found == expected, year
 
 
 def test_the_real_cash_in_bank_observation_has_a_timeline_across_four_aars(real_index):

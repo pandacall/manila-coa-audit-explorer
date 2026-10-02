@@ -10,6 +10,7 @@ from pathlib import Path
 
 from coa_explorer import links, part2, part3
 from coa_explorer.config import DEFAULT_INDEX, REPO_ROOT, load_settings
+from coa_explorer.embedder import Embedder, GeminiEmbedder
 from coa_explorer.index import build_index, load_records
 
 DEFAULT_REPORTS = REPO_ROOT / "coa-audit-reports"
@@ -18,7 +19,8 @@ LINK_REPORT = "link-report.json"
 YEARS = (2020, 2021, 2022, 2023, 2024)
 
 
-def main(argv: Sequence[str] | None = None) -> int:
+def main(argv: Sequence[str] | None = None, *, embedder: Embedder | None = None) -> int:
+    """Run a step. `embedder` replaces Gemini for `index` (tests pass a fake)."""
     parser = argparse.ArgumentParser(prog="coa-explorer", description=__doc__)
     steps = parser.add_subparsers(dest="step", required=True)
 
@@ -36,7 +38,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
 
     index = steps.add_parser(
-        "index", help="build the SQLite search index from the extracted records"
+        "index", help="build the SQLite search index (keyword and embeddings) from the records"
     )
     index.add_argument("--records", type=Path, default=DEFAULT_OUT, help="extracted records")
     index.add_argument("--out", type=Path, default=DEFAULT_INDEX, help="the SQLite file to write")
@@ -52,7 +54,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     args = parser.parse_args(argv)
     if args.step == "index":
-        return index_step(args.records, args.out)
+        return index_step(args.records, args.out, embedder or gemini_embedder())
     if args.step == "serve":
         return serve_step(args.host, args.port)
     if args.step == "links":
@@ -93,8 +95,17 @@ def extract_step(reports: Path, out: Path, *, check: bool = False) -> int:
     return 0
 
 
-def index_step(records: Path, out: Path) -> int:
-    count = build_index(records, out)
+def gemini_embedder() -> GeminiEmbedder:
+    settings = load_settings()
+    return GeminiEmbedder(
+        project=settings.gcp_project_id,
+        location=settings.gemini_location,
+        model=settings.gemini_embedding_model,
+    )
+
+
+def index_step(records: Path, out: Path, embedder: Embedder) -> int:
+    count = build_index(records, out, embedder)
     print(f"indexed {count} pieces into {out}")
     return 0
 
@@ -138,7 +149,8 @@ def serve_step(host: str, port: int) -> int:
         location=settings.gemini_location,
         model=settings.gemini_answer_model,
     )
-    app = create_app(AnswerEngine(adapter, Index.open(settings.index_path)))
+    index = Index.open(settings.index_path, gemini_embedder())
+    app = create_app(AnswerEngine(adapter, index))
     uvicorn.run(app, host=host, port=port)
     return 0
 

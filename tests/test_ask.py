@@ -12,6 +12,7 @@ from coa_explorer.api import create_app
 from coa_explorer.index import build_index
 from coa_explorer.models import ModelTurn, ToolCall
 from coa_explorer.search import Index
+from tests.fake_embedder import FakeEmbedder
 from tests.fixtures import write_fixture_records
 from tests.scripted import ScriptedAdapter, point, say, search, submit
 
@@ -22,8 +23,8 @@ CITATION_5 = "CY 2023 AAR, Part II, Observation No. 5, pp. 71-73"
 @pytest.fixture()
 def index(tmp_path):
     records = write_fixture_records(tmp_path / "records")
-    build_index(records, tmp_path / "coa.sqlite")
-    with Index.open(tmp_path / "coa.sqlite") as opened:
+    build_index(records, tmp_path / "coa.sqlite", FakeEmbedder())
+    with Index.open(tmp_path / "coa.sqlite", FakeEmbedder()) as opened:
         yield opened
 
 
@@ -360,3 +361,67 @@ def test_a_pre_2020_observation_is_shown_cited_to_the_aars_that_track_it(index):
     assert [c.text for c in answer.key_points[0].citations] == [
         "CY 2023 AAR, Part III, CY 2019 Observation No. 4, p. 92"
     ]
+
+
+def test_a_hit_gives_the_model_the_whole_observation_to_cite(index):
+    adapter = ScriptedAdapter(
+        search("Section 89"),  # only the description matches
+        submit(
+            "Summary.",
+            [point("Management said liquidation is ongoing.", "2022-3-management_comment-1")],
+        ),
+    )
+
+    answer = Answer.model_validate(final(ask(index, adapter)))
+
+    _, messages, _ = adapter.requests[1]
+    passages = messages[-1].tool_results[0].content
+    assert [p["kind"] for p in passages] == [
+        "description",
+        "recommendations",
+        "management_comment",
+        "auditors_rejoinder",
+    ]
+    assert [p["matched"] for p in passages] == [True, False, False, False]
+    assert all(p["citation"] == passages[0]["citation"] for p in passages)
+    assert (
+        answer.key_points[0].citations[0].text == "CY 2022 AAR, Part II, Observation No. 3, p. 73"
+    )
+
+
+def test_with_no_year_named_the_model_sees_the_newest_year_first(index):
+    adapter = ScriptedAdapter(
+        search("cash"), submit("Summary.", [point("Point.", "2022-3-description-1")])
+    )
+
+    ask(index, adapter)
+
+    _, messages, _ = adapter.requests[1]
+    years = [p["citation"].split()[1] for p in messages[-1].tool_results[0].content]
+    assert years == sorted(years, reverse=True)
+    assert {"2022", "2023"} <= set(years)
+
+
+def test_the_model_can_filter_by_year_part_and_observation_number(index):
+    adapter = ScriptedAdapter(
+        search("", years=[2023], observation=5, parts=["II"]),
+        search("cash", parts=["III"]),
+        submit("Summary.", [point("Point.", IPSAS_5)]),
+    )
+
+    ask(index, adapter)
+
+    _, messages, _ = adapter.requests[1]
+    assert {p["citation"] for p in messages[-1].tool_results[0].content} == {CITATION_5}
+    _, messages, _ = adapter.requests[2]
+    assert {p["id"] for p in messages[-1].tool_results[0].content} == {"2023-III-1", "2024-III-1"}
+
+
+def test_the_model_is_told_to_name_the_years_a_topic_appeared_in(index):
+    adapter = ScriptedAdapter(search("cash"), submit("Summary.", [point("P.", IPSAS_5)]))
+
+    ask(index, adapter)
+
+    system, _, _ = adapter.requests[0]
+    assert "newest first" in system
+    assert "say which years" in system

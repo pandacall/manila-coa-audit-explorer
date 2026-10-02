@@ -15,7 +15,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from coa_explorer.models import Message, ModelAdapter, ToolCall, ToolResult, ToolSpec
-from coa_explorer.search import Index, Piece
+from coa_explorer.search import DEFAULT_LIMIT, Index, Piece
 from coa_explorer.timeline import Timeline
 
 MAX_SUMMARY_CHARS = 600
@@ -41,6 +41,14 @@ How to work
 number filter, if the first results miss. Do not repeat a query that already returned results. \
 You have a limited number of searches: to compare years, search each year with the `years` \
 filter. Then call `submit_answer` exactly once to finish.
+- `search` understands both COA's exact words and everyday language. Each Part II hit comes back \
+as the whole Audit Observation (description, recommendations, Management Comment, Auditor's \
+Rejoinder); `matched` marks the passages that matched your query. To read a specific observation, \
+such as "2023 Observation No. 5", search with an empty query and `years` and `observation` set.
+- With no `years` filter, results span all years, newest first, but a search returns at most five \
+observations, so a topic that may span many years needs a search per year to be sure. When a topic \
+appears in several years, say which years in your summary, going by the citations of the passages \
+you used.
 - To find out whether Manila acted on a recommendation, find the observation with `search`, then \
 call `timeline` with the `origin_year` and `origin_observation` printed on its results. It returns \
 when the observation was raised and COA's Status of Implementation in each later AAR, each step \
@@ -77,10 +85,11 @@ implemented.
 SEARCH_TOOL = ToolSpec(
     name="search",
     description=(
-        "Keyword search over COA's Annual Audit Reports on the City of Manila: Part II Audit "
-        "Observations and Part III follow-up of Prior Years' Recommendations. Returns ranked "
-        "passages, each with an `id`, its `citation` and the observation it is about "
-        "(`origin_year`, `origin_observation`, for the `timeline` tool)."
+        "Search COA's Annual Audit Reports on the City of Manila, by exact words or by meaning: "
+        "Part II Audit Observations and Part III follow-up of Prior Years' Recommendations. "
+        "Returns passages, each with an `id`, its `citation` and the observation it is about "
+        "(`origin_year`, `origin_observation`, for the `timeline` tool); with no `years` filter "
+        "they are ordered newest year first."
     ),
     parameters={
         "type": "object",
@@ -94,14 +103,14 @@ SEARCH_TOOL = ToolSpec(
                 "items": {"type": "integer"},
                 "description": "Restrict to these AAR years (2020-2024).",
             },
-            "observation": {
-                "type": "integer",
-                "description": "Restrict to this Part II Audit Observation number.",
-            },
             "parts": {
                 "type": "array",
                 "items": {"type": "string", "enum": ["II", "III"]},
                 "description": "Restrict to Part II (observations) and/or Part III (follow-up).",
+            },
+            "observation": {
+                "type": "integer",
+                "description": "Restrict to this Part II Audit Observation number.",
             },
             "status": {
                 "type": "string",
@@ -110,7 +119,10 @@ SEARCH_TOOL = ToolSpec(
             },
             "limit": {
                 "type": "integer",
-                "description": f"Passages to return (default 8, at most {MAX_SEARCH_RESULTS}).",
+                "description": (
+                    f"How many Audit Observations (or Part III blocks) to return: default "
+                    f"{DEFAULT_LIMIT}, at most {MAX_SEARCH_RESULTS}."
+                ),
             },
         },
         "required": ["query"],
@@ -271,28 +283,31 @@ class AnswerEngine:
     def _run_search(self, call: ToolCall, seen: dict[str, Piece]) -> list[dict]:
         args = call.args
         observation = args.get("observation")
-        pieces = self._index.search(
+        hits = self._index.search(
             str(args.get("query", "")),
             years=[int(year) for year in args.get("years") or []] or None,
+            parts=as_list(args.get("parts")) or None,
             observation=int(observation) if observation is not None else None,
-            parts=[str(part) for part in args.get("parts") or []] or None,
             status=str(args["status"]) if args.get("status") else None,
-            limit=max(1, min(int(args.get("limit") or 8), MAX_SEARCH_RESULTS)),
+            limit=max(1, min(int(args.get("limit") or DEFAULT_LIMIT), MAX_SEARCH_RESULTS)),
         )
-        for piece in pieces:
-            seen[piece.key] = piece
-        return [
-            {
-                "id": piece.key,
-                "citation": piece.citation,
-                "title": piece.title,
-                "kind": piece.kind,
-                "origin_year": piece.origin_year,
-                "origin_observation": piece.origin_observation,
-                "text": piece.text[:MAX_PIECE_CHARS_TO_MODEL],
-            }
-            for piece in pieces
-        ]
+        passages = []
+        for whole in self._index.expand(hits):
+            for piece in whole.pieces:
+                seen[piece.key] = piece
+                passages.append(
+                    {
+                        "id": piece.key,
+                        "citation": piece.citation,
+                        "title": piece.title,
+                        "kind": piece.kind,
+                        "origin_year": piece.origin_year,
+                        "origin_observation": piece.origin_observation,
+                        "matched": piece.key in whole.matched,
+                        "text": piece.text[:MAX_PIECE_CHARS_TO_MODEL],
+                    }
+                )
+        return passages
 
     def _run_timeline(
         self, call: ToolCall, seen: dict[str, Piece], timelines: dict[tuple[int, int], Timeline]
@@ -309,10 +324,15 @@ class AnswerEngine:
         return {"timeline": timeline.model_dump(mode="json")}
 
 
+def as_list(value) -> list[str]:
+    """A list of strings from a model argument that may be a bare string or missing."""
+    return [str(item) for item in ([value] if isinstance(value, str) else value or [])]
+
+
 ARGUMENT_ERRORS = {
     "search": (
-        "years and parts must be lists, observation, limit integers and status one of the "
-        "three Status of Implementation values"
+        "years must be a list of integers, parts a list of strings, observation and limit "
+        "integers, status one of the three Status of Implementation values"
     ),
     "timeline": "origin_year and origin_observation must be integers",
 }

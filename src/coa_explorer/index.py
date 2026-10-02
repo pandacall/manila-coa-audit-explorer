@@ -18,10 +18,13 @@ import sqlite3
 from collections.abc import Iterator
 from pathlib import Path
 
+import sqlite_vec
+
+from coa_explorer.embedder import Embedder
 from coa_explorer.links import build_links
+from coa_explorer.timeline import clip_title
 
 MAX_PIECE_CHARS = 1800
-MAX_TITLE_CHARS = 200
 
 SCHEMA = """
 CREATE TABLE pieces (
@@ -72,6 +75,7 @@ CREATE TABLE follow_ups (
     shared TEXT NOT NULL,
     citation TEXT NOT NULL
 );
+CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
 """
 
 PIECE_COLUMNS = (
@@ -91,17 +95,32 @@ def load_records(directory: Path) -> dict[int, dict]:
     }
 
 
-def build_index(records_dir: Path, db_path: Path) -> int:
+def load_vec_extension(db: sqlite3.Connection) -> None:
+    db.enable_load_extension(True)
+    sqlite_vec.load(db)
+    db.enable_load_extension(False)
+
+
+def build_index(records_dir: Path, db_path: Path, embedder: Embedder) -> int:
     """Index the records under `records_dir` (`part2/`, `part3/`) into a fresh SQLite file.
 
-    Returns the number of pieces.
+    Each piece is stored for keyword search (FTS5) and, embedded by `embedder`, for vector search
+    (sqlite-vec). Returns the number of pieces.
     """
     part2 = load_records(records_dir / "part2")
     part3 = load_records(records_dir / "part3")
     db_path.parent.mkdir(parents=True, exist_ok=True)
     db_path.unlink(missing_ok=True)
     with sqlite3.connect(db_path) as db:
+        load_vec_extension(db)
         db.executescript(SCHEMA)
+        db.execute(
+            "CREATE VIRTUAL TABLE pieces_vec USING vec0("
+            f"embedding float[{embedder.dimensions}] distance_metric=cosine)"
+        )
+        db.execute(
+            "INSERT INTO meta VALUES ('embedding_dimensions', ?)", (str(embedder.dimensions),)
+        )
         for record in part2.values():
             for observation in record["observations"]:
                 db.executemany(
@@ -145,6 +164,15 @@ def build_index(records_dir: Path, db_path: Path) -> int:
                 ),
             )
         db.execute("INSERT INTO pieces_fts(rowid, title, text) SELECT id, title, text FROM pieces")
+        rows = db.execute("SELECT id, title, text FROM pieces ORDER BY id").fetchall()
+        vectors = embedder.embed_documents([f"{title}\n{text}" for _, title, text in rows])
+        db.executemany(
+            "INSERT INTO pieces_vec(rowid, embedding) VALUES (?, ?)",
+            [
+                (row_id, sqlite_vec.serialize_float32(vector))
+                for (row_id, _, _), vector in zip(rows, vectors, strict=True)
+            ],
+        )
         (count,) = db.execute("SELECT count(*) FROM pieces").fetchone()
     db.close()
     return count
@@ -206,12 +234,6 @@ def follow_up_text(tracked: dict, rec: dict) -> str:
     if rec["reason"]:
         lines.append(f"Reason for partial or non-implementation: {rec['reason']}")
     return "\n".join(lines)
-
-
-def clip_title(text: str) -> str:
-    if len(text) <= MAX_TITLE_CHARS:
-        return text
-    return text[: MAX_TITLE_CHARS - 1].rsplit(" ", 1)[0].rstrip(" ,;:") + "…"
 
 
 def observation_pieces(observation: dict) -> Iterator[tuple[str, int, str]]:
