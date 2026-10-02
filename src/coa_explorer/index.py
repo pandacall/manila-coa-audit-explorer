@@ -13,6 +13,10 @@ import sqlite3
 from collections.abc import Iterator
 from pathlib import Path
 
+import sqlite_vec
+
+from coa_explorer.embedder import Embedder
+
 MAX_PIECE_CHARS = 1800
 
 SCHEMA = """
@@ -32,15 +36,34 @@ CREATE TABLE pieces (
 CREATE VIRTUAL TABLE pieces_fts USING fts5(
     title, text, content='pieces', content_rowid='id', tokenize='porter unicode61'
 );
+CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
 """
 
 
-def build_index(records_dir: Path, db_path: Path) -> int:
-    """Index every `<year>.json` in `records_dir` into a fresh SQLite file, returning the count."""
+def load_vec_extension(db: sqlite3.Connection) -> None:
+    db.enable_load_extension(True)
+    sqlite_vec.load(db)
+    db.enable_load_extension(False)
+
+
+def build_index(records_dir: Path, db_path: Path, embedder: Embedder) -> int:
+    """Index every `<year>.json` in `records_dir` into a fresh SQLite file, returning the count.
+
+    Each piece is stored for keyword search (FTS5) and, embedded by `embedder`, for vector search
+    (sqlite-vec).
+    """
     db_path.parent.mkdir(parents=True, exist_ok=True)
     db_path.unlink(missing_ok=True)
     with sqlite3.connect(db_path) as db:
+        load_vec_extension(db)
         db.executescript(SCHEMA)
+        db.execute(
+            "CREATE VIRTUAL TABLE pieces_vec USING vec0("
+            f"embedding float[{embedder.dimensions}] distance_metric=cosine)"
+        )
+        db.execute(
+            "INSERT INTO meta VALUES ('embedding_dimensions', ?)", (str(embedder.dimensions),)
+        )
         for path in sorted(records_dir.glob("*.json")):
             record = json.loads(path.read_text(encoding="utf-8"))
             for observation in record["observations"]:
@@ -65,6 +88,15 @@ def build_index(records_dir: Path, db_path: Path) -> int:
                     ],
                 )
         db.execute("INSERT INTO pieces_fts(rowid, title, text) SELECT id, title, text FROM pieces")
+        rows = db.execute("SELECT id, title, text FROM pieces ORDER BY id").fetchall()
+        vectors = embedder.embed_documents([f"{title}\n{text}" for _, title, text in rows])
+        db.executemany(
+            "INSERT INTO pieces_vec(rowid, embedding) VALUES (?, ?)",
+            [
+                (row_id, sqlite_vec.serialize_float32(vector))
+                for (row_id, _, _), vector in zip(rows, vectors, strict=True)
+            ],
+        )
         (count,) = db.execute("SELECT count(*) FROM pieces").fetchone()
     db.close()
     return count

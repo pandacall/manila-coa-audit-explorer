@@ -10,6 +10,7 @@ import pytest
 from coa_explorer.cli import main
 from coa_explorer.index import build_index
 from coa_explorer.search import Index
+from tests.fake_embedder import FakeEmbedder
 from tests.fixtures import observation, part2, write_fixture_records
 
 
@@ -17,8 +18,8 @@ from tests.fixtures import observation, part2, write_fixture_records
 def index(tmp_path):
     records = write_fixture_records(tmp_path / "records")
     db = tmp_path / "coa.sqlite"
-    build_index(records, db)
-    with Index.open(db) as opened:
+    build_index(records, db, FakeEmbedder())
+    with Index.open(db, FakeEmbedder()) as opened:
         yield opened
 
 
@@ -94,7 +95,9 @@ def test_the_index_command_builds_the_sqlite_file_from_extracted_records(tmp_pat
     records = write_fixture_records(tmp_path / "records")
     db = tmp_path / "out" / "coa.sqlite"
 
-    assert main(["index", "--records", str(records), "--out", str(db)]) == 0
+    assert (
+        main(["index", "--records", str(records), "--out", str(db)], embedder=FakeEmbedder()) == 0
+    )
 
     assert "indexed" in capsys.readouterr().out
     with Index.open(db) as built:
@@ -103,7 +106,7 @@ def test_the_index_command_builds_the_sqlite_file_from_extracted_records(tmp_pat
 
 def test_the_index_opens_from_a_relative_path(tmp_path, monkeypatch):
     records = write_fixture_records(tmp_path / "records")
-    build_index(records, tmp_path / "coa.sqlite")
+    build_index(records, tmp_path / "coa.sqlite", FakeEmbedder())
     monkeypatch.chdir(tmp_path)
 
     with Index.open(Path("coa.sqlite")) as opened:
@@ -118,7 +121,175 @@ def test_an_exact_phrase_outranks_pieces_that_only_share_its_words(tmp_path):
     records = write_fixture_records(
         tmp_path / "records", {2020: part2(2020, [exact]), 2024: part2(2024, [scattered])}
     )
-    build_index(records, tmp_path / "coa.sqlite")
+    build_index(records, tmp_path / "coa.sqlite", FakeEmbedder())
 
     with Index.open(tmp_path / "coa.sqlite") as built:
-        assert built.search("IPSAS 1")[0].aar_year == 2020
+        assert built.search("IPSAS 1", years=[2020, 2024])[0].aar_year == 2020
+
+
+def test_everyday_wording_finds_the_passage_that_keywords_miss(index):
+    pieces = index.search("money still unsettled")
+
+    assert (pieces[0].aar_year, pieces[0].observation_number) == (2022, 3)
+
+
+def observations_of(pieces):
+    """(year, observation number) of each distinct observation, in result order."""
+    seen = []
+    for piece in pieces:
+        identity = (piece.aar_year, piece.observation_number)
+        if identity not in seen:
+            seen.append(identity)
+    return seen
+
+
+def test_keyword_and_vector_results_are_merged_into_one_ranking(index):
+    # "IPSAS 1" is a keyword hit on 2023 No. 5; "unsettled" a vector-only hit on 2022 No. 3.
+    pieces = index.search("IPSAS 1 unsettled")
+
+    assert set(observations_of(pieces)) == {(2023, 5), (2022, 3)}
+
+
+def test_a_piece_found_by_both_keyword_and_vector_search_outranks_one_found_by_either(index):
+    # 2023 No. 1 matches "bank reconciliation" by keyword and by meaning; No. 5 only by "statements".
+    pieces = index.search("bank reconciliation statements", years=[2023])
+
+    assert observations_of(pieces)[0] == (2023, 1)
+
+
+def test_the_year_filter_applies_to_vector_results_too(index):
+    assert index.search("unsettled", years=[2023]) == []
+    assert observations_of(index.search("unsettled", years=[2022])) == [(2022, 3)]
+
+
+def test_the_part_filter_keeps_only_that_part(index):
+    assert index.search("IPSAS 1", parts=["II"])
+    assert index.search("IPSAS 1", parts=["III"]) == []
+    assert index.search("unsettled", parts=["III"]) == []
+
+
+def test_an_observation_can_be_looked_up_directly_by_year_and_number(index):
+    pieces = index.search("", years=[2023], observation=5)
+
+    assert observations_of(pieces) == [(2023, 5)]
+    assert [piece.kind for piece in pieces] == [
+        "description",
+        "recommendations",
+        "management_comment",
+    ]
+
+
+def test_the_observation_filter_narrows_a_query_to_that_observation_number(index):
+    pieces = index.search("cash", observation=3)
+
+    assert observations_of(pieces) == [(2022, 3)]
+
+
+def test_with_no_year_named_results_span_all_years_newest_first(tmp_path):
+    most_relevant = observation(
+        2020, 1, "Bank reconciliation", "Bank reconciliation statements were not prepared."
+    )
+    less = observation(2022, 1, "Bank accounts", "The bank balance could not be reconciled.")
+    least = observation(2024, 1, "Cash controls", "Controls over bank deposits were weak.")
+    records = write_fixture_records(
+        tmp_path / "records",
+        {
+            2020: part2(2020, [most_relevant]),
+            2022: part2(2022, [less]),
+            2024: part2(2024, [least]),
+        },
+    )
+    build_index(records, tmp_path / "coa.sqlite", FakeEmbedder())
+
+    with Index.open(tmp_path / "coa.sqlite", FakeEmbedder()) as built:
+        everywhere = observations_of(built.search("bank reconciliation statements"))
+        two_years = observations_of(
+            built.search("bank reconciliation statements", years=[2020, 2022])
+        )
+        one_year = observations_of(built.search("bank reconciliation statements", years=[2022]))
+
+    assert everywhere == [(2024, 1), (2022, 1), (2020, 1)]
+    assert two_years == [(2020, 1), (2022, 1)]  # named years: most relevant first
+    assert one_year == [(2022, 1)]
+
+
+def test_a_direct_lookup_without_a_year_lists_every_year_newest_first(tmp_path):
+    records = write_fixture_records(
+        tmp_path / "records",
+        {y: part2(y, [observation(y, 5, "Topic", "Text.")]) for y in (2021, 2023, 2022)},
+    )
+    build_index(records, tmp_path / "coa.sqlite", FakeEmbedder())
+
+    with Index.open(tmp_path / "coa.sqlite") as built:
+        assert observations_of(built.search("", observation=5)) == [(2023, 5), (2022, 5), (2021, 5)]
+
+
+def test_a_hit_on_any_piece_expands_to_the_whole_observation(index):
+    hits = index.search("Section 89")  # only the description mentions it
+
+    (whole,) = index.expand(hits)
+
+    assert [piece.kind for piece in whole.pieces] == [
+        "description",
+        "recommendations",
+        "management_comment",
+        "auditors_rejoinder",
+    ]
+    assert whole.matched == {"2022-3-description-1"}
+    assert (whole.aar_year, whole.number) == (2022, 3)
+    assert whole.citation == "CY 2022 AAR, Part II, Observation No. 3, p. 73"
+
+
+def test_several_hits_in_one_observation_expand_to_it_once(index):
+    hits = index.search("Management cash advances liquidated", years=[2022])
+
+    assert len(hits) > 1
+    assert [(o.aar_year, o.number) for o in index.expand(hits)] == [(2022, 3)]
+
+
+def test_a_search_returns_at_most_the_asked_number_of_observations(tmp_path):
+    records = write_fixture_records(
+        tmp_path / "records",
+        {
+            2023: part2(
+                2023, [observation(2023, n, "Cash", f"Cash matter {n}.") for n in range(1, 7)]
+            )
+        },
+    )
+    build_index(records, tmp_path / "coa.sqlite", FakeEmbedder())
+
+    with Index.open(tmp_path / "coa.sqlite", FakeEmbedder()) as built:
+        assert len(observations_of(built.search("cash", limit=3))) == 3
+        assert len(observations_of(built.search("cash"))) == 5
+
+
+def test_search_falls_back_to_keywords_when_the_embedder_fails(tmp_path, caplog):
+    class Broken(FakeEmbedder):
+        def embed_query(self, text):
+            raise RuntimeError("embedding service down")
+
+    records = write_fixture_records(tmp_path / "records")
+    build_index(records, tmp_path / "coa.sqlite", FakeEmbedder())
+
+    with Index.open(tmp_path / "coa.sqlite", Broken()) as built:
+        assert observations_of(built.search("IPSAS 1")) == [(2023, 5)]
+    assert "embedding the query failed" in caplog.text
+
+
+def test_an_index_and_an_embedder_of_different_dimensions_are_rejected(tmp_path):
+    class Wider(FakeEmbedder):
+        dimensions = 512
+
+    records = write_fixture_records(tmp_path / "records")
+    build_index(records, tmp_path / "coa.sqlite", FakeEmbedder())
+
+    with pytest.raises(ValueError, match="rebuild"):
+        Index.open(tmp_path / "coa.sqlite", Wider())
+
+
+def test_part_names_are_matched_whatever_their_case(index):
+    assert index.search("IPSAS 1", parts=["ii"])
+
+
+def test_a_vector_match_that_is_not_close_is_dropped(index):
+    assert index.search("potholes") == []

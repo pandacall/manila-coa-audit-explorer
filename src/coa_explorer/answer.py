@@ -35,6 +35,14 @@ How to work
 number filter, if the first results miss. Do not repeat a query that already returned results. \
 You have a limited number of searches: to compare years, search each year with the `years` \
 filter. Then call `submit_answer` exactly once to finish.
+- `search` understands both COA's exact words and everyday language. Each hit comes back as the \
+whole Audit Observation (description, recommendations, Management Comment, Auditor's Rejoinder); \
+`matched` marks the passages that matched your query. To read a specific observation, such as \
+"2023 Observation No. 5", search with an empty query and `years` and `observation` set.
+- With no `years` filter, results span all years, newest first, but a search returns at most five \
+observations, so a topic that may span many years needs a search per year to be sure. When a topic \
+appears in several years, say which years in your summary, going by the citations of the passages \
+you used.
 - Answer ONLY from passages `search` returned. Never use outside knowledge, never guess, never \
 calculate or infer figures that the passages do not state. If the passages do not address the \
 question, submit with covered=false and say so plainly; suggest what the reports do cover if you \
@@ -58,8 +66,10 @@ passage records one, present it fairly and attribute it to Management.
 SEARCH_TOOL = ToolSpec(
     name="search",
     description=(
-        "Keyword search over the Part II Audit Observations of COA's Annual Audit Reports on the "
-        "City of Manila. Returns ranked passages, each with an `id` and its `citation`."
+        "Search the Part II Audit Observations of COA's Annual Audit Reports on the City of "
+        "Manila, by exact words or by meaning. Returns whole Audit Observations as passages, each "
+        "with an `id` and its `citation`; with no `years` filter they are ordered newest year "
+        "first."
     ),
     parameters={
         "type": "object",
@@ -72,6 +82,11 @@ SEARCH_TOOL = ToolSpec(
                 "type": "array",
                 "items": {"type": "integer"},
                 "description": "Restrict to these AAR years (2020-2024).",
+            },
+            "parts": {
+                "type": "array",
+                "items": {"type": "string", "enum": ["I", "II", "III", "IV"]},
+                "description": "Restrict to these Parts of the AAR (only Part II is searchable).",
             },
             "observation": {
                 "type": "integer",
@@ -187,7 +202,8 @@ class AnswerEngine:
                     except (TypeError, ValueError):
                         # Tell the model what was wrong so it can retry, instead of failing.
                         error = {
-                            "error": "years must be a list of integers; observation an integer"
+                            "error": "years must be a list of integers, parts a list of"
+                            " strings, observation an integer"
                         }
                         results.append(ToolResult(call, error))
                 else:
@@ -198,23 +214,32 @@ class AnswerEngine:
     def _run_search(self, call: ToolCall, seen: dict[str, Piece]) -> list[dict]:
         args = call.args
         observation = args.get("observation")
-        pieces = self._index.search(
+        hits = self._index.search(
             str(args.get("query", "")),
             years=[int(year) for year in args.get("years") or []] or None,
+            parts=as_list(args.get("parts")) or None,
             observation=int(observation) if observation is not None else None,
         )
-        for piece in pieces:
-            seen[piece.key] = piece
-        return [
-            {
-                "id": piece.key,
-                "citation": piece.citation,
-                "title": piece.title,
-                "kind": piece.kind,
-                "text": piece.text[:MAX_PIECE_CHARS_TO_MODEL],
-            }
-            for piece in pieces
-        ]
+        passages = []
+        for whole in self._index.expand(hits):
+            for piece in whole.pieces:
+                seen[piece.key] = piece
+                passages.append(
+                    {
+                        "id": piece.key,
+                        "citation": piece.citation,
+                        "title": piece.title,
+                        "kind": piece.kind,
+                        "matched": piece.key in whole.matched,
+                        "text": piece.text[:MAX_PIECE_CHARS_TO_MODEL],
+                    }
+                )
+        return passages
+
+
+def as_list(value) -> list[str]:
+    """A list of strings from a model argument that may be a bare string or missing."""
+    return [str(item) for item in ([value] if isinstance(value, str) else value or [])]
 
 
 def finalise(args: dict, seen: dict[str, Piece]) -> Answer | NotCovered:
