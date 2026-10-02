@@ -88,6 +88,14 @@ confirm() {
   [[ "$reply" =~ ^[Yy] ]]
 }
 
+# _trim VALUE prints VALUE without a stray carriage return (some Windows terminals end typed or
+# pasted lines with CR+LF, which read keeps) or surrounding whitespace.
+_trim() {
+  local v="${1//$''/}"
+  v="${v#"${v%%[![:space:]]*}"}"
+  printf '%s' "${v%"${v##*[![:space:]]}"}"
+}
+
 # _existing KEY: current value of KEY in ENV_FILE, if any.
 _existing() {
   [[ -f "$ENV_FILE" ]] || return 1
@@ -106,6 +114,7 @@ ask() {
     printf '  %s%s%s ' "$BOLD" "$prompt" "$RESET"
   fi
   read -r input || true
+  input=$(_trim "$input")
   [[ -z "$input" && -n "$current" ]] && input="$current"
   printf -v "$key" '%s' "$input"
 }
@@ -120,6 +129,7 @@ ask_secret() {
     printf '  %s%s%s ' "$BOLD" "$prompt" "$RESET"
   fi
   read -rs input || true
+  input=$(_trim "$input")
   printf '\n'
   [[ -z "$input" && -n "$current" ]] && input="$current"
   printf -v "$key" '%s' "$input"
@@ -604,6 +614,7 @@ pick_model() {
     warn "That doesn't look like a model ID (expected e.g. $default). Don't paste API keys here."
     printf '  %sModel ID: %s' "$BOLD" "$RESET"
     read -r input || true
+    input=$(_trim "$input")
     printf -v "$key" '%s' "${input:-$default}"
   done
   while :; do
@@ -615,6 +626,7 @@ pick_model() {
       [[ -n "$models" ]] && note "Gemini models Vertex lists for your project: $models"
       printf '  %sType another model ID to try, or press Enter to keep %s: %s' "$BOLD" "${!key}" "$RESET"
       read -r input || true
+      input=$(_trim "$input")
       if [[ -n "$input" ]]; then printf -v "$key" '%s' "$input"; continue; fi
     else
       warn "Not a missing model; if it's 403, wait a minute for the API enablement to propagate."
