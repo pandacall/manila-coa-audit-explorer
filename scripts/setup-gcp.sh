@@ -217,14 +217,32 @@ export MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL='*'
 
 # On Windows, Git Bash finds gcloud's sh launcher, which can pick a Python that lacks gcloud's
 # bundled libraries ("No module named six") or hand Windows Python a /c/... path that the setting
-# above stops MSYS converting. gcloud.cmd is Windows' own launcher and has neither problem.
-if command -v gcloud.cmd >/dev/null 2>&1; then
-  gcloud() { gcloud.cmd "$@"; }
+# above stops MSYS converting; gcloud.cmd goes through cmd.exe, which mangles arguments containing
+# spaces. So run the SDK's own bundled Python on gcloud.py directly, as the launchers do.
+if command -v gcloud.cmd >/dev/null 2>&1 && command -v cygpath >/dev/null 2>&1; then
+  _sdk_root=$(cd "$(dirname "$(command -v gcloud.cmd)")/.." && pwd)
+  _sdk_py="$_sdk_root/platform/bundledpython/python.exe"
+  [[ -x "$_sdk_py" ]] || _sdk_py=python
+  _sdk_win=$(cygpath -w "$_sdk_root")
+  gcloud() {
+    CLOUDSDK_ROOT_DIR="$_sdk_win" CLOUDSDK_PYTHON="$(cygpath -w "$_sdk_py")"       "$_sdk_py" "$_sdk_win\lib\gcloud.py" "$@"
+  }
 fi
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 TOTAL_STAGES=11
+
+# A git worktree has no .env of its own (it is git-ignored). Start from the main checkout's, so
+# answers given on earlier runs are remembered here too.
+if [[ ! -f "$ENV_FILE" ]]; then
+  _common=$(git rev-parse --git-common-dir 2>/dev/null || true)
+  _main_env="$(cd "$_common/.." 2>/dev/null && pwd)/.env"
+  if [[ -n "$_common" && -f "$_main_env" && "$(cd "$_common/.." && pwd)" != "$(pwd)" ]]; then
+    cp "$_main_env" "$ENV_FILE" && printf '  Using saved settings from %s
+' "$_main_env"
+  fi
+fi
 
 REGION="us-central1"
 RUNTIME_SA_ID="coa-runtime"
@@ -302,9 +320,20 @@ pause "Press Enter to continue."
 stage "Choose the Google Cloud project"
 say "Use the project that holds your \$300 Free Trial credit. If you don't have"
 say "one yet, create it first (any ID, e.g. coa-audit-explorer)."
-open_url "https://console.cloud.google.com/projectcreate"
-step "Create the project (or skip if it exists) and note its Project ID."
-ask GCP_PROJECT_ID "Project ID:"
+# Offer the saved project (from .env), else the one gcloud is already set to, as the default.
+DEFAULT_PROJECT=$(_existing GCP_PROJECT_ID || true)
+if [[ -z "$DEFAULT_PROJECT" ]]; then
+  DEFAULT_PROJECT=$(gcloud config get-value project 2>/dev/null | tr -d '' || true)
+  [[ "$DEFAULT_PROJECT" == "(unset)" ]] && DEFAULT_PROJECT=""
+fi
+if [[ -n "$DEFAULT_PROJECT" ]]; then
+  say "Using project $DEFAULT_PROJECT. Type a different Project ID to change it."
+  ask_default GCP_PROJECT_ID "Project ID:" "$DEFAULT_PROJECT"
+else
+  open_url "https://console.cloud.google.com/projectcreate"
+  step "Create the project (or skip if it exists) and note its Project ID."
+  ask GCP_PROJECT_ID "Project ID:"
+fi
 [[ -n "$GCP_PROJECT_ID" ]] || die "A project ID is required."
 gcloud projects describe "$GCP_PROJECT_ID" >/dev/null 2>&1 \
   || die "Can't see project '$GCP_PROJECT_ID'. Check the ID and that you're signed in to the right account."
