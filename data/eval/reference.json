@@ -192,7 +192,7 @@
         "Four items of land, building or school building were recognized at nominal costs totaling P20,061.43 and were thus undervalued"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "inventory-overstatement-2022",
@@ -208,7 +208,7 @@
         "Inexistent inventories still carried in the inventory accounts amounted to P35,521,926.90"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "building-permit-fees-2024",
@@ -224,7 +224,7 @@
         "COA recommended that the OBO formulate a Program of Work for the utilization of its 15 percent share"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "audit-opinion-2021",
@@ -241,7 +241,7 @@
         "Payables amounting to P21.888 million were not supported with the required documents"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "good-governance-seal-2024",
@@ -255,7 +255,7 @@
         "The City reported that it was awarded the Seal of Local Good Governance by the Department of the Interior and Local Government"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "legal-cases-2023",
@@ -271,7 +271,7 @@
         "CTA Case No. 10654, The City of Manila vs. Commissioner of Internal Revenue, involves deficiency taxes in the total amount of P1,650,772,865.80"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "expropriation-deposits-2022",
@@ -288,7 +288,7 @@
         "Section 19 of RA No. 7160 requires a deposit with the court of at least 15 per cent of the property's fair market value"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "manila-budget-2025",
@@ -298,7 +298,7 @@
       "expected_citations": [],
       "key_facts": [],
       "unanswerable": true,
-      "approved": false
+      "approved": true
     },
     {
       "id": "mmda-audit",
@@ -308,7 +308,7 @@
       "expected_citations": [],
       "key_facts": [],
       "unanswerable": true,
-      "approved": false
+      "approved": true
     },
     {
       "id": "mayor-corruption-judgement",
@@ -318,7 +318,7 @@
       "expected_citations": [],
       "key_facts": [],
       "unanswerable": true,
-      "approved": false
+      "approved": true
     },
     {
       "id": "cctv-spending-2023",
@@ -328,7 +328,7 @@
       "expected_citations": [],
       "key_facts": [],
       "unanswerable": true,
-      "approved": false
+      "approved": true
     },
     {
       "id": "inventory-overstatement-followup-2022",
@@ -344,7 +344,7 @@
         "The OCAT prepared adjustments to reconcile the books of account with the CGSO's inventory records"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "unsupported-payables-followup-2021",
@@ -362,7 +362,7 @@
         "In the CY 2023 AAR, COA assessed the remaining recommendation as Implemented"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "arroceros-joint-venture-followup-2020",
@@ -379,7 +379,7 @@
         "In the CY 2023 AAR, COA assessed both recommendations as Implemented after Management submitted the amended JVA dated May 23, 2023"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "internal-audit-service-followup-2018",
@@ -396,7 +396,7 @@
         "In the CY 2024 AAR, COA assessed it as Implemented: the City Council passed Ordinance No. 9093 creating the City Internal Audit Service on December 12, 2024"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "e-trikes-deployment-followup-2019",
@@ -412,7 +412,7 @@
         "The E-Trikes were already deployed to the intended beneficiaries"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "rpt-system-access-followup-2022",
@@ -428,7 +428,7 @@
         "Management provided the Audit Team access to the application system that tracks the RPT and SET accounts"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "gad-catch-up-followup-2020",
@@ -445,7 +445,7 @@
         "In the CY 2022 AAR, COA assessed the recommendation as Implemented"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "cash-in-bank-errors-followup-2020",
@@ -462,7 +462,7 @@
         "In the CY 2023 AAR, COA assessed both recommendations as Implemented after the OCAT made adjusting entries to correct the misstatements"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "ppe-depreciation-followup-2020",
@@ -478,7 +478,7 @@
         "Depreciation for the 4,087 depreciable PPE items was already recognized in the books"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "cash-in-bank-reconciliation-disagreement-2023",
@@ -496,7 +496,7 @@
         "COA assessed the other two recommendations, on timely monthly BRSs and a document tracking system, as Implemented"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "accounts-payable-variance-followup-2023",
@@ -513,7 +513,7 @@
         "COA assessed all four recommendations as Implemented in the APMT"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "unsubmitted-vouchers-followup-2024",
@@ -530,7 +530,7 @@
         "COA assessed the recommendation as Not Implemented, remarking that the OCAT has yet to submit the 3,404 DVs"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "child-protection-fund-followup-2024",
@@ -547,7 +547,7 @@
         "COA assessed the recommendation as Not Implemented, pending appropriate action from Management"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "total-assets-2020",
@@ -561,7 +561,7 @@
         "Manila's total assets at the end of 2020 were P74,464,757,574.00 (about P74.46 billion)"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "cash-and-equivalents-2024",
@@ -575,7 +575,7 @@
         "Cash and cash equivalents at the end of 2024 were P8,084,227,242.24 (about P8.08 billion)"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "receivables-2022",
@@ -589,7 +589,7 @@
         "Receivables at the end of 2022 were P19,859,356,666.12 (about P19.86 billion)"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "personnel-services-2023",
@@ -603,7 +603,7 @@
         "Personnel Services expenses in 2023 were P5,220,260,373.37 (about P5.22 billion)"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "internal-revenue-share-2022",
@@ -617,7 +617,7 @@
         "Manila's Share from Internal Revenue Collections in 2022 was P4,602,952,487.00 (about P4.60 billion)"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "operating-expenses-2024",
@@ -631,7 +631,7 @@
         "Total current operating expenses in 2024 were P16,620,119,685.20 (about P16.62 billion)"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "total-liabilities-change-2021-2022",
@@ -648,7 +648,7 @@
         "Total liabilities increased by P4,586,877,904.44 (about P4.59 billion)"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "ppe-change-2023-2024",
@@ -665,24 +665,7 @@
         "It increased by P2,185,777,264.45 (about P2.19 billion)"
       ],
       "unanswerable": false,
-      "approved": false
-    },
-    {
-      "id": "government-equity-change-2020-2021",
-      "question": "What happened to the City of Manila's government equity from 2020 to 2021?",
-      "language": "en",
-      "question_type": "financial",
-      "expected_citations": [
-        "CY 2020 AAR, Part I, Statement of Financial Position, Government Equity",
-        "CY 2021 AAR, Part I, Statement of Financial Position, Government Equity"
-      ],
-      "key_facts": [
-        "Government equity was P52,044,009,702.00 at the end of 2020",
-        "Government equity was P40,364,620,209.01 at the end of 2021",
-        "Government equity decreased by P11,679,389,492.99 (about P11.68 billion)"
-      ],
-      "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "appropriations-vs-actual-2022",
@@ -698,7 +681,7 @@
         "Actual spending was P5,534,309,981.67 (about P5.53 billion) below the final budget"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "revenue-budget-vs-actual-2023",
@@ -714,7 +697,7 @@
         "Actual collections exceeded the final budget by P706,070,213.84 (about P706.07 million)"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "fund-cash-2021",
@@ -729,7 +712,7 @@
         "The Special Education Fund's cash and cash equivalents at the end of 2021 were P3,227,733,910.55 (about P3.23 billion)"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     },
     {
       "id": "sef-appropriations-2023",
@@ -745,7 +728,7 @@
         "P1,051,907,148.26 (about P1.05 billion) of the final budget was not used"
       ],
       "unanswerable": false,
-      "approved": false
+      "approved": true
     }
   ]
 }
