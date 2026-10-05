@@ -169,8 +169,8 @@ Summary, `I` Auditor's Report, `TL` transmittal letter, `MR` Management Responsi
 number with `NOTES`), and with no year named returns
 the newest year first. Open http://127.0.0.1:8000, ask a question
 about Part II or about whether the City acted on COA's recommendations, and the page shows the
-summary and key points, each with Citation chips in COA's format. A follow-up question also shows a
-timeline: when the observation was raised and COA's Status of Implementation in each later AAR,
+summary and key points, each with Citation chips in COA's format. A question about whether the City
+acted on a recommendation also shows a timeline: when the observation was raised and COA's Status of Implementation in each later AAR,
 with Management's action kept apart and attributed. For 2023 and 2024 the timeline also shows
 Management's Action Plan and Reported Status (AAPSI) and COA's validation (APMT) as separate,
 attributed entries, and says where Management's Reported Status and COA's Status of Implementation
@@ -220,8 +220,8 @@ questions the reports can answer, or the example questions when the model offers
 The page keeps the conversation and sends the last three exchanges with each question as
 `history` (`[{"question": "...", "answer": "..."}]`, oldest first; an earlier answer is sent as
 plain text with its Citations, at most 3,000 characters). The server passes them to the model so a
-follow-up such as "What about 2022?" or "Did they fix it?" makes sense, and stores none of it: the
-question log holds only the new question. Each follow-up runs its own searches, and its key points
+follow-up question such as "What about 2022?" or "Did they fix it?" makes sense, and stores none of
+it: the question log holds only the new question. Each follow-up question runs its own searches, and its key points
 can cite only what those searches returned, never the earlier answer. "New conversation" clears it.
 
 Ask in English, Filipino or Taglish and the answer comes in the same language; the model searches
