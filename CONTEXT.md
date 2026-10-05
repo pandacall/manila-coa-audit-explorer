@@ -93,7 +93,10 @@ Action Plan Monitoring Tool: COA's validation of the AAPSI, adding COA's own Sta
 The five statements in Part I: Financial Position (SFPo), Financial Performance (SFPe), Changes in Net Assets/Equity (SCNAE), Cash Flows (SCF), and Comparison of Budget and Actual Amounts (SCBAA).
 
 **Notes to Financial Statements**:
-Management's explanatory disclosures supporting the Financial Statements, part of Part I.
+Management's explanatory disclosures supporting the Financial Statements, part of Part I. Amounts in them are in Philippine pesos unless a Note says otherwise.
+
+**Note**:
+One numbered Note of the Notes to Financial Statements ("Note 4 – Cash and Cash Equivalents"). The first Notes are accounting policy; the rest explain one account or statement each, with a table of its amounts. The numbering drifts between years: Note 18 is not the same Note in 2021 and 2022.
 
 **Annex**:
 A supporting schedule in Part IV, typically a statement broken down by fund.
@@ -111,6 +114,6 @@ What `financial_lookup` returns for a line item in one AAR: one printed line of 
 
 **Citation**:
 A pointer from an answer to its source, written the way COA cites itself: AAR year, Part, Audit Observation number where applicable, and page — e.g. "CY 2023 AAR, Part II, Observation No. 5, p. 71", or for a Part III row, "CY 2023 AAR, Part III, CY 2022 Observation No. 3, p. 93" (the AAR whose Part III it is, then the Originating Observation it follows up), and for an AAPSI or APMT row, "CY 2023 APMT, CY 2022 Observation No. 3, p. 2" (the document, the Originating Observation, and the page of the scanned PDF, which prints none of its own).
-For the Executive Summary the exact anchor is its section letter and the page is a Roman numeral, "CY 2023 AAR, Executive Summary, Section E, p. iii"; for the Auditor's Report, which sits in Part I, "CY 2022 AAR, Part I, Auditor's Report, pp. 2-3".
+For the Executive Summary the exact anchor is its section letter and the page is a Roman numeral, "CY 2023 AAR, Executive Summary, Section E, p. iii"; for the Auditor's Report, which sits in Part I, "CY 2022 AAR, Part I, Auditor's Report, pp. 2-3"; and for a Note, "CY 2023 AAR, Part I, Notes to Financial Statements, Note 4, p. 30" (the page is the one COA prints, which in the 2021 Notes repeats after a restart of the numbering; the Note number is the exact anchor).
 For a Financial line it names the statement and the line item, with the Annex where the line comes from an Annex and the headings above it when the line item is printed more than once: "CY 2022 AAR, Part I, Statement of Financial Position, Cash and Cash Equivalents", "CY 2024 AAR, Part IV, Annex A, Statement of Financial Position, Total Cash and Cash Equivalents". Spreadsheets have no page numbers, so there is none.
 _Avoid_: source link (and "Reference", which is Part III's column)

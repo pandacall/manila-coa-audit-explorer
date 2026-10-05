@@ -12,7 +12,17 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from coa_explorer import aapsi, financial, front_matter, links, ocr, part2, part3, smoke
+from coa_explorer import (
+    aapsi,
+    financial,
+    front_matter,
+    links,
+    notes,
+    ocr,
+    part2,
+    part3,
+    smoke,
+)
 from coa_explorer.config import (
     DEFAULT_INDEX,
     DEFAULT_REVIEWED,
@@ -62,8 +72,9 @@ def main(
     extract = steps.add_parser(
         "extract",
         help="extract the front matter (Executive Summary, Auditor's Report, transmittal letter,"
-        " Management Responsibility statement), Part II, Part III and the financial lines into"
-        " JSON records, and report the links of Part III",
+        " Management Responsibility statement), Notes to Financial Statements, Part II,"
+        " Part III and the financial lines into JSON records, and report the links of"
+        " Part III",
     )
     extract.add_argument("--reports", type=Path, default=DEFAULT_REPORTS, help="raw AAR folder")
     extract.add_argument(
@@ -204,6 +215,7 @@ def extract_step(
     auditors_reports = {
         year: front_matter.extract_auditors_report(reports, year, reviewed) for year in YEARS
     }
+    notes_records = {year: notes.extract_notes(reports, year, reviewed) for year in YEARS}
     letters = {
         year: front_matter.extract_transmittal_letter(reports, year, reviewed) for year in YEARS
     }
@@ -228,6 +240,10 @@ def extract_step(
         **{
             Path("auditors_report") / f"{year}.json": record.to_dict()
             for year, record in auditors_reports.items()
+        },
+        **{
+            Path("notes") / f"{year}.json": record.to_dict()
+            for year, record in notes_records.items()
         },
         **{
             Path("transmittal_letter") / f"{year}.json": record.to_dict()

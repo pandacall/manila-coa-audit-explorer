@@ -25,11 +25,15 @@ from coa_explorer.financial_lookup import (
     lookup,
 )
 from coa_explorer.index import load_vec_extension
+from coa_explorer.notes import NOTES_PART
 from coa_explorer.timeline import Timeline, assemble_timeline
 
 DEFAULT_LIMIT = 5  # Audit Observations per search
 CANDIDATES = 50  # pieces taken from each of keyword and vector search before merging
 LOOKUP_LIMIT = 1000  # pieces a filter-only lookup may return; nothing is ranked, so no cut-off
+# A Note can run to dozens of passages and a search word such as "cash" matches many of them, so
+# a search returns only a Note's best ones; reading a Note by number returns all of it.
+MAX_NOTE_HITS = 6
 RRF_K = 60
 # Vector search always returns the nearest pieces, related or not. With gemini-embedding-001 (768
 # dimensions, cosine), on-topic questions reached 0.2-0.37 and off-topic ones ("who won the
@@ -119,17 +123,21 @@ class Index:
 
         Keyword and vector matches are merged into one ranking (reciprocal rank fusion). `years`,
         `parts` ("ES" Executive Summary, "I" Auditor's Report, "TL" transmittal letter, "MR"
-        Management Responsibility statement, "II", "III", "AAPSI", "APMT";
-        document codes, not all of them COA Parts), `observation` (a Part II number; the other
-        Parts have none) and `status` (COA's Status of Implementation, for Part III and APMT)
-        narrow the search; with no query words, the filters alone are a direct lookup, an
-        observation filter returning that observation's pieces in reading order. With no `years`,
+        Management Responsibility statement, "NOTES" Notes to Financial Statements, "II",
+        "III", "AAPSI", "APMT"; document codes, not all of them COA Parts), `observation`
+        (a Part II number, or with `parts` ["NOTES"] a Note number; the other Parts have
+        none) and `status` (COA's Status of Implementation, for Part III and APMT) narrow
+        the search; with no query words, the filters alone are a direct lookup, an
+        observation filter returning that observation's pieces in reading order. With no
+        `years`,
         observations are ordered newest year first (most relevant first within a year); with
         `years`, most relevant first.
         """
         match = fts_query(query)
         if not match and observation is None and not parts and not status:
             return []
+        if observation is not None and not parts:
+            parts = ["II"]  # the Notes are numbered too, but only on request
         where, params = [], []
         if years:
             where.append(f"pieces.aar_year IN ({','.join('?' * len(years))})")
@@ -150,16 +158,23 @@ class Index:
             )
         else:
             ranked = self._lookup_ids(where, params)
-        return group_by_observation(self._pieces(ranked), limit, newest_first=not years)
+        return group_by_observation(
+            self._pieces(ranked),
+            limit,
+            newest_first=not years,
+            max_note_hits=MAX_NOTE_HITS if match else None,
+        )
 
     def expand(self, pieces: list[Piece]) -> list[Observation]:
-        """The whole Audit Observation behind each hit, in the order the hits first appear."""
+        """The whole Audit Observation behind each hit, in the order the hits first appear. Other
+        documents, the Notes included (one can run to dozens of pieces), are not expanded: their
+        hits stand for themselves."""
         hits: dict[tuple, set[str]] = {}
         for piece in pieces:
             hits.setdefault(observation_key(piece), set()).add(piece.key)
         result = []
         for (year, part, number, _), matched in hits.items():
-            if number is None:
+            if number is None or part == NOTES_PART:
                 whole = [piece for piece in pieces if piece.key in matched]
             else:
                 rows = self._db.execute(
@@ -272,12 +287,17 @@ def observation_key(piece: Piece) -> tuple:
     return (piece.aar_year, piece.part, piece.observation_number, origin)
 
 
-def group_by_observation(pieces: list[Piece], limit: int, *, newest_first: bool) -> list[Piece]:
-    """Keep the `limit` best-ranked observations, their hits together; optionally newest first."""
+def group_by_observation(
+    pieces: list[Piece], limit: int, *, newest_first: bool, max_note_hits: int | None = None
+) -> list[Piece]:
+    """Keep the `limit` best-ranked observations, their hits together; optionally newest first.
+    A Note keeps at most `max_note_hits` of its hits, if that is given."""
     groups: dict[tuple, list[Piece]] = {}
     for piece in pieces:
         key = observation_key(piece)
         if key not in groups and len(groups) == limit:
+            continue
+        if piece.part == NOTES_PART and len(groups.get(key, ())) == max_note_hits:
             continue
         groups.setdefault(key, []).append(piece)
     ordered = list(groups.values())

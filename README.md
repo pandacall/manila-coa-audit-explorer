@@ -22,11 +22,12 @@ uv run coa-explorer extract
 ```
 
 Reads each year's transmittal letter, Management Responsibility statement, Executive Summary,
-Auditor's Report, Part II (Audit Observations and Recommendations) and Part III (Status of
-Implementation of Prior Years' Recommendations) under `coa-audit-reports/` and writes committed,
-human-readable JSON to `data/extracted/`:
+Auditor's Report, Notes to Financial Statements, Part II (Audit Observations and Recommendations)
+and Part III (Status of Implementation of Prior Years' Recommendations) under
+`coa-audit-reports/` and writes committed, human-readable JSON to `data/extracted/`:
 `executive_summary/<year>.json`, `auditors_report/<year>.json` (one record per section),
 `transmittal_letter/<year>.json`, `management_responsibility/<year>.json` (one section each),
+`notes/<year>.json` (one record per Note, cut into cited passages),
 `part2/<year>.json`, `part3/<year>.json` (one record per Prior Years' Recommendation, with COA's
 Status of Implementation, Management's action and the reason given), `financial/<year>.json` (see
 below) and `link-report.json`. Re-running produces no diff. To check that the committed
@@ -65,6 +66,22 @@ as they are. Word pages are derived from the saved layout (ADR-0001), so they ar
 2021-2023 Executive Summaries agree exactly with COA's PDF renderings, but the CY 2020 one is
 derived a page early from Section C on because Word saved no page break after its first table.
 The section letter is the exact anchor.
+
+### Notes to Financial Statements
+
+Each Note ("Note 4 – Cash and Cash Equivalents") is one record, cut into passages of at most 1,800
+characters on paragraph and table-row boundaries; each passage is a piece of the index with its own
+Citation by Note and page ("CY 2023 AAR, Part I, Notes to Financial Statements, Note 4, p. 30").
+Tables are written as markdown, and a table cut over several passages repeats its header row in
+each. The Notes are Word for 2020-2023 and PDF for 2024 (all 5 years, 31 to 35 Notes each).
+
+Pages are the ones COA prints (ADR-0004). Word's are derived from the saved layout, which follows
+a document's restarts of its page numbering: the 2021 Notes restart at page 45 in their last
+section, so pages 45 and 46 occur twice. The 2024 file begins part-way through the AAR, so its
+first PDF page is cited as page 12. Derived Word pages can drift by a few pages over long tables:
+the Notes end within 4 pages of where COA's table of contents puts the start of Part II (the 2024
+PDF ends exactly one page before Part II). The PDF's tables are rebuilt from the column spacing of
+its text layer, and a table without amounts in it (a list of lessees, say) is read as prose.
 
 The CY 2023 Auditor's Report is a scan whose text layer is too garbled to cite ("Qualffled", "Section
 7 4"), so its text comes from a reviewed transcription in `data/reviewed/` instead; see the README
@@ -148,7 +165,8 @@ Vertex AI, so it needs the same GCP access as `serve` and takes about half a min
 whenever the extracted records or the embedding model change. Search merges keyword (FTS5) and
 vector (sqlite-vec) matches into one ranking, can be narrowed by year, part (`ES` Executive
 Summary, `I` Auditor's Report, `TL` transmittal letter, `MR` Management Responsibility statement,
-`II`, `III`, `AAPSI`, `APMT`) or observation number, and with no year named returns
+`NOTES` Notes to Financial Statements, `II`, `III`, `AAPSI`, `APMT`) or observation number (a Note
+number with `NOTES`), and with no year named returns
 the newest year first. Open http://127.0.0.1:8000, ask a question
 about Part II or about whether the City acted on COA's recommendations, and the page shows the
 summary and key points, each with Citation chips in COA's format. A follow-up question also shows a

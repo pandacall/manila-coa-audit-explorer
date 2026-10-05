@@ -14,6 +14,10 @@ document. (The codes are document codes, not all of them COA Parts.)
 The Financial Statements and Annexes are not pieces: every amount goes to the `financial_lines`
 table, in centavos, for `financial_lookup`.
 
+The Notes to Financial Statements (part "NOTES") become one piece per passage of a Note, as the
+record cut them (tables in markdown); the Note number is the piece's `observation_number`, so a
+Note can be looked up by number, and each carries the passage's own Citation and pages.
+
 Each Prior Years' Recommendation in Part III becomes one piece (COA's Status of Implementation with
 Management's action and reason), plus a row in `follow_ups`. Each AAPSI row (Management's Action
 Plan and Reported Status) and each APMT row (COA's validation) becomes one piece, plus a row in
@@ -43,9 +47,10 @@ from coa_explorer.front_matter import (
     TRANSMITTAL_LETTER,
 )
 from coa_explorer.links import build_links
+from coa_explorer.notes import MAX_PASSAGE_CHARS, NOTES_PART
 from coa_explorer.timeline import clip_title, disagreement
 
-MAX_PIECE_CHARS = 1800
+MAX_PIECE_CHARS = MAX_PASSAGE_CHARS
 
 # Each document that is read in sections: its record folder (also its piece kind) and part code.
 FRONT_MATTER = {
@@ -198,6 +203,7 @@ def build_index(records_dir: Path, db_path: Path, embedder: Embedder) -> int:
         for folder, _ in FRONT_MATTER.values()
         for record in load_records(records_dir / folder).values()
     ]
+    notes = load_records(records_dir / "notes")
     monitoring = load_monitoring(records_dir)
     financial = load_records(records_dir / "financial")
     db_path.parent.mkdir(parents=True, exist_ok=True)
@@ -237,6 +243,8 @@ def build_index(records_dir: Path, db_path: Path, embedder: Embedder) -> int:
                 )
         for record in front_matter:
             db.executemany(PIECE_INSERT, front_matter_pieces(record))
+        for record in notes.values():
+            db.executemany(PIECE_INSERT, notes_pieces(record))
         for record in part3.values():
             for tracked in record["observations"]:
                 for rec in tracked["recommendations"]:
@@ -335,6 +343,28 @@ def front_matter_pieces(record: dict) -> Iterator[tuple]:
                 section["page_start"],
                 section["page_end"],
                 section["citation"],
+            )
+
+
+def notes_pieces(record: dict) -> Iterator[tuple]:
+    """The piece rows of one year's Notes to Financial Statements, a passage at a time."""
+    year = record["aar_year"]
+    for note in record["notes"]:
+        for seq, passage in enumerate(note["passages"], start=1):
+            yield (
+                f"{year}-N-{note['number']}-{seq}",
+                year,
+                NOTES_PART,
+                note["number"],
+                None,
+                None,
+                None,
+                "note",
+                f"Note {note['number']}: {note['title']}",
+                passage["text"],
+                passage["page_start"],
+                passage["page_end"],
+                passage["citation"],
             )
 
 

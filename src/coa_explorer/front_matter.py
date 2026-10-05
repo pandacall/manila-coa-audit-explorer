@@ -25,7 +25,7 @@ from __future__ import annotations
 import re
 import string
 from collections.abc import Callable, Sequence
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 
 from coa_explorer.config import DEFAULT_REVIEWED
@@ -396,13 +396,13 @@ def _pdf_blocks(pages: list[PdfPage], starts_block: Callable[[str], bool]) -> li
     blocks: list[Block] = []
     for page in pages:
         first_on_page = len(blocks)
-        for group in _paragraph_groups(page.lines):
+        for group in paragraph_groups(page.lines):
             blocks.extend(_group_blocks(group, page.number))
-        _join_over_page_break(blocks, first_on_page, starts_block)
+        join_over_page_break(blocks, first_on_page, starts_block)
     return blocks
 
 
-def _paragraph_groups(lines: Sequence[str]) -> list[list[str]]:
+def paragraph_groups(lines: Sequence[str]) -> list[list[str]]:
     groups: list[list[str]] = [[]]
     for line in lines:
         if line.strip():
@@ -417,7 +417,7 @@ def _group_blocks(lines: list[str], page: int) -> list[Block]:
         return [Block("\n".join(_table_rows(lines)), page, page, table=True)]
     blocks: list[str] = []
     for line in lines:
-        text = _tidy(line)
+        text = tidy(line)
         if not blocks or LIST_ITEM.match(text):
             blocks.append(text)
         else:
@@ -426,11 +426,18 @@ def _group_blocks(lines: list[str], page: int) -> list[Block]:
 
 
 def _table_rows(lines: list[str]) -> list[str]:
-    """One "a | b | c" row per table line; a lone indented label continues the row above."""
+    return [" | ".join(row) for row in table_cells(lines)]
+
+
+def table_cells(
+    lines: list[str], split: Callable[[str], list[str]] | None = None
+) -> list[list[str]]:
+    """The cells of each table line (as `split` cuts them, by default at the gaps between
+    columns); a lone indented label continues the row above."""
     rows: list[list[str]] = []
     indents: list[int] = []
     for line in lines:
-        cells = [_tidy(cell) for cell in CELL_GAP.split(line.strip())]
+        cells = split(line) if split else [tidy(cell) for cell in CELL_GAP.split(line.strip())]
         indent = len(line) - len(line.lstrip())
         if (
             len(cells) == 1
@@ -442,15 +449,15 @@ def _table_rows(lines: list[str]) -> list[str]:
             continue
         rows.append(cells)
         indents.append(indent)
-    return [" | ".join(row) for row in rows]
+    return rows
 
 
-def _tidy(text: str) -> str:
+def tidy(text: str) -> str:
     """Collapse spacing, and close the gap a PDF leaves before a hyphen ("non -maintenance")."""
     return re.sub(r"(?<=\w) -(?=\w)", "-", re.sub(r"\s+", " ", text)).strip()
 
 
-def _join_over_page_break(
+def join_over_page_break(
     blocks: list[Block], first_on_page: int, starts_block: Callable[[str], bool]
 ) -> None:
     """Rejoin a paragraph that runs over a page break: the earlier page's last block has not
@@ -468,5 +475,5 @@ def _join_over_page_break(
     ):
         return
     blocks[first_on_page - 1 : first_on_page + 1] = [
-        Block(f"{before.text} {after.text}", before.page, after.end_page)
+        replace(before, text=f"{before.text} {after.text}", end_page=after.end_page)
     ]

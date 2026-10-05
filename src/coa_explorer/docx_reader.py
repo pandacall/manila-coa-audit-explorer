@@ -348,7 +348,15 @@ class _Pages:
     def new_section(self, start: int | None, starts_new_page: bool) -> None:
         if starts_new_page:
             self.page = start if start is not None else self.page + 1
-        self._after_explicit_break = False
+        # Word saves a page break at the top of a section's first text as well; it is the same
+        # break as the section's own, so it is not counted again.
+        self._after_explicit_break = starts_new_page
+
+    def state(self) -> tuple[int, bool]:
+        return self.page, self._after_explicit_break
+
+    def restore(self, state: tuple[int, bool]) -> None:
+        self.page, self._after_explicit_break = state
 
 
 # ---------------------------------------------------------------------------------------------
@@ -491,9 +499,16 @@ class _Reader:
             cells: list[str] = []
             cell_paragraphs: list[tuple[str, ...]] = []
             row_first = row_last = None
+            # Every cell of a row sits on the same pages, and Word saves a page break in each cell
+            # it falls in, so each cell is counted from the row's start and the row ends where its
+            # longest cell does.
+            row_start = self._pages.state()
+            cell_ends: list[tuple[int, bool]] = []
             for cell in row.findall(W + "tc"):
+                self._pages.restore(row_start)
                 before = len(self._blocks)
                 self._read_children(cell)
+                cell_ends.append(self._pages.state())
                 added = self._blocks[before:]
                 del self._blocks[before:]
                 text = " ".join(_block_text(b) for b in added)
@@ -505,6 +520,7 @@ class _Reader:
                 for block in added:
                     row_first = block.page if row_first is None else min(row_first, block.page)
                     row_last = block.end_page if row_last is None else max(row_last, block.end_page)
+            self._pages.restore(_row_end(row_start, cell_ends))
             rows.append(cells)
             table_rows.append(
                 TableRow(
@@ -517,6 +533,15 @@ class _Reader:
         markdown = _markdown_table(rows)
         if markdown:
             self._blocks.append(Table(markdown, first_page, self._pages.page, tuple(table_rows)))
+
+
+def _row_end(start: tuple[int, bool], cell_ends: list[tuple[int, bool]]) -> tuple[int, bool]:
+    """Where a table row leaves the page count: the last page any of its cells reaches. The row is
+    still at the top of a page only if every cell that got there has not yet had any text."""
+    if not cell_ends:
+        return start
+    last = max(page for page, _ in cell_ends)
+    return last, all(fresh for page, fresh in cell_ends if page == last)
 
 
 def _walk(para: ET.Element) -> Iterator[ET.Element]:
