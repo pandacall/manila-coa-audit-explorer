@@ -53,3 +53,12 @@ summary { cursor: pointer; color: var(--muted); }
 .demo-limit details { margin: 0.75rem 0; font-size: 1rem; }
 .demo-limit summary { color: inherit; font-weight: 600; }
 footer p { margin: 0 0 0.35rem; }
+
+.exchange { margin: 1.5rem 0 2rem; }
+.question { font-weight: 600; margin: 0 0 0.5rem; padding: 0.4rem 0.75rem; border-left: 4px solid var(--accent); }
+.examples h2 { font-size: 1rem; margin: 0 0 0.5rem; }
+.question-chip { display: block; margin: 0 0 0.5rem; padding: 0.4rem 0.75rem; text-align: left; background: none;
+  border: 1px solid var(--accent); border-radius: 6px; color: var(--accent); font-size: 0.9rem; }
+.suggestions { margin-top: 0.75rem; }
+.suggestions .note { margin: 0 0 0.4rem; }
+.new-conversation { padding: 0.3rem 0.75rem; font-size: 0.85rem; }

@@ -14,12 +14,19 @@ from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field, StringConstraints
 
-from coa_explorer.answer import Answer, AnswerEngine, Status
+from coa_explorer.answer import (
+    EXAMPLE_QUESTIONS,
+    MAX_HISTORY_EXCHANGES,
+    MAX_QUESTION_CHARS,
+    Answer,
+    AnswerEngine,
+    Exchange,
+    Status,
+)
 from coa_explorer.demo import DEMO_LIMIT_MESSAGE, Demo, Outcome, Rating, SavedAnswer
 from coa_explorer.models import Usage
 
 WEB_DIR = Path(__file__).parent / "web"
-MAX_QUESTION_CHARS = 1000
 NDJSON = "application/x-ndjson"
 
 log = logging.getLogger(__name__)
@@ -29,11 +36,18 @@ class AskRequest(BaseModel):
     question: Annotated[
         str, StringConstraints(strip_whitespace=True, min_length=1, max_length=MAX_QUESTION_CHARS)
     ]
+    # The last few exchanges of the conversation, oldest first. The browser keeps them; the
+    # server only passes them to the model and never stores them.
+    history: list[Exchange] = Field(default_factory=list, max_length=MAX_HISTORY_EXCHANGES)
 
 
 class FeedbackRequest(BaseModel):
     question_id: Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{32}$")]
     rating: Rating
+
+
+class Examples(BaseModel):
+    questions: list[str]
 
 
 class ErrorEvent(BaseModel):
@@ -73,7 +87,9 @@ def create_app(engine: AnswerEngine, demo: Demo | None = None) -> FastAPI:
                 return line_response(RateLimitedEvent(message=demo.rate_limited_message()), 429)
             if verdict == "capped":
                 return line_response(DemoLimitEvent(examples=demo.examples), 429)
-        return StreamingResponse(ndjson(engine, request.question, demo), media_type=NDJSON)
+        return StreamingResponse(
+            ndjson(engine, request.question, request.history, demo), media_type=NDJSON
+        )
 
     @app.post("/api/feedback", status_code=204)
     def feedback(request: FeedbackRequest) -> None:
@@ -85,6 +101,11 @@ def create_app(engine: AnswerEngine, demo: Demo | None = None) -> FastAPI:
             raise HTTPException(503, "Could not save your feedback.") from None
         if not found:
             raise HTTPException(404, "No such question.")
+
+    @app.get("/api/examples")
+    def examples() -> Examples:
+        """Example questions the reports can answer, for the page to offer."""
+        return Examples(questions=list(EXAMPLE_QUESTIONS))
 
     @app.get("/")
     def page() -> FileResponse:
@@ -107,12 +128,14 @@ def line_response(event: BaseModel, status_code: int) -> Response:
     return Response(event.model_dump_json() + "\n", status_code, media_type=NDJSON)
 
 
-def ndjson(engine: AnswerEngine, question: str, demo: Demo | None) -> Iterator[str]:
+def ndjson(
+    engine: AnswerEngine, question: str, history: list[Exchange], demo: Demo | None
+) -> Iterator[str]:
     started = time.monotonic()
     usage = Usage()
     final: BaseModel | None = None
     try:
-        for event in engine.ask(question, usage):
+        for event in engine.ask(question, usage, history=history):
             if isinstance(event, Status):
                 yield event.model_dump_json() + "\n"
             else:

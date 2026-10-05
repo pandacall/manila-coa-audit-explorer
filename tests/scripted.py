@@ -33,7 +33,11 @@ def financial_lookup(line_item: str, **args) -> ModelTurn:
 
 
 def submit(
-    summary: str, key_points: list[dict], covered: bool = True, message: str = ""
+    summary: str,
+    key_points: list[dict],
+    covered: bool = True,
+    message: str = "",
+    suggestions: list[str] | None = None,
 ) -> ModelTurn:
     args = {
         "covered": covered,
@@ -41,6 +45,14 @@ def submit(
         "key_points": key_points,
         "not_covered_message": message,
     }
+    if suggestions is not None:
+        args["suggested_questions"] = suggestions
+    return ModelTurn(text=None, tool_calls=[ToolCall("submit_answer", args)])
+
+
+def refuse(message: str = "") -> ModelTurn:
+    """The model turns the question down as outside what the AARs cover."""
+    args = {"covered": False, "out_of_scope": True, "not_covered_message": message}
     return ModelTurn(text=None, tool_calls=[ToolCall("submit_answer", args)])
 
 

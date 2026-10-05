@@ -33,13 +33,6 @@ DEFAULT_DAILY_CAP = 300
 LOG_RETENTION = timedelta(days=30)
 DEMO_LIMIT_MESSAGE = "Demo limit reached for today"
 
-# Asked of the real model by `coa-explorer save-examples`; shown, answered, when the cap is hit.
-EXAMPLE_QUESTIONS = (
-    "What did COA observe about cash advances in Manila?",
-    "Did Manila comply with IPSAS 1 in its financial statements? Which years?",
-    "Did Manila act on COA's recommendations about cash advances?",
-)
-
 Rating = Literal["up", "down"]
 Admission = Literal["ok", "rate_limited", "capped"]
 Outcome = Literal["answer", "not_covered", "error"]

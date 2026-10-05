@@ -1,13 +1,18 @@
-// Minimal page: ask a question, watch progress, read the cited answer and any follow-up timeline.
-// React and htm come from a CDN so the page needs no build step.
-const { useState } = React;
+// Minimal page: a conversation of questions, each with its progress, cited answer and any
+// follow-up timeline. React and htm come from a CDN so the page needs no build step.
+// The conversation lives only here, in the page: each question is sent with the last few
+// exchanges so that a follow-up ("What about 2022?") makes sense, and the server keeps none of it.
+const { useEffect, useRef, useState } = React;
 const html = htm.bind(React.createElement);
 
-async function* events(question) {
+const HISTORY_EXCHANGES = 3; // the server accepts at most this many
+const HISTORY_ANSWER_CHARS = 3000; // and answers at most this long
+
+async function* events(question, history) {
   const response = await fetch("/api/ask", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ question }),
+    body: JSON.stringify({ question, history }),
   });
   // A refusal (rate limit 429, store down 503) still arrives as one event line.
   if (!response.ok && response.status !== 429 && response.status !== 503) {
@@ -122,10 +127,28 @@ function Timeline({ timeline }) {
   </section>`;
 }
 
-function Answer({ result }) {
+// An earlier answer as plain text, citations included, for the model to read a follow-up by.
+function answerText(result) {
+  if (result.type === "not_covered") return result.message;
+  const points = (label, list) =>
+    (list || []).map((p) => `- ${label}${p.text} (${p.citations.map((c) => c.text).join("; ")})`);
+  return [result.summary, ...points("", result.key_points), ...points("What the City said: ", result.city_said)]
+    .join("\n")
+    .slice(0, HISTORY_ANSWER_CHARS);
+}
+
+function Answer({ result, onAsk }) {
   if (result.type === "not_covered") {
+    const suggestions = onAsk ? result.suggestions || [] : [];
     return html`<section class="answer not-covered">
       <p>${result.message}</p>
+      ${suggestions.length > 0 &&
+      html`<div class="suggestions">
+        <p class="note">You could ask instead:</p>
+        ${suggestions.map(
+          (s) => html`<button type="button" class="question-chip" key=${s} onClick=${() => onAsk(s)}>${s}</button>`
+        )}
+      </div>`}
     </section>`;
   }
   return html`<section class="answer">
@@ -214,54 +237,108 @@ function DemoLimit({ result }) {
   </section>`;
 }
 
+// One question of the conversation: its progress while it is being answered, then its result.
+function Exchange({ exchange, onAsk }) {
+  const { question, progress, result } = exchange;
+  return html`<article class="exchange">
+    <p class="question">${question}</p>
+    ${!result && html`<ul class="progress">${progress.map((m, i) => html`<li key=${i}>${m}</li>`)}</ul>`}
+    ${result && (result.type === "error" || result.type === "rate_limited") &&
+    html`<p class="error">${result.message}</p>`}
+    ${result && result.type === "demo_limit" && html`<${DemoLimit} result=${result} />`}
+    ${result && (result.type === "answer" || result.type === "not_covered") &&
+    html`<${Answer} result=${result} onAsk=${onAsk} />`}
+    ${result && result.question_id && html`<${Feedback} questionId=${result.question_id} key=${result.question_id} />`}
+  </article>`;
+}
+
 function App() {
   const [question, setQuestion] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [progress, setProgress] = useState([]);
-  const [result, setResult] = useState(null);
+  const [conversation, setConversation] = useState([]);
+  const [examples, setExamples] = useState([]);
+  const busy = conversation.length > 0 && !conversation[conversation.length - 1].result;
+  const latest = useRef(null);
 
-  async function submit(e) {
-    e.preventDefault();
-    if (!question.trim() || busy) return;
-    setBusy(true);
-    setProgress([]);
-    setResult(null);
+  useEffect(() => {
+    fetch("/api/examples")
+      .then((r) => (r.ok ? r.json() : { questions: [] }))
+      .then((data) => setExamples(data.questions))
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (latest.current) latest.current.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [conversation.length]);
+
+  // Change the exchange being answered, which is always the last one.
+  const update = (change) =>
+    setConversation((c) => [...c.slice(0, -1), { ...c[c.length - 1], ...change(c[c.length - 1]) }]);
+
+  async function ask(text) {
+    text = text.trim();
+    if (!text || busy) return;
+    // Only answered exchanges give a follow-up its context; errors and limits are left out.
+    const history = conversation
+      .filter((e) => e.result && (e.result.type === "answer" || e.result.type === "not_covered"))
+      .slice(-HISTORY_EXCHANGES)
+      .map((e) => ({ question: e.question, answer: answerText(e.result) }));
+    setQuestion("");
+    setConversation((c) => [...c, { question: text, progress: [], result: null }]);
+    let result = null;
     try {
-      for await (const event of events(question)) {
-        if (event.type === "status") setProgress((p) => [...p, event.message]);
-        else setResult(event);
+      for await (const event of events(text, history)) {
+        if (event.type === "status") update((e) => ({ progress: [...e.progress, event.message] }));
+        else result = event;
       }
     } catch (err) {
-      setResult({ type: "error", message: "Could not reach the server. Please try again." });
-    } finally {
-      setBusy(false);
+      result = { type: "error", message: "Could not reach the server. Please try again." };
     }
+    update(() => ({ result: result || { type: "error", message: "No answer came back. Please try again." } }));
+  }
+
+  function submit(e) {
+    e.preventDefault();
+    ask(question);
   }
 
   return html`<main>
     <h1>COA Audit Explorer</h1>
     <p class="lede">
       Ask about the Commission on Audit's Audit Observations on the City of Manila, 2020–2024,
-      and whether the City acted on COA's recommendations. An Audit Observation is a deficiency COA
-      found, not a finding of wrongdoing.
+      whether the City acted on COA's recommendations, and the City's financial statements, in
+      English, Filipino or Taglish. An Audit Observation is a deficiency COA found, not a finding
+      of wrongdoing.
     </p>
+    ${conversation.map(
+      (exchange, i) => html`<div key=${i} ref=${i === conversation.length - 1 ? latest : null}>
+        <${Exchange} exchange=${exchange} onAsk=${ask} />
+      </div>`
+    )}
     <form onSubmit=${submit}>
       <input
         value=${question}
         onInput=${(e) => setQuestion(e.target.value)}
-        placeholder="e.g. Did Manila act on COA's recommendations about cash advances?"
+        placeholder=${conversation.length
+          ? "Ask a follow-up, e.g. What about 2022?"
+          : "e.g. Did Manila act on COA's recommendations about cash advances?"}
         maxLength="1000"
         aria-label="Your question"
       />
       <button disabled=${busy}>${busy ? "Working…" : "Ask"}</button>
     </form>
-    ${busy && html`<ul class="progress">${progress.map((m, i) => html`<li key=${i}>${m}</li>`)}</ul>`}
-    ${result && (result.type === "error" || result.type === "rate_limited") &&
-    html`<p class="error">${result.message}</p>`}
-    ${result && result.type === "demo_limit" && html`<${DemoLimit} result=${result} />`}
-    ${result && (result.type === "answer" || result.type === "not_covered") &&
-    html`<${Answer} result=${result} />`}
-    ${result && result.question_id && html`<${Feedback} questionId=${result.question_id} key=${result.question_id} />`}
+    ${conversation.length > 0 &&
+    html`<p>
+      <button type="button" class="new-conversation" disabled=${busy} onClick=${() => setConversation([])}>
+        New conversation
+      </button>
+    </p>`}
+    ${conversation.length === 0 && examples.length > 0 &&
+    html`<section class="examples">
+      <h2>Try asking</h2>
+      ${examples.map(
+        (q) => html`<button type="button" class="question-chip" key=${q} onClick=${() => ask(q)}>${q}</button>`
+      )}
+    </section>`}
     <footer>
       <p>
         Independent project, not affiliated with COA. Answers are AI-generated from the 2020–2024 AARs; verify against the cited source.
