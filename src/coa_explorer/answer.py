@@ -19,7 +19,7 @@ from collections.abc import Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field, StringConstraints
+from pydantic import BaseModel, Field, StringConstraints, field_validator
 
 from coa_explorer.financial import FUNDS, STATEMENT_NAMES
 from coa_explorer.financial_lookup import FinancialChange, FinancialLookup
@@ -40,6 +40,7 @@ MAX_PIECE_CHARS_TO_MODEL = 2500
 MAX_QUESTION_CHARS = 1000
 MAX_HISTORY_EXCHANGES = 3
 MAX_HISTORY_ANSWER_CHARS = 3000
+NO_EARLIER_ANSWER = "(no answer)"
 NOT_COVERED_DEFAULT = (
     "The Annual Audit Reports I have don't cover that, or I couldn't ground an answer in them."
 )
@@ -141,12 +142,12 @@ guess, never calculate or infer figures that the passages do not state. If the p
 address the question, submit with covered=false, say so plainly, and give up to three \
 `suggested_questions` on related matters the reports do cover, going by what your searches \
 returned.
-- Questions about anything else are out of scope: other cities or agencies, news, politics, \
-elections, or judgements of people. Do not search for them: submit at once with covered=false \
-and out_of_scope=true, and in `not_covered_message` explain in a sentence or two that you answer \
-only from COA's 2020-2024 Annual Audit Reports on the City of Manila (its Audit Observations and \
-Recommendations, whether the City acted on them, and its financial statements). Give \
-`suggested_questions` too.
+- Questions about anything else are out of scope: other cities, news, politics, elections, \
+or judgements of people. When a question is plainly about one of these, do not search: submit \
+at once with covered=false and out_of_scope=true (if unsure, search first), and in \
+`not_covered_message` explain in a sentence or two that you answer only from COA's 2020-2024 \
+Annual Audit Reports on the City of Manila (its Audit Observations and Recommendations, \
+whether the City acted on them, and its financial statements). Give `suggested_questions` too.
 - Answer in the language of the question: English, Filipino or Taglish (a mix of the two), \
 whichever the visitor used. The reports are in English, so always search in English, in COA's \
 words. Where COA's exact words matter (an opinion, a status, a term, a figure's line item), quote \
@@ -465,9 +466,15 @@ class NotCovered(BaseModel):
     type: Literal["not_covered"] = "not_covered"
     reason: Literal["not_found", "out_of_scope"] = "not_found"
     message: str
+    # Related questions the reports can answer; the example questions when there are none.
     suggestions: list[str] = Field(
-        default_factory=lambda: list(EXAMPLE_QUESTIONS), max_length=MAX_SUGGESTIONS
+        default_factory=list, max_length=MAX_SUGGESTIONS, validate_default=True
     )
+
+    @field_validator("suggestions")
+    @classmethod
+    def _example_questions_if_none(cls, suggestions: list[str]) -> list[str]:
+        return suggestions or list(EXAMPLE_QUESTIONS)
 
 
 class Status(BaseModel):
@@ -478,14 +485,17 @@ class Status(BaseModel):
 Event = Status | Answer | NotCovered
 
 
+Question = Annotated[
+    str, StringConstraints(strip_whitespace=True, min_length=1, max_length=MAX_QUESTION_CHARS)
+]
+
+
 class Exchange(BaseModel):
     """One earlier question and the answer the visitor was shown, as the browser sends it back.
 
     It is context for a follow-up question only: nothing in it can be cited."""
 
-    question: Annotated[
-        str, StringConstraints(strip_whitespace=True, min_length=1, max_length=MAX_QUESTION_CHARS)
-    ]
+    question: Question
     answer: Annotated[str, StringConstraints(max_length=MAX_HISTORY_ANSWER_CHARS)] = ""
 
 
@@ -512,7 +522,7 @@ class AnswerEngine:
         messages = []
         for exchange in history[-MAX_HISTORY_EXCHANGES:]:
             messages.append(Message(role="user", text=exchange.question))
-            messages.append(Message(role="model", text=exchange.answer or "(no answer)"))
+            messages.append(Message(role="model", text=exchange.answer or NO_EARLIER_ANSWER))
         messages.append(Message(role="user", text=question))
         seen = retrieved if retrieved is not None else {}
         figures: dict[str, Source] = {}  # financial figures the model was shown, by id
@@ -749,9 +759,7 @@ def finalise(
     """Validate the model's submitted answer against what it retrieved."""
     if args.get("covered") is not True:
         message = clip(str(args.get("not_covered_message") or ""), MAX_NOT_COVERED_CHARS)
-        suggestions = suggested_questions(args.get("suggested_questions")) or list(
-            EXAMPLE_QUESTIONS
-        )
+        suggestions = suggested_questions(args.get("suggested_questions"))
         if args.get("out_of_scope") is True:
             return NotCovered(
                 reason="out_of_scope",

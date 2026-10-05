@@ -17,10 +17,10 @@ from pydantic import BaseModel, Field, StringConstraints
 from coa_explorer.answer import (
     EXAMPLE_QUESTIONS,
     MAX_HISTORY_EXCHANGES,
-    MAX_QUESTION_CHARS,
     Answer,
     AnswerEngine,
     Exchange,
+    Question,
     Status,
 )
 from coa_explorer.demo import DEMO_LIMIT_MESSAGE, Demo, Outcome, Rating, SavedAnswer
@@ -33,9 +33,7 @@ log = logging.getLogger(__name__)
 
 
 class AskRequest(BaseModel):
-    question: Annotated[
-        str, StringConstraints(strip_whitespace=True, min_length=1, max_length=MAX_QUESTION_CHARS)
-    ]
+    question: Question
     # The last few exchanges of the conversation, oldest first. The browser keeps them; the
     # server only passes them to the model and never stores them.
     history: list[Exchange] = Field(default_factory=list, max_length=MAX_HISTORY_EXCHANGES)
