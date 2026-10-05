@@ -1,6 +1,7 @@
 """The `extract` step writes committed, human-readable records and regenerates them identically."""
 
 import json
+import shutil
 from pathlib import Path
 
 from coa_explorer.cli import main
@@ -14,6 +15,9 @@ RECORD_FILES = [
     *(f"executive_summary/{y}.json" for y in YEARS),
     *(f"auditors_report/{y}.json" for y in YEARS),
     *(f"notes/{y}.json" for y in YEARS),
+    *(f"transmittal_letter/{y}.json" for y in YEARS),
+    *(f"management_responsibility/{y}.json" for y in YEARS),
+    *(f"financial/{y}.json" for y in YEARS),
     "link-report.json",
 ]
 
@@ -37,6 +41,23 @@ def test_extract_writes_one_readable_record_file_per_year_and_part(tmp_path):
     notes = json.loads((tmp_path / "notes" / "2021.json").read_text(encoding="utf-8"))
     assert len(notes["notes"]) == 33
     assert notes["notes"][3]["passages"][0]["citation"].startswith("CY 2021 AAR, Part I, Notes to")
+    letter = json.loads((tmp_path / "transmittal_letter" / "2023.json").read_text("utf-8"))
+    assert letter["sections"][0]["citation"] == "CY 2023 AAR, Transmittal Letter, pp. 1-3"
+    statement = json.loads(
+        (tmp_path / "management_responsibility" / "2022.json").read_text(encoding="utf-8")
+    )
+    assert statement["sections"][0]["pages"] == "1"
+    financial_2022 = json.loads((tmp_path / "financial" / "2022.json").read_text(encoding="utf-8"))
+    cash = [
+        line
+        for line in financial_2022["lines"]
+        if line["source"] == "Part I"
+        and line["statement"] == "SFPo"
+        and line["line_item"] == "Cash and Cash Equivalents"
+        and line["column"] == "Amount"
+    ]
+    assert [line["amount"] for line in cash] == ["8325730232.46"]
+    assert "NFS" in {sheet["sheet"] for sheet in financial_2022["ignored_sheets"]}
     # Human-readable: indented, with real characters rather than escapes.
     text = (tmp_path / "part2" / "2024.json").read_text(encoding="utf-8")
     assert "\n  " in text
@@ -82,9 +103,9 @@ def test_check_mode_also_covers_the_executive_summary_and_auditors_report(tmp_pa
 
 def test_a_changed_reviewed_transcription_changes_the_record_it_stands_in_for(tmp_path):
     reviewed = tmp_path / "reviewed"
-    reviewed.mkdir()
+    shutil.copytree(ROOT / "data" / "reviewed", reviewed)
     name = "05-ManilaCity2023_Part1-Auditor's_Report.txt"
-    original = (ROOT / "data" / "reviewed" / name).read_text(encoding="utf-8")
+    original = (reviewed / name).read_text(encoding="utf-8")
     (reviewed / name).write_text(original.replace("P9.237 billion", "P9.999 billion"), "utf-8")
 
     main(["extract", "--out", str(tmp_path / "out"), "--reviewed", str(reviewed)])
@@ -92,6 +113,31 @@ def test_a_changed_reviewed_transcription_changes_the_record_it_stands_in_for(tm
     record = (tmp_path / "out" / "auditors_report" / "2023.json").read_text(encoding="utf-8")
     assert "P9.999 billion" in record
     assert main(["extract", "--out", str(tmp_path / "out"), "--check"]) == 1
+
+
+def test_check_mode_also_covers_the_letters_and_statements(tmp_path):
+    stale = tmp_path / "stale"
+    main(["extract", "--out", str(stale)])
+    (stale / "transmittal_letter" / "2022.json").write_text("{}\n", encoding="utf-8")
+    assert main(["extract", "--out", str(stale), "--check"]) == 1
+    main(["extract", "--out", str(stale)])
+    (stale / "management_responsibility" / "2024.json").unlink()
+    assert main(["extract", "--out", str(stale), "--check"]) == 1
+
+
+def test_normal_extraction_reads_only_committed_transcriptions_and_never_calls_ocr(
+    tmp_path, monkeypatch
+):
+    """OCR is only ever run by `coa-explorer ocr`; extract and index need no GCP access."""
+
+    def refuse(*args, **kwargs):
+        raise AssertionError("extract must not reach Document AI")
+
+    monkeypatch.setattr("coa_explorer.cli.document_ai_ocr", refuse)
+    monkeypatch.setenv("GCP_PROJECT_ID", "")
+
+    assert main(["extract", "--out", str(tmp_path)]) == 0
+    assert main(["extract", "--out", str(tmp_path), "--check"]) == 0
 
 
 def test_check_mode_also_covers_part_III_and_the_link_report(tmp_path):

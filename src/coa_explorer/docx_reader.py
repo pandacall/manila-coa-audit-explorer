@@ -20,6 +20,9 @@ from xml.etree import ElementTree as ET
 
 W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 MC = "{http://schemas.openxmlformats.org/markup-compatibility/2006}"
+A = "{http://schemas.openxmlformats.org/drawingml/2006/main}"
+R = "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}"
+MEDIA_TYPES = {".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg"}
 
 
 @dataclass(frozen=True)
@@ -72,6 +75,21 @@ def page_number_format(path: Path) -> str:
             return number.get(W + "fmt")
         break
     return "decimal"
+
+
+def embedded_images(path: Path) -> list[tuple[str, bytes]]:
+    """The pictures a Word file shows, as (media type, bytes), in the order they appear. A page
+    that is a picture of a letter has no text for `read_blocks` to find."""
+    with zipfile.ZipFile(path) as z:
+        document = ET.fromstring(z.read("word/document.xml"))
+        relationships = ET.fromstring(z.read("word/_rels/document.xml.rels"))
+        targets = {rel.get("Id"): rel.get("Target") for rel in relationships}
+        images = []
+        for blip in document.iter(A + "blip"):
+            target = targets[blip.get(R + "embed")]
+            data = z.read("word/" + target.lstrip("/").removeprefix("word/"))
+            images.append((MEDIA_TYPES[Path(target).suffix.lower()], data))
+    return images
 
 
 def format_page_number(page: int, fmt: str) -> str:

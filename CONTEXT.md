@@ -20,6 +20,14 @@ COA's front-matter overview of an AAR, numbered in lowercase Roman pages.
 COA's formal opinion on whether the Financial Statements are fairly presented.
 _Avoid_: Audit opinion letter
 
+**Transmittal Letter**:
+COA's cover letter sending an AAR to the Mayor. It restates the opinion and, in most years, the significant observations; it is not part of any Part.
+_Avoid_: Cover letter (the "Cover" file is a different, excluded document)
+
+**Management Responsibility statement**:
+The City's own Statement of Management's Responsibility for Financial Statements, signed by the City Accountant and the Mayor and carried in Part I. It is Management's words, never COA's.
+_Avoid_: Management representation letter
+
 **Management**:
 The audited agency: the City Government of Manila, as COA addresses it. In plain-language answers, say "the City of Manila".
 _Avoid_: LGU, the city (in document-facing contexts)
@@ -94,11 +102,18 @@ One numbered Note of the Notes to Financial Statements ("Note 4 – Cash and Cas
 A supporting schedule in Part IV, typically a statement broken down by fund.
 
 **Fund**:
-A separately accounted pool of City money, chiefly the General Fund (GF) and the Special Education Fund (SEF).
+A separately accounted pool of City money: the General Fund (GF), the Special Education Fund (SEF) and the Trust Fund. Part I's statements are for the City as a whole ("All Funds"); an Annex breaks the same statement down by Fund and adds a Total column.
+
+**Financial line**:
+One amount from the Financial Statements or an Annex: its AAR year, statement, Fund, line item and column (the budget statement has Original budget, Final budget, Actual and COA's two difference columns). Amounts come from the spreadsheets and are never computed by the model; differences between years are computed by the `financial_lookup` tool.
+
+**Figure**:
+What `financial_lookup` returns for a line item in one AAR: one printed line of a statement for one Fund, with its amount in each column (so one Figure holds several Financial lines). It has an id the model cites and a Citation. Differences between years compare Figures like for like: the same statement, printed in the same place, for the same Fund.
 
 ### Answers
 
 **Citation**:
 A pointer from an answer to its source, written the way COA cites itself: AAR year, Part, Audit Observation number where applicable, and page — e.g. "CY 2023 AAR, Part II, Observation No. 5, p. 71", or for a Part III row, "CY 2023 AAR, Part III, CY 2022 Observation No. 3, p. 93" (the AAR whose Part III it is, then the Originating Observation it follows up), and for an AAPSI or APMT row, "CY 2023 APMT, CY 2022 Observation No. 3, p. 2" (the document, the Originating Observation, and the page of the scanned PDF, which prints none of its own).
 For the Executive Summary the exact anchor is its section letter and the page is a Roman numeral, "CY 2023 AAR, Executive Summary, Section E, p. iii"; for the Auditor's Report, which sits in Part I, "CY 2022 AAR, Part I, Auditor's Report, pp. 2-3"; and for a Note, "CY 2023 AAR, Part I, Notes to Financial Statements, Note 4, p. 30" (the page is the one COA prints, which in the 2021 Notes repeats after a restart of the numbering; the Note number is the exact anchor).
+For a Financial line it names the statement and the line item, with the Annex where the line comes from an Annex and the headings above it when the line item is printed more than once: "CY 2022 AAR, Part I, Statement of Financial Position, Cash and Cash Equivalents", "CY 2024 AAR, Part IV, Annex A, Statement of Financial Position, Total Cash and Cash Equivalents". Spreadsheets have no page numbers, so there is none.
 _Avoid_: source link (and "Reference", which is Part III's column)

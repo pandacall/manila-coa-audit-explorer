@@ -5,9 +5,14 @@ Citation): its description, its Recommendations, its Management Comment and, whe
 Auditor's Rejoinder. Long descriptions are split on paragraph boundaries so a piece stays small
 enough to read in full.
 
-The Executive Summary (part "ES") and the Auditor's Report (part "I", its place in the AAR) become
-one piece per section, split on paragraph boundaries when long; a heading with no text makes none.
-Each carries the section's Citation.
+The Executive Summary (part "ES"), the Auditor's Report (part "I", its place in the AAR), the
+transmittal letter (part "TL") and the Management Responsibility statement (part "MR") become one
+piece per section, split on paragraph boundaries when long; a heading with no text makes none. Each
+carries the section's Citation. The letter and the statement have one section each, the whole
+document. (The codes are document codes, not all of them COA Parts.)
+
+The Financial Statements and Annexes are not pieces: every amount goes to the `financial_lines`
+table, in centavos, for `financial_lookup`.
 
 The Notes to Financial Statements (part "NOTES") become one piece per passage of a Note, as the
 record cut them (tables in markdown); the Note number is the piece's `observation_number`, so a
@@ -28,18 +33,32 @@ from __future__ import annotations
 import json
 import sqlite3
 from collections.abc import Iterator
+from decimal import Decimal
 from pathlib import Path
 
 import sqlite_vec
 
 from coa_explorer.aapsi import DOCUMENTS
 from coa_explorer.embedder import Embedder
-from coa_explorer.front_matter import EXECUTIVE_SUMMARY
+from coa_explorer.front_matter import (
+    AUDITORS_REPORT,
+    EXECUTIVE_SUMMARY,
+    MANAGEMENT_RESPONSIBILITY,
+    TRANSMITTAL_LETTER,
+)
 from coa_explorer.links import build_links
 from coa_explorer.notes import MAX_PASSAGE_CHARS, NOTES_PART
 from coa_explorer.timeline import clip_title, disagreement
 
 MAX_PIECE_CHARS = MAX_PASSAGE_CHARS
+
+# Each document that is read in sections: its record folder (also its piece kind) and part code.
+FRONT_MATTER = {
+    EXECUTIVE_SUMMARY: ("executive_summary", "ES"),
+    AUDITORS_REPORT: ("auditors_report", "I"),
+    TRANSMITTAL_LETTER: ("transmittal_letter", "TL"),
+    MANAGEMENT_RESPONSIBILITY: ("management_responsibility", "MR"),
+}
 
 SCHEMA = """
 CREATE TABLE pieces (
@@ -116,6 +135,23 @@ CREATE TABLE monitoring_rows (
     remarks TEXT,
     citation TEXT NOT NULL
 );
+CREATE TABLE financial_lines (
+    id INTEGER PRIMARY KEY,
+    key TEXT NOT NULL,
+    aar_year INTEGER NOT NULL,
+    source TEXT NOT NULL,
+    statement TEXT NOT NULL,
+    sheet TEXT NOT NULL,
+    sheet_row INTEGER NOT NULL,
+    fund TEXT NOT NULL,
+    section TEXT NOT NULL,
+    line_item TEXT NOT NULL,
+    column_name TEXT NOT NULL,
+    period INTEGER NOT NULL,
+    centavos INTEGER NOT NULL,
+    citation TEXT NOT NULL
+);
+CREATE INDEX financial_lines_year ON financial_lines (aar_year, statement);
 CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
 """
 
@@ -163,11 +199,13 @@ def build_index(records_dir: Path, db_path: Path, embedder: Embedder) -> int:
     part2 = load_records(records_dir / "part2")
     part3 = load_records(records_dir / "part3")
     front_matter = [
-        *load_records(records_dir / "executive_summary").values(),
-        *load_records(records_dir / "auditors_report").values(),
+        record
+        for folder, _ in FRONT_MATTER.values()
+        for record in load_records(records_dir / folder).values()
     ]
     notes = load_records(records_dir / "notes")
     monitoring = load_monitoring(records_dir)
+    financial = load_records(records_dir / "financial")
     db_path.parent.mkdir(parents=True, exist_ok=True)
     db_path.unlink(missing_ok=True)
     with sqlite3.connect(db_path) as db:
@@ -216,6 +254,8 @@ def build_index(records_dir: Path, db_path: Path, embedder: Embedder) -> int:
                 for block in record["observations"]:
                     for row in block["rows"]:
                         add_monitoring_row(db, record["aar_year"], document, block, row)
+        for record in financial.values():
+            add_financial_lines(db, record)
         for link in build_links(part2, part3, monitoring):
             db.execute(
                 "INSERT INTO links VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -247,13 +287,47 @@ def build_index(records_dir: Path, db_path: Path, embedder: Embedder) -> int:
     return count
 
 
+def add_financial_lines(db: sqlite3.Connection, record: dict) -> None:
+    """The financial lines of one AAR, each amount in whole centavos so that sums are exact."""
+    db.executemany(
+        "INSERT INTO financial_lines (key, aar_year, source, statement, sheet, sheet_row, fund,"
+        " section, line_item, column_name, period, centavos, citation)"
+        f" VALUES ({', '.join('?' * 13)})",
+        [
+            (
+                line["key"],
+                record["aar_year"],
+                line["source"],
+                line["statement"],
+                line["sheet"],
+                line["row"],
+                line["fund"],
+                line["section"],
+                line["line_item"],
+                line["column"],
+                line["period"],
+                int(Decimal(line["amount"]) * 100),
+                line["citation"],
+            )
+            for line in record["lines"]
+        ],
+    )
+
+
 def front_matter_pieces(record: dict) -> Iterator[tuple]:
-    """The piece rows of one Executive Summary or Auditor's Report, a section at a time."""
+    """The piece rows of one Executive Summary, Auditor's Report, transmittal letter or Management
+    Responsibility statement, a section at a time."""
     year, document = record["aar_year"], record["document"]
-    summary = document == EXECUTIVE_SUMMARY
-    part, kind = ("ES", "executive_summary") if summary else ("I", "auditors_report")
+    kind, part = FRONT_MATTER[document]
     for number, section in enumerate(record["sections"], start=1):
-        anchor = section["label"] if summary else f"AR-{number}"
+        # The Executive Summary's sections are lettered, the Auditor's Report's are numbered "AR-n"
+        # (the key ids the model cites), and the one-section documents are just "n".
+        if document == EXECUTIVE_SUMMARY:
+            anchor = section["label"]
+        elif document == AUDITORS_REPORT:
+            anchor = f"AR-{number}"
+        else:
+            anchor = str(number)
         for seq, text in enumerate(split_text(section["text"]), start=1):
             yield (
                 f"{year}-{part}-{anchor}-{seq}",

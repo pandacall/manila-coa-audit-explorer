@@ -1,4 +1,5 @@
-"""The retrieval tools: hybrid keyword + vector `search` over the AARs, and `timeline`.
+"""The retrieval tools: hybrid keyword + vector `search` over the AARs, `timeline` and
+`financial_lookup`.
 
 Every result carries a complete Citation. Keyword (FTS5) and vector (sqlite-vec) matches are merged
 into one ranking; a hit on any piece of an Audit Observation can be expanded to the whole
@@ -17,6 +18,12 @@ from pathlib import Path
 import sqlite_vec
 
 from coa_explorer.embedder import Embedder
+from coa_explorer.financial_lookup import (
+    FinancialChange,
+    FinancialLookup,
+    change_by_keys,
+    lookup,
+)
 from coa_explorer.index import load_vec_extension
 from coa_explorer.notes import NOTES_PART
 from coa_explorer.timeline import Timeline, assemble_timeline
@@ -115,12 +122,14 @@ class Index:
         Executive Summary / Auditor's Report documents), grouped together.
 
         Keyword and vector matches are merged into one ranking (reciprocal rank fusion). `years`,
-        `parts` ("ES" Executive Summary, "I" Auditor's Report, "NOTES" Notes to Financial
-        Statements, "II", "III", "AAPSI", "APMT"; document codes, not all of them COA Parts),
-        `observation` (a Part II number, or with `parts` ["NOTES"] a Note number; the other Parts
-        have none) and `status` (COA's Status of Implementation, for Part III and APMT) narrow the
-        search; with no query words, the filters alone are a direct lookup, an observation filter
-        returning that observation's pieces in reading order. With no `years`,
+        `parts` ("ES" Executive Summary, "I" Auditor's Report, "TL" transmittal letter, "MR"
+        Management Responsibility statement, "NOTES" Notes to Financial Statements, "II",
+        "III", "AAPSI", "APMT"; document codes, not all of them COA Parts), `observation`
+        (a Part II number, or with `parts` ["NOTES"] a Note number; the other Parts have
+        none) and `status` (COA's Status of Implementation, for Part III and APMT) narrow
+        the search; with no query words, the filters alone are a direct lookup, an
+        observation filter returning that observation's pieces in reading order. With no
+        `years`,
         observations are ordered newest year first (most relevant first within a year); with
         `years`, most relevant first.
         """
@@ -234,6 +243,25 @@ class Index:
     def piece(self, key: str) -> Piece | None:
         row = self._db.execute("SELECT * FROM pieces WHERE key = ?", (key,)).fetchone()
         return piece_from(row) if row else None
+
+    def financial_lookup(
+        self,
+        line_item: str,
+        years: list[int],
+        statement: str | None = None,
+        fund: str | None = None,
+    ) -> FinancialLookup:
+        """Exact peso amounts for a line of the Financial Statements or Annexes in each of `years`,
+        by Fund where the Annexes give one, with the differences between years worked out."""
+        return lookup(self._db, line_item, years, statement=statement, fund=fund)
+
+    def financial_change(
+        self, from_key: str, to_key: str, column: str | None = None
+    ) -> list[FinancialChange]:
+        """The exact change between two financial lines (ids from `financial_lookup`) of the same
+        Fund and statement in different years, for lines COA labelled differently from year to
+        year. Raises ValueError if they cannot be compared."""
+        return change_by_keys(self._db, from_key, to_key, column)
 
     def timeline(self, origin_year: int, origin_observation: int) -> Timeline | None:
         """How COA's Status of Implementation for one Audit Observation's Recommendations changed

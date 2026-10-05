@@ -75,7 +75,9 @@ def test_observation_filter_without_a_query_returns_the_whole_observation(index)
 
 
 def test_every_result_carries_a_complete_citation(index):
-    pieces = index.search("cash OR statements OR management OR recommended", limit=50)
+    pieces = index.search(
+        "cash OR statements OR management OR recommended OR responsible OR transmit", limit=50
+    )
 
     assert len(pieces) > 5
     for piece in pieces:
@@ -84,6 +86,8 @@ def test_every_result_carries_a_complete_citation(index):
             "III": r"CY \d{4} AAR, Part III, CY \d{4} Observation No\. \d+, pp?\. \d+(-\d+)?",
             "ES": r"CY \d{4} AAR, Executive Summary, Section [A-Z], pp?\. [ivx]+(-[ivx]+)?",
             "I": r"CY \d{4} AAR, Part I, Auditor's Report, pp?\. \d+(-\d+)?",
+            "TL": r"CY \d{4} AAR, Transmittal Letter, pp?\. \d+(-\d+)?",
+            "MR": r"CY \d{4} AAR, Part I, Management Responsibility for Financial Statements, p\. 1",
         }[piece.part]
         assert re.fullmatch(pattern, piece.citation), piece.citation
 
@@ -178,6 +182,42 @@ def test_parts_keep_the_summary_the_report_and_the_observations_apart(index):
     assert {p.part for p in index.search("financial statements", parts=["I"])} == {"I"}
     assert {p.part for p in index.search("financial statements", parts=["II"])} == {"II"}
     assert {p.part for p in index.search("financial statements", parts=["es"])} == {"ES"}
+
+
+# Transmittal letters and Management Responsibility statements
+
+
+def test_a_transmittal_letter_is_found_and_cited_by_its_pages(index):
+    pieces = index.search("transmit Annual Audit Report", years=[2022], parts=["TL"])
+
+    assert [p.title for p in pieces] == ["Transmittal Letter: Transmittal Letter"]
+    letter = pieces[0]
+    assert (letter.aar_year, letter.part, letter.kind) == (2022, "TL", "transmittal_letter")
+    assert letter.citation == "CY 2022 AAR, Transmittal Letter, pp. 1-2"
+    assert (letter.page_start, letter.page_end) == (1, 2)
+    assert letter.observation_number is None
+
+
+def test_a_management_responsibility_statement_is_found_and_cited(index):
+    pieces = index.search("responsible for all information", parts=["MR"])
+
+    assert [p.citation for p in pieces] == [
+        "CY 2023 AAR, Part I, Management Responsibility for Financial Statements, p. 1"
+    ]
+    assert (pieces[0].part, pieces[0].kind) == ("MR", "management_responsibility")
+
+
+def test_the_short_documents_stay_out_of_the_other_parts(index):
+    assert {p.part for p in index.search("financial statements", parts=["I"])} == {"I"}
+    assert {p.part for p in index.search("Qualified Opinion", parts=["ES", "I"])} <= {"ES", "I"}
+    everything = {p.part for p in index.search("", years=[2023], parts=["TL", "MR"])}
+    assert everything == {"TL", "MR"}
+
+
+def test_a_year_filter_lists_that_years_letter_and_statement(index):
+    pieces = index.search("", years=[2023], parts=["TL", "MR"])
+
+    assert sorted((p.aar_year, p.part) for p in pieces) == [(2023, "MR"), (2023, "TL")]
 
 
 def test_a_heading_with_no_text_makes_no_piece(index):

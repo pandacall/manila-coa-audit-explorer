@@ -27,6 +27,11 @@ def search(query: str, **args) -> ModelTurn:
     return ModelTurn(text=None, tool_calls=[ToolCall("search", {"query": query, **args})])
 
 
+def financial_lookup(line_item: str, **args) -> ModelTurn:
+    call = ToolCall("financial_lookup", {"line_item": line_item, **args})
+    return ModelTurn(text=None, tool_calls=[call])
+
+
 def submit(
     summary: str, key_points: list[dict], covered: bool = True, message: str = ""
 ) -> ModelTurn:
