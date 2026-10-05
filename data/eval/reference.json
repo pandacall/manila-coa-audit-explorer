@@ -177,6 +177,558 @@
       "key_facts": [],
       "unanswerable": true,
       "approved": true
+    },
+    {
+      "id": "ppe-depreciation-2020",
+      "question": "Why did COA question the City of Manila's records of its property and equipment in 2020?",
+      "language": "en",
+      "question_type": "observation",
+      "expected_citations": [
+        "CY 2020 AAR, Part II, Observation No. 2, pp. 72-74"
+      ],
+      "key_facts": [
+        "No depreciation was recognized for 4,087 depreciable PPE items because their acquisition dates had not been captured in the accounting and property records",
+        "COA recommended providing depreciation for the 4,087 PPE items totaling P10.263 billion",
+        "Four items of land, building or school building were recognized at nominal costs totaling P20,061.43 and were thus undervalued"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "inventory-overstatement-2022",
+      "question": "Na-overstate daw ang inventory accounts ng City of Manila noong 2022 — magkano at bakit?",
+      "language": "taglish",
+      "question_type": "observation",
+      "expected_citations": [
+        "CY 2022 AAR, Part II, Observation No. 1, pp. 73-76"
+      ],
+      "key_facts": [
+        "The inventory accounts were overstated by a net amount of P32.595 million",
+        "The cause was accounting errors in record keeping, non-maintenance of inventory records and unreconciled records of the OCAT and the CGSO",
+        "Inexistent inventories still carried in the inventory accounts amounted to P35,521,926.90"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "building-permit-fees-2024",
+      "question": "Naibigay ba ng Maynila sa DPWH ang bahagi nito sa mga building permit fee noong 2024?",
+      "language": "fil",
+      "question_type": "observation",
+      "expected_citations": [
+        "CY 2024 AAR, Part II, Observation No. 25, pp. 164-166"
+      ],
+      "key_facts": [
+        "The 5% share of the DPWH in the Building Permit Fees amounting to P23.797 million remained unremitted as of December 31, 2024",
+        "The 15% share of the Office of the Building Official amounting to P71.399 million remained unutilized",
+        "COA recommended that the OBO formulate a Program of Work for the utilization of its 15 percent share"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "audit-opinion-2021",
+      "question": "Anong klaseng opinyon ang ibinigay ng COA sa financial statements ng Maynila para sa 2021, at bakit?",
+      "language": "fil",
+      "question_type": "observation",
+      "expected_citations": [
+        "CY 2021 AAR, Part I, Auditor's Report, pp. 1-2"
+      ],
+      "key_facts": [
+        "COA gave a qualified opinion on the City's financial statements for 2021",
+        "Accounting errors overstated the Cash-in-Bank accounts by a net amount of P51.371 million",
+        "The City had not settled cash advances totaling P182.725 million",
+        "Payables amounting to P21.888 million were not supported with the required documents"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "good-governance-seal-2024",
+      "question": "Nakatanggap ba ang City of Manila ng Seal of Local Good Governance noong 2024?",
+      "language": "taglish",
+      "question_type": "observation",
+      "expected_citations": [
+        "CY 2024 AAR, Executive Summary, Section C, p. ii"
+      ],
+      "key_facts": [
+        "The City reported that it was awarded the Seal of Local Good Governance by the Department of the Interior and Local Government"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "legal-cases-2023",
+      "question": "How many court cases was the City of Manila involved in at the end of 2023?",
+      "language": "en",
+      "question_type": "observation",
+      "expected_citations": [
+        "CY 2023 AAR, Part I, Notes to Financial Statements, Note 35, p. 71"
+      ],
+      "key_facts": [
+        "As of December 31, 2023, the City had a total of 92 legal cases",
+        "They consisted of 18 tax cases, 53 civil cases, 7 criminal cases and 14 expropriation cases",
+        "CTA Case No. 10654, The City of Manila vs. Commissioner of Internal Revenue, involves deficiency taxes in the total amount of P1,650,772,865.80"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "expropriation-deposits-2022",
+      "question": "Why does Manila keep money in bank accounts tied to expropriation cases, and how much was there in 2022?",
+      "language": "en",
+      "question_type": "observation",
+      "expected_citations": [
+        "CY 2022 AAR, Part I, Notes to Financial Statements, Note 4, pp. 33-34"
+      ],
+      "key_facts": [
+        "47 of the City's 63 current bank accounts in CY 2022 were for trust deposits held under expropriation cases",
+        "The expropriation trust deposits amounted to P168,908,255.56 for 236 properties",
+        "The deposits are cash deposited with Landbank as part of just compensation for private properties acquired by the City for public use",
+        "Section 19 of RA No. 7160 requires a deposit with the court of at least 15 per cent of the property's fair market value"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "manila-budget-2025",
+      "question": "Magkano ang approved budget ng City of Manila para sa 2025?",
+      "language": "taglish",
+      "question_type": "financial",
+      "expected_citations": [],
+      "key_facts": [],
+      "unanswerable": true,
+      "approved": true
+    },
+    {
+      "id": "mmda-audit",
+      "question": "What did COA find when it audited the Metropolitan Manila Development Authority (MMDA)?",
+      "language": "en",
+      "question_type": "observation",
+      "expected_citations": [],
+      "key_facts": [],
+      "unanswerable": true,
+      "approved": true
+    },
+    {
+      "id": "mayor-corruption-judgement",
+      "question": "Batay sa mga audit ng COA, kurakot ba ang alkalde ng Maynila at dapat ba siyang makulong?",
+      "language": "fil",
+      "question_type": "observation",
+      "expected_citations": [],
+      "key_facts": [],
+      "unanswerable": true,
+      "approved": true
+    },
+    {
+      "id": "cctv-spending-2023",
+      "question": "How much did the City of Manila spend on CCTV cameras in 2023?",
+      "language": "en",
+      "question_type": "observation",
+      "expected_citations": [],
+      "key_facts": [],
+      "unanswerable": true,
+      "approved": true
+    },
+    {
+      "id": "inventory-overstatement-followup-2022",
+      "question": "COA said Manila's inventory accounts were overstated in 2022. Did the City fix the problem?",
+      "language": "en",
+      "question_type": "follow_up",
+      "expected_citations": [
+        "CY 2023 AAR, Part III, CY 2022 Observation No. 1, pp. 91-92"
+      ],
+      "key_facts": [
+        "In 2022 COA found the inventory accounts overstated by a net P32.595 million due to accounting errors, non-maintenance of inventory records and unreconciled OCAT and CGSO records",
+        "In the CY 2023 AAR, COA assessed both recommendations as Implemented",
+        "The OCAT prepared adjustments to reconcile the books of account with the CGSO's inventory records"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "unsupported-payables-followup-2021",
+      "question": "Back in 2021 COA questioned P21.888 million in payables that had no supporting documents. What came of its recommendations?",
+      "language": "en",
+      "question_type": "follow_up",
+      "expected_citations": [
+        "CY 2022 AAR, Part III, CY 2021 Observation No. 3, p. 87",
+        "CY 2023 AAR, Part III, CY 2021 Observation No. 3, p. 97"
+      ],
+      "key_facts": [
+        "The 2021 observation was that payables of P21.888 million were not supported with the required documents proving their validity",
+        "In the CY 2022 AAR, COA assessed two recommendations as Implemented and the one to specify the creditors' correct addresses as Partially Implemented",
+        "COA said the subsidiary ledgers kept for CY 2022 lacked required details such as the creditors' addresses",
+        "In the CY 2023 AAR, COA assessed the remaining recommendation as Implemented"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "arroceros-joint-venture-followup-2020",
+      "question": "What happened to COA's recommendation that Manila rescind the Arroceros joint venture with JBROS?",
+      "language": "en",
+      "question_type": "follow_up",
+      "expected_citations": [
+        "CY 2022 AAR, Part III, CY 2020 Observation No. 4, pp. 91-92",
+        "CY 2023 AAR, Part III, CY 2020 Observation No. 4, pp. 100-101"
+      ],
+      "key_facts": [
+        "The 2020 observation concerned the JVA with JBROS Construction Corporation for the Arroceros Compound Mixed-Use Development and JBROS's continuing failure to perform its obligations",
+        "In the CY 2022 AAR, COA assessed the recommendation to rescind the JVA as Not Implemented, noting JBROS claims it did not commit a material breach",
+        "In the CY 2023 AAR, COA assessed both recommendations as Implemented after Management submitted the amended JVA dated May 23, 2023"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "internal-audit-service-followup-2018",
+      "question": "Has Manila finally set up the Internal Audit Service that COA has been pushing for since its 2018 audit?",
+      "language": "en",
+      "question_type": "follow_up",
+      "expected_citations": [
+        "CY 2023 AAR, Part III, CY 2018 Observation No. 15, p. 109",
+        "CY 2024 AAR, Part III, CY 2018 Observation No. 15, pp. 187-188"
+      ],
+      "key_facts": [
+        "The 2018 observation was that the City had not created, organized and operated an Internal Audit Service mandated under RA No. 3456 as amended by RA No. 4177",
+        "In the CY 2023 AAR, COA assessed the recommendation as Not Implemented because the City's Internal Audit merely pre-audits financial transactions and is under the OCAT",
+        "In the CY 2024 AAR, COA assessed it as Implemented: the City Council passed Ordinance No. 9093 creating the City Internal Audit Service on December 12, 2024"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "e-trikes-deployment-followup-2019",
+      "question": "Naipamahagi na ba ng Maynila ang mga E-Trike sa mga talagang dapat makatanggap nito, ayon sa COA?",
+      "language": "fil",
+      "question_type": "follow_up",
+      "expected_citations": [
+        "CY 2021 AAR, Part III, CY 2019 Observation No. 11, pp. 107-108"
+      ],
+      "key_facts": [
+        "The 2019 observation was that the City had not yet deployed the E-Trikes to the intended beneficiaries but used them to deliver emergency services during the COVID-19 pandemic",
+        "In the CY 2021 AAR, COA assessed both recommendations as Implemented",
+        "The E-Trikes were already deployed to the intended beneficiaries"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "rpt-system-access-followup-2022",
+      "question": "In 2022 COA couldn't verify Manila's real property tax receivables because it had no access to the tax system. Did the City ever give the auditors access?",
+      "language": "en",
+      "question_type": "follow_up",
+      "expected_citations": [
+        "CY 2023 AAR, Part III, CY 2022 Observation No. 2, p. 92"
+      ],
+      "key_facts": [
+        "In 2022 COA could not establish the accuracy and completeness of the RPT and SET Receivables and related Deferred Credit accounts because access to the application system tracking them was not granted to the Audit Team",
+        "In the CY 2023 AAR, COA assessed the recommendation as Implemented",
+        "Management provided the Audit Team access to the application system that tracks the RPT and SET accounts"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "gad-catch-up-followup-2020",
+      "question": "Did the City catch up on the Gender and Development programs it failed to carry out during the 2020 pandemic restrictions?",
+      "language": "en",
+      "question_type": "follow_up",
+      "expected_citations": [
+        "CY 2021 AAR, Part III, CY 2020 Observation No. 5, p. 99",
+        "CY 2022 AAR, Part III, CY 2020 Observation No. 5, p. 92"
+      ],
+      "key_facts": [
+        "The 2020 observation was that the City failed to implement 74 GAD PPAs with a total budget of P566.235 million and to fully establish the GAD database",
+        "In the CY 2021 AAR, COA assessed the recommendation as Partially Implemented and reiterated it",
+        "In the CY 2022 AAR, COA assessed the recommendation as Implemented"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "cash-in-bank-errors-followup-2020",
+      "question": "Were the P66.815 million in cash-in-bank recording errors COA found in 2020 ever corrected?",
+      "language": "en",
+      "question_type": "follow_up",
+      "expected_citations": [
+        "CY 2022 AAR, Part III, CY 2020 Observation No. 1, p. 89",
+        "CY 2023 AAR, Part III, CY 2020 Observation No. 1, pp. 98-99"
+      ],
+      "key_facts": [
+        "The 2020 observation was that accounting errors in recording Cash-in-Bank transactions amounting to P66.815 million misstated the affected accounts",
+        "In the CY 2022 AAR, COA assessed the adjusting entry for 6,169 checks totalling P5.913 million as Not Implemented and the recording of reconciling items of P60.902 million as Partially Implemented",
+        "In the CY 2023 AAR, COA assessed both recommendations as Implemented after the OCAT made adjusting entries to correct the misstatements"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "ppe-depreciation-followup-2020",
+      "question": "COA flagged problems in how Manila accounted for its property and equipment in 2020. Did the City follow COA's advice?",
+      "language": "en",
+      "question_type": "follow_up",
+      "expected_citations": [
+        "CY 2021 AAR, Part III, CY 2020 Observation No. 2, p. 94"
+      ],
+      "key_facts": [
+        "The 2020 observation was that deficiencies in accounting for PPE undermined the quality of PPE information in the City's financial statements",
+        "In the CY 2021 AAR, COA assessed all four recommendations as Implemented",
+        "Depreciation for the 4,087 depreciable PPE items was already recognized in the books"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "cash-in-bank-reconciliation-disagreement-2023",
+      "question": "Sabi ng City, fully implemented na daw nila yung reconciliation ng cash in bank na finlag ng COA noong 2023. Totoo ba yun according sa COA?",
+      "language": "taglish",
+      "question_type": "follow_up",
+      "expected_citations": [
+        "CY 2023 APMT, CY 2023 Observation No. 1, p. 1",
+        "CY 2023 AAPSI, CY 2023 Observation No. 1, p. 2"
+      ],
+      "key_facts": [
+        "Management reported the recommendation to reconcile the bank-confirmation variances with the book balances as Fully Implemented in its AAPSI",
+        "COA assessed that recommendation as Not Implemented in the APMT",
+        "COA noted that although the OCAT submitted Bank Reconciliation Statements, the book balances of the Cash in Bank accounts remained unadjusted",
+        "COA assessed the other two recommendations, on timely monthly BRSs and a document tracking system, as Implemented"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "accounts-payable-variance-followup-2023",
+      "question": "What did the City do about the gap COA found in 2023 between its accounts payable and what contractors and suppliers confirmed, and did COA accept it?",
+      "language": "en",
+      "question_type": "follow_up",
+      "expected_citations": [
+        "CY 2023 APMT, CY 2023 Observation No. 2, p. 1",
+        "CY 2023 AAPSI, CY 2023 Observation No. 2, p. 2"
+      ],
+      "key_facts": [
+        "The 2023 observation was that the P4.577 billion Accounts Payable balance could not be determined due to a net understatement variance against confirmations with contractors and suppliers",
+        "Management reported that the variance was recorded through JEV No. 100-24-04-06 dated June 15, 2024, and reported the recommendations as Fully Implemented",
+        "COA assessed all four recommendations as Implemented in the APMT"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "unsubmitted-vouchers-followup-2024",
+      "question": "Has the City sent COA the disbursement vouchers it failed to forward for 2024?",
+      "language": "en",
+      "question_type": "follow_up",
+      "expected_citations": [
+        "CY 2024 APMT, CY 2024 Observation No. 21, p. 10",
+        "CY 2024 AAPSI, CY 2024 Observation No. 21, p. 21"
+      ],
+      "key_facts": [
+        "The 2024 observation was that 2,407 DVs totaling P132.347 million for CY 2024 had not been forwarded by the OCAT to the Office of the City Auditor",
+        "Management's action plan stated that the OCAT had partially submitted the DVs, leaving a balance of P194.237 million for the 3,404 DVs",
+        "COA assessed the recommendation as Not Implemented, remarking that the OCAT has yet to submit the 3,404 DVs"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "child-protection-fund-followup-2024",
+      "question": "What has Manila done about the children's protection programs it left unimplemented in 2024, according to COA's monitoring?",
+      "language": "en",
+      "question_type": "follow_up",
+      "expected_citations": [
+        "CY 2024 APMT, CY 2024 Observation No. 23, p. 10",
+        "CY 2024 AAPSI, CY 2024 Observation No. 23, p. 21"
+      ],
+      "key_facts": [
+        "The 2024 observation was that the LCPC fund of P259.910 million was not maximized due to non-implementation of 10 PPAs with an appropriation of P117.591 million",
+        "Management stated it is committed to implementing procedures and coordinating with concerned offices to ensure the implementation of the Programs for Children",
+        "COA assessed the recommendation as Not Implemented, pending appropriate action from Management"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "total-assets-2020",
+      "question": "What was the total value of the City of Manila's assets at the end of 2020?",
+      "language": "en",
+      "question_type": "financial",
+      "expected_citations": [
+        "CY 2020 AAR, Part I, Statement of Financial Position, Total Assets"
+      ],
+      "key_facts": [
+        "Manila's total assets at the end of 2020 were P74,464,757,574.00 (about P74.46 billion)"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "cash-and-equivalents-2024",
+      "question": "How much cash and cash equivalents did Manila have at the close of 2024?",
+      "language": "en",
+      "question_type": "financial",
+      "expected_citations": [
+        "CY 2024 AAR, Part I, Statement of Financial Position, Cash and Cash Equivalents"
+      ],
+      "key_facts": [
+        "Cash and cash equivalents at the end of 2024 were P8,084,227,242.24 (about P8.08 billion)"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "receivables-2022",
+      "question": "Magkano ang total receivables ng Manila sa end ng 2022? Ibig sabihin, magkano pa ang hindi nakokolekta ng City?",
+      "language": "taglish",
+      "question_type": "financial",
+      "expected_citations": [
+        "CY 2022 AAR, Part I, Statement of Financial Position, Receivables"
+      ],
+      "key_facts": [
+        "Receivables at the end of 2022 were P19,859,356,666.12 (about P19.86 billion)"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "personnel-services-2023",
+      "question": "How much did the City of Manila spend on personnel services, like salaries and benefits, in 2023?",
+      "language": "en",
+      "question_type": "financial",
+      "expected_citations": [
+        "CY 2023 AAR, Part I, Statement of Financial Performance, Personnel Services"
+      ],
+      "key_facts": [
+        "Personnel Services expenses in 2023 were P5,220,260,373.37 (about P5.22 billion)"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "internal-revenue-share-2022",
+      "question": "How much did Manila receive as its share from national internal revenue collections in 2022?",
+      "language": "en",
+      "question_type": "financial",
+      "expected_citations": [
+        "CY 2022 AAR, Part I, Statement of Financial Performance, Share from Internal Revenue Collections"
+      ],
+      "key_facts": [
+        "Manila's Share from Internal Revenue Collections in 2022 was P4,602,952,487.00 (about P4.60 billion)"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "operating-expenses-2024",
+      "question": "What were Manila's total current operating expenses for 2024?",
+      "language": "en",
+      "question_type": "financial",
+      "expected_citations": [
+        "CY 2024 AAR, Part I, Statement of Financial Performance, Total Current Operating Expenses"
+      ],
+      "key_facts": [
+        "Total current operating expenses in 2024 were P16,620,119,685.20 (about P16.62 billion)"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "total-liabilities-change-2021-2022",
+      "question": "How did Manila's total liabilities change from 2021 to 2022?",
+      "language": "en",
+      "question_type": "financial",
+      "expected_citations": [
+        "CY 2021 AAR, Part I, Statement of Financial Position, Total Liabilities",
+        "CY 2022 AAR, Part I, Statement of Financial Position, Total Liabilities"
+      ],
+      "key_facts": [
+        "Total liabilities were P22,178,251,815.43 at the end of 2021",
+        "Total liabilities were P26,765,129,719.87 at the end of 2022",
+        "Total liabilities increased by P4,586,877,904.44 (about P4.59 billion)"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "ppe-change-2023-2024",
+      "question": "Did the value of Manila's property, plant and equipment go up or down between 2023 and 2024, and by how much?",
+      "language": "en",
+      "question_type": "financial",
+      "expected_citations": [
+        "CY 2023 AAR, Part I, Statement of Financial Position, Property, Plant and Equipment",
+        "CY 2024 AAR, Part I, Statement of Financial Position, Property, Plant and Equipment"
+      ],
+      "key_facts": [
+        "Property, Plant and Equipment was P43,223,470,947.47 at the end of 2023",
+        "Property, Plant and Equipment was P45,409,248,211.92 at the end of 2024",
+        "It increased by P2,185,777,264.45 (about P2.19 billion)"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "appropriations-vs-actual-2022",
+      "question": "How much of its 2022 budget did the City of Manila actually spend, compared with what was appropriated?",
+      "language": "en",
+      "question_type": "financial",
+      "expected_citations": [
+        "CY 2022 AAR, Part I, Statement of Comparison of Budget and Actual Amounts, Total Appropriations"
+      ],
+      "key_facts": [
+        "The original budget for total appropriations in 2022 was P22,762,962,983.55 and the final budget was P26,040,437,283.55",
+        "Actual amounts were P20,506,127,301.88 (about P20.51 billion)",
+        "Actual spending was P5,534,309,981.67 (about P5.53 billion) below the final budget"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "revenue-budget-vs-actual-2023",
+      "question": "Did Manila collect more or less revenue than it budgeted for in 2023?",
+      "language": "en",
+      "question_type": "financial",
+      "expected_citations": [
+        "CY 2023 AAR, Part I, Statement of Comparison of Budget and Actual Amounts, Total Revenues and Receipts"
+      ],
+      "key_facts": [
+        "The final budget for total revenues and receipts in 2023 was P24,640,000,000.00",
+        "Actual revenues and receipts were P25,346,070,213.84 (about P25.35 billion)",
+        "Actual collections exceeded the final budget by P706,070,213.84 (about P706.07 million)"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "fund-cash-2021",
+      "question": "Magkano ang cash ng General Fund at ng Special Education Fund ng Maynila noong katapusan ng 2021?",
+      "language": "fil",
+      "question_type": "financial",
+      "expected_citations": [
+        "CY 2021 AAR, Part IV, Annex A, Statement of Financial Position, Cash and Cash Equivalents"
+      ],
+      "key_facts": [
+        "The General Fund's cash and cash equivalents at the end of 2021 were P4,430,766,995.26 (about P4.43 billion)",
+        "The Special Education Fund's cash and cash equivalents at the end of 2021 were P3,227,733,910.55 (about P3.23 billion)"
+      ],
+      "unanswerable": false,
+      "approved": true
+    },
+    {
+      "id": "sef-appropriations-2023",
+      "question": "How much of the Special Education Fund budget did Manila actually use in 2023?",
+      "language": "en",
+      "question_type": "financial",
+      "expected_citations": [
+        "CY 2023 AAR, Part IV, Annex F, Statement of Comparison of Budget and Actual Amounts (Special Education Fund), Total Appropriations"
+      ],
+      "key_facts": [
+        "The Special Education Fund's final budget for total appropriations in 2023 was P2,440,000,000.00",
+        "Actual amounts were P1,388,092,851.74 (about P1.39 billion)",
+        "P1,051,907,148.26 (about P1.05 billion) of the final budget was not used"
+      ],
+      "unanswerable": false,
+      "approved": true
     }
   ]
 }

@@ -16,13 +16,13 @@ model wrote.
 from __future__ import annotations
 
 from collections.abc import Iterator, Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Annotated, Literal
 
 from pydantic import BaseModel, Field, StringConstraints, field_validator
 
 from coa_explorer.financial import FUNDS, STATEMENT_NAMES
-from coa_explorer.financial_lookup import FinancialChange, FinancialLookup
+from coa_explorer.financial_lookup import FinancialChange, FinancialFigure, FinancialLookup
 from coa_explorer.models import Message, ModelAdapter, ToolCall, ToolResult, ToolSpec, Usage
 from coa_explorer.search import DEFAULT_LIMIT, Index, Piece
 from coa_explorer.timeline import Timeline
@@ -428,10 +428,11 @@ SUBMIT_TOOL = ToolSpec(
 
 @dataclass(frozen=True)
 class Source:
-    """What a key point may cite: a piece or a financial figure the model was shown."""
+    """What a key point may cite besides a piece: a Figure the model was shown."""
 
     citation: str
     title: str
+    text: str  # what the model was shown of it
 
 
 class Citation(BaseModel):
@@ -509,15 +510,15 @@ class AnswerEngine:
         self,
         question: str,
         usage: Usage | None = None,
-        retrieved: dict[str, Piece] | None = None,
+        retrieved: dict[str, Piece | Source] | None = None,
         history: Sequence[Exchange] = (),
     ) -> Iterator[Event]:
         """Yield `Status` updates while working, then exactly one `Answer` or `NotCovered`.
 
         The tokens the model reports using are added to `usage`, if given. Pass a dict as
-        `retrieved` to learn which pieces (by id) the model was shown. `history` holds the
-        earlier exchanges of the conversation, oldest first; the model reads them to make sense
-        of a follow-up, but cites only what it retrieves for this question.
+        `retrieved` to learn which pieces and financial figures (by id) the model was shown.
+        `history` holds the earlier exchanges of the conversation, oldest first; the model reads
+        them to make sense of a follow-up, but cites only what it retrieves for this question.
         """
         messages = []
         for exchange in history[-MAX_HISTORY_EXCHANGES:]:
@@ -525,7 +526,6 @@ class AnswerEngine:
             messages.append(Message(role="model", text=exchange.answer or NO_EARLIER_ANSWER))
         messages.append(Message(role="user", text=question))
         seen = retrieved if retrieved is not None else {}
-        figures: dict[str, Source] = {}  # financial figures the model was shown, by id
         timelines: dict[tuple[int, int], Timeline] = {}
         nudged = False
         for round_number in range(self._max_search_rounds + 1):
@@ -556,12 +556,12 @@ class AnswerEngine:
             results = []
             for call in turn.tool_calls:
                 if call.name == "submit_answer":
-                    yield finalise(call.args, {**seen, **figures}, timelines)
+                    yield finalise(call.args, seen, timelines)
                     return
                 if call.name in ARGUMENT_ERRORS and not last_round:
                     yield Status(message=status_message(call))
                     try:
-                        content = self._run_tool(call, seen, figures, timelines)
+                        content = self._run_tool(call, seen, timelines)
                     except (TypeError, ValueError, KeyError, OverflowError) as error:
                         # Tell the model what was wrong so it can retry, instead of failing.
                         content = {"error": ARGUMENT_ERRORS[call.name]}
@@ -576,19 +576,18 @@ class AnswerEngine:
     def _run_tool(
         self,
         call: ToolCall,
-        seen: dict[str, Piece],
-        figures: dict[str, Source],
+        seen: dict[str, Piece | Source],
         timelines: dict[tuple[int, int], Timeline],
     ) -> list[dict] | dict:
         if call.name == "search":
             return self._run_search(call, seen)
         if call.name == "financial_lookup":
-            return self._run_financial_lookup(call, figures)
+            return self._run_financial_lookup(call, seen)
         if call.name == "financial_change":
-            return self._run_financial_change(call, figures)
+            return self._run_financial_change(call, seen)
         return self._run_timeline(call, seen, timelines)
 
-    def _run_search(self, call: ToolCall, seen: dict[str, Piece]) -> list[dict]:
+    def _run_search(self, call: ToolCall, seen: dict[str, Piece | Source]) -> list[dict]:
         args = call.args
         observation = args.get("observation")
         hits = self._index.search(
@@ -617,7 +616,7 @@ class AnswerEngine:
                 )
         return passages
 
-    def _run_financial_lookup(self, call: ToolCall, figures: dict[str, Source]) -> dict:
+    def _run_financial_lookup(self, call: ToolCall, seen: dict[str, Piece | Source]) -> dict:
         args = call.args
         years = args["years"]
         if not isinstance(years, list):
@@ -637,24 +636,34 @@ class AnswerEngine:
             fund=fund,
         )
         for figure in result.figures:
-            figures[figure.key] = Source(
-                figure.citation, f"{figure.line_item} ({STATEMENT_NAMES[figure.statement]})"
+            seen.setdefault(  # a Figure shown before keeps the changes added to its text
+                figure.key,
+                Source(
+                    figure.citation,
+                    f"{figure.line_item} ({STATEMENT_NAMES[figure.statement]})",
+                    figure_text(figure),
+                ),
             )
+        add_changes_to_figures(result.changes, seen)
         return financial_content(result)
 
-    def _run_financial_change(self, call: ToolCall, figures: dict[str, Source]) -> dict:
+    def _run_financial_change(self, call: ToolCall, seen: dict[str, Piece | Source]) -> dict:
         from_id, to_id = str(call.args["from_id"]), str(call.args["to_id"])
         for key in (from_id, to_id):
-            if key not in figures:
+            if not isinstance(seen.get(key), Source):
                 raise ToolError(f"{key} was not returned by financial_lookup; look it up first")
         try:
             changes = self._index.financial_change(from_id, to_id, call.args.get("column"))
         except ValueError as error:
             raise ToolError(str(error)) from error
+        add_changes_to_figures(changes, seen)
         return {"units": FIGURES_UNITS, "changes": [change_content(c) for c in changes]}
 
     def _run_timeline(
-        self, call: ToolCall, seen: dict[str, Piece], timelines: dict[tuple[int, int], Timeline]
+        self,
+        call: ToolCall,
+        seen: dict[str, Piece | Source],
+        timelines: dict[tuple[int, int], Timeline],
     ) -> dict:
         year, observation = int(call.args["origin_year"]), int(call.args["origin_observation"])
         timeline = self._index.timeline(year, observation)
@@ -671,6 +680,29 @@ class AnswerEngine:
 FIGURES_UNITS = (
     "Philippine pesos (₱), exact to the centavo. Quote `display` as given; never calculate."
 )
+
+
+def figure_text(figure: FinancialFigure) -> str:
+    """A Figure in words, as the model was shown it: where it is printed and its amounts."""
+    line = " > ".join(part for part in (figure.section, figure.line_item) if part)
+    amounts = "; ".join(f"{column}: {shown}" for column, shown in figure.display.items())
+    return (
+        f"CY {figure.aar_year} AAR, {figure.source}, {STATEMENT_NAMES[figure.statement]},"
+        f" {figure.fund}: {line}. {amounts}"
+    )
+
+
+def add_changes_to_figures(changes: list[FinancialChange], seen: dict[str, Piece | Source]) -> None:
+    """Add each change the model was shown to the text of the later figure it compares."""
+    for change in changes:
+        later = seen[change.keys[1]]
+        percent = f" ({change.display_percent})" if change.display_percent else ""
+        shown = (
+            f"Change from CY {change.from_year} to CY {change.to_year} ({change.column}),"
+            f" worked out by the tool: {change.display_change}{percent}"
+        )
+        if shown not in later.text:
+            seen[change.keys[1]] = replace(later, text=f"{later.text}\n{shown}")
 
 
 def financial_content(result: FinancialLookup) -> dict:

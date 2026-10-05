@@ -263,6 +263,37 @@ repeat, grants the deployer account Vertex AI access for the index build, and se
 variables. To switch the answer model without code changes, change the `GEMINI_ANSWER_MODEL`
 variable and re-run the workflow (Actions, "CI/CD", Run workflow, on `main`).
 
+## Citations and page accuracy
+
+Every key point in an answer carries a Citation written the way COA cites itself: the AAR year,
+the Part, the Audit Observation (or Executive Summary section, Note, Part III row, AAPSI or APMT
+row, or financial line) and the page, e.g. "CY 2023 AAR, Part II, Observation No. 5, pp. 84-86".
+An answer can only cite what the model retrieved for that question; the Citation text comes from
+the index, never from the model.
+
+The observation number (or section letter, Note number, statement and line item) is the exact
+anchor. The page is a best-effort pointer, because most of each AAR is in Word files, which have no
+fixed pages, and no faithful renderer was available (ADR-0001). Pages are derived from the page
+breaks Word saved the last time each file was laid out. PDFs (the 2024 Executive Summary and
+Notes, the Auditor's Reports from 2022, the scans) use their real pages, and a financial line has
+no page at all: it is cited by statement and line item.
+
+The derived pages are measured, not assumed. Each later Part III cites the page where the
+observation it follows up starts in Part II, and `coa-explorer links` compares those starting pages
+with the derived ones:
+
+| Part II of | Observations COA cites later | Times cited (Part III of) | Derived start page exact |
+| --- | --- | --- | --- |
+| CY 2020 | 5 | 12 (CY 2021-2023) | 12 |
+| CY 2021 | 6 | 10 (CY 2022-2024) | 10 |
+| CY 2022 | 6 | 6 (CY 2023) | 6 |
+| CY 2023 | 6 | 6 (CY 2024) | 3; two 1 page early, one 2 pages early |
+
+CY 2024 has no later Part III to check against yet. Management's AAPSI pages are not used as the
+yardstick: they agree with the derived pages for most of 2024 (22 of 27 exact) but sit 7 to 9
+pages after them for 2023, where COA's own Part III is within 2. The evaluation also measures the
+drift of the pages the app actually cites (see "Results").
+
 ## Measuring quality
 
 ```bash
@@ -282,14 +313,15 @@ A reference item in `data/eval/reference.json` has an `id`, the `question`, its 
 `expected_citations` (COA's format) and `key_facts` a good answer states, an `unanswerable` flag
 (then the app must refuse, and the item has neither citations nor facts) and an `approved` flag.
 Agents draft items; the owner checks each against the AAR and sets `"approved": true`. Items
-without it are never scored. The ten Part II items and two unanswerable ones there now are drafts:
-their expected pages are the ones the index derives, so check them against the Word file (or COA's
-own later citation in the next year's Part III) when approving.
+without it are never scored. An expected Citation is copied from the extracted records, so its page
+is the derived one: check it against the Word file (or COA's own later citation in the next year's
+Part III) when approving. A Citation may name any source the app cites: a Part II observation, an
+Executive Summary section, a Note, a Part III, AAPSI or APMT row, or a financial line.
 
 Scores, pooled over items:
 
-- **Retrieval hit rate**: answerable items for which the passages the model was shown include an
-  expected source (same AAR year, Part and observation, any page).
+- **Retrieval hit rate**: answerable items for which the passages or financial figures the model
+  was shown include an expected source (the same Citation apart from its pages).
 - **Citation correctness**: expected Citations the answer cites (same source), out of all expected
   Citations. **Page drift** is reported apart: for sources cited correctly, how many pages the cited
   starting page is from the expected one (ADR-0001 makes pages best-effort, so this is measured, not
@@ -306,3 +338,44 @@ creates one, plus a separate CI evaluator account that may only call Vertex AI a
 bucket, and sets the variables CI reads). Re-run the wizard once to get those.
 `.github/workflows/eval.yml` runs the first five approved items on every pull request from this
 repository and posts the summary on the run page; it reports and does not block the merge.
+
+## Results
+
+The reference set is **human-verified**: 48 questions, each checked by the owner against the AAR
+before it counts. Of the 42 answerable ones, 17 ask about one year (Audit Observations, the
+Auditor's Report, the Executive Summary, the Notes), 13 about COA's follow-up across years (Part
+III, the AAPSI and APMT, including recommendations raised before 2020 and one Disagreement between
+Management and COA) and 12 are number questions answered from the Financial Statements and
+Annexes. The other 6 are questions the reports don't cover (another agency, a 2025 budget, a
+judgement of the Mayor), which the app must refuse. 13 of the 48 are in Filipino or Taglish.
+
+Full run of 2026-10-05, answer model `gemini-3.8-flash`, judge `gemini-3.1-pro-preview`, all 48
+items (42 answerable, 6 unanswerable), no errors and no unusable judge replies:
+
+| Measure | Score |
+| --- | --- |
+| Retrieval hit rate | 100.0% (42 of 42) |
+| Citation correctness | 100.0% (53 of 53 expected Citations) |
+| Faithfulness | 98.2% (163 of 166 key points) |
+| Key-fact coverage | 93.8% (106 of 113 facts) |
+| Correct refusal (unanswerable items) | 100.0% (6 of 6) |
+| False refusal (answerable items) | 0.0% (0 of 42) |
+
+| Questions | Items | Faithfulness | Key-fact coverage |
+| --- | --- | --- | --- |
+| One year | 17 | 97.3% | 93.9% |
+| Follow-up across years | 13 | 97.7% | 90.2% |
+| Number questions | 12 | 100.0% | 100.0% |
+| In Filipino or Taglish | 10 | 100.0% | 96.2% |
+
+The judge found three key points unsupported, each adding a detail or a link that its cited
+passages don't state outright: in the answers about 2023 Cash-in-Bank, the 2022 expropriation
+deposits, and the follow-up of the 2018 Internal Audit Service recommendation (a summary of four
+years' statuses under one reason). The missed key facts are mostly secondary details of follow-up
+answers, such as what one of several Part III rows said.
+
+All 39 Citations with a page that the app cited correctly named the expected starting page. The
+expected pages are themselves the derived ones, so this shows the app cites pages consistently;
+how far the derived pages are from COA's own is the drift table under "Citations and page
+accuracy". To reproduce, run `uv run coa-explorer eval`; scores move a little between runs, since
+the answer model is not deterministic.

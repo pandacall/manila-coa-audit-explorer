@@ -31,7 +31,8 @@ def render_summary(run: dict, evaluation: Evaluation) -> str:
     lines = [
         "# Evaluation results",
         "",
-        f"Answer model `{run['answer_model']}`, judge `{run['judge_model']}`. "
+        f"Answer model `{run['answer_model']}`, judge `{run['judge_model']}`, "
+        f"run finished {run['finished_at'][:10]} (UTC). "
         f"{run['scored']} approved items scored ({s['answerable_items']} answerable, "
         f"{s['unanswerable_items']} unanswerable) of {run['items_in_file']} in the reference file.",
         "",

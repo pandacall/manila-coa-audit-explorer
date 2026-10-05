@@ -19,8 +19,8 @@ from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 from typing import Protocol
 
-from coa_explorer.answer import Answer, AnswerEngine, NotCovered
-from coa_explorer.citation import ParsedCitation, Source, parse_citation
+from coa_explorer.answer import Answer, AnswerEngine, NotCovered, Source
+from coa_explorer.citation import ParsedCitation, parse_citation
 from coa_explorer.reference import ReferenceItem
 from coa_explorer.search import Piece
 
@@ -35,7 +35,9 @@ Faithfulness: a key point is supported only if the source passages state or dire
 claim in it, including each number, year, status and who said it. Wording may differ. A point that \
 adds outside information, overstates what the passage says (for example calls a deficiency fraud), \
 or presents Management's claim as COA's own assessment is not supported. Judge only against the \
-passages, never your own knowledge.
+passages, never your own knowledge. A passage may be a financial figure, an amount the app read \
+from the City's statements, followed by any change between years that its tool worked out exactly; \
+an amount the answer rounds ("about P8.33 billion" for P8,325,730,232.46) is supported.
 
 Coverage: a key fact is covered if the answer's summary or key points state it, in any wording or \
 language. A vague gesture at the topic does not cover a specific fact.
@@ -94,7 +96,7 @@ def evaluate(
 ) -> Evaluation:
     """Score `items`. `judge` is only needed (and called, once) if some item produced an answer."""
     results: list[ItemResult] = []
-    passages: dict[str, list[Piece]] = {}  # item id -> the pieces its answer cites
+    passages: dict[str, list[Piece | Source]] = {}  # item id -> what its answer cites
     for position, item in enumerate(items, start=1):
         progress(f"[{position}/{len(items)}] {item.id}")
         result, cited = answer_item(engine, item)
@@ -117,7 +119,9 @@ def evaluate(
     return Evaluation(results, score(items, results))
 
 
-def answer_item(engine: AnswerEngine, item: ReferenceItem) -> tuple[ItemResult, list[Piece]]:
+def answer_item(
+    engine: AnswerEngine, item: ReferenceItem
+) -> tuple[ItemResult, list[Piece | Source]]:
     result = ItemResult(
         id=item.id,
         question=item.question,
@@ -126,7 +130,7 @@ def answer_item(engine: AnswerEngine, item: ReferenceItem) -> tuple[ItemResult, 
         unanswerable=item.unanswerable,
         outcome="error",
     )
-    retrieved: dict[str, Piece] = {}
+    retrieved: dict[str, Piece | Source] = {}
     final = None
     try:
         for event in engine.ask(item.question, retrieved=retrieved):
@@ -138,7 +142,7 @@ def answer_item(engine: AnswerEngine, item: ReferenceItem) -> tuple[ItemResult, 
     if not item.unanswerable:
         found = sources(result.retrieved_citations)
         result.retrieval_hit = any(s in found for s in expected_sources(item))
-    cited_pieces: list[Piece] = []
+    cited_pieces: list[Piece | Source] = []
     cited: list[str] = []
     if isinstance(final, NotCovered):
         result.outcome, result.detail = "refused", final.message
@@ -162,11 +166,11 @@ def answer_item(engine: AnswerEngine, item: ReferenceItem) -> tuple[ItemResult, 
     return result, cited_pieces
 
 
-def expected_sources(item: ReferenceItem) -> list[Source]:
+def expected_sources(item: ReferenceItem) -> list[str]:
     return [parse_citation(c).source for c in item.expected_citations]
 
 
-def sources(citations: list[str]) -> set[Source]:
+def sources(citations: list[str]) -> set[str]:
     found = set()
     for citation in citations:
         try:
@@ -206,7 +210,7 @@ def distance(cited: ParsedCitation, expected: ParsedCitation) -> int:
     return abs(cited.page_start - expected.page_start)
 
 
-def judge_prompt(item: ReferenceItem, result: ItemResult, cited: list[Piece]) -> str:
+def judge_prompt(item: ReferenceItem, result: ItemResult, cited: list[Piece | Source]) -> str:
     passages = "\n\n".join(
         f"[{piece.citation}]\n{piece.text[:MAX_PASSAGE_CHARS]}" for piece in cited
     )
