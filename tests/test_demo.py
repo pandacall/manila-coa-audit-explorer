@@ -370,8 +370,9 @@ def test_the_footer_carries_the_disclaimer_and_the_logging_notice(index):
 
 
 def test_the_committed_saved_answers_load_and_cover_every_example_question():
+    from coa_explorer.answer import EXAMPLE_QUESTIONS
     from coa_explorer.config import DEFAULT_SAVED_ANSWERS
-    from coa_explorer.demo import EXAMPLE_QUESTIONS, load_saved_answers
+    from coa_explorer.demo import load_saved_answers
 
     saved = load_saved_answers(DEFAULT_SAVED_ANSWERS)
 

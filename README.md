@@ -169,8 +169,8 @@ Summary, `I` Auditor's Report, `TL` transmittal letter, `MR` Management Responsi
 number with `NOTES`), and with no year named returns
 the newest year first. Open http://127.0.0.1:8000, ask a question
 about Part II or about whether the City acted on COA's recommendations, and the page shows the
-summary and key points, each with Citation chips in COA's format. A follow-up question also shows a
-timeline: when the observation was raised and COA's Status of Implementation in each later AAR,
+summary and key points, each with Citation chips in COA's format. A question about whether the City
+acted on a recommendation also shows a timeline: when the observation was raised and COA's Status of Implementation in each later AAR,
 with Management's action kept apart and attributed. For 2023 and 2024 the timeline also shows
 Management's Action Plan and Reported Status (AAPSI) and COA's validation (APMT) as separate,
 attributed entries, and says where Management's Reported Status and COA's Status of Implementation
@@ -207,15 +207,38 @@ and needs no Firestore.
 - **Feedback**: 👍/👎 on an answer is sent to `POST /api/feedback`
   (`{"question_id": "...", "rating": "up" | "down"}`) and stored on the logged question.
 
-The page streams from `POST /api/ask` (`{"question": "..."}`), which returns newline-delimited
-JSON: `status` events while the model searches, then one `answer` (with its `timelines`, if any),
-`not_covered` or `error` event.
+The page streams from `POST /api/ask` (`{"question": "...", "history": [...]}`), which returns
+newline-delimited JSON: `status` events while the model searches, then one `answer` (with its
+`timelines`, if any), `not_covered` or `error` event. A `not_covered` event has a `reason`
+(`not_found`, or `out_of_scope` for a question about other cities, news or politics, which is
+refused with a short explanation of what the app covers) and up to three `suggestions`: related
+questions the reports can answer, or the example questions when the model offers none.
+`GET /api/examples` gives the example questions the page shows.
+
+## Conversation and languages
+
+The page keeps the conversation and sends the last three exchanges with each question as
+`history` (`[{"question": "...", "answer": "..."}]`, oldest first; an earlier answer is sent as
+plain text with its Citations, at most 3,000 characters). The server passes them to the model so a
+follow-up question such as "What about 2022?" or "Did they fix it?" makes sense, and stores none of
+it: the question log holds only the new question. Each follow-up question runs its own searches, and its key points
+can cite only what those searches returned, never the earlier answer. "New conversation" clears it.
+
+Ask in English, Filipino or Taglish and the answer comes in the same language; the model searches
+in English (the reports' language) and quotes COA's English words where precision matters.
+
+Verified against real Gemini (2026-10-05) with a conversation: "Ano ang napansin ng COA tungkol sa
+cash advances noong 2023?" (cited answer in Filipino, with COA's "Implemented" quoted), then "What
+about 2022?" (searched cash advances in 2022 again; cited answer in English, from 2022's own
+sources), "Sino ang mananalo sa susunod na eleksyon sa Quezon City?" (refused in Filipino, saying
+what the app covers, with three suggested questions), one of those suggestions, and "Did they fix
+it?" (COA's statuses for the 2021 cash-advance recommendations in 2022 and 2023).
 
 Verified against real Gemini (2026-10-02) with: "What did COA observe about cash advances in
 Manila?" (cited answer), "Did Manila comply with IPSAS 1 in its financial statements? Which years?"
 (cited answer across 2022-2024), "What did COA say about Quezon City's budget?" (not covered), and a
-Filipino question about 2023 Observation No. 5 (cited answer, but in English; answering in the
-question's language is a later ticket).
+Filipino question about 2023 Observation No. 5 (cited answer, but in English at the time; answers
+now follow the question's language, see "Conversation and languages").
 
 Hybrid search verified against real Gemini (2026-10-02) with: "Did the city ever fail to collect
 money that employees borrowed and never paid back?" (everyday wording; cited answer from the

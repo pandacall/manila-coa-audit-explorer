@@ -117,3 +117,33 @@ A pointer from an answer to its source, written the way COA cites itself: AAR ye
 For the Executive Summary the exact anchor is its section letter and the page is a Roman numeral, "CY 2023 AAR, Executive Summary, Section E, p. iii"; for the Auditor's Report, which sits in Part I, "CY 2022 AAR, Part I, Auditor's Report, pp. 2-3"; and for a Note, "CY 2023 AAR, Part I, Notes to Financial Statements, Note 4, p. 30" (the page is the one COA prints, which in the 2021 Notes repeats after a restart of the numbering; the Note number is the exact anchor).
 For a Financial line it names the statement and the line item, with the Annex where the line comes from an Annex and the headings above it when the line item is printed more than once: "CY 2022 AAR, Part I, Statement of Financial Position, Cash and Cash Equivalents", "CY 2024 AAR, Part IV, Annex A, Statement of Financial Position, Total Cash and Cash Equivalents". Spreadsheets have no page numbers, so there is none.
 _Avoid_: source link (and "Reference", which is Part III's column)
+
+**Not covered**:
+The result for a question about the AARs that they don't address, or that no Citation could support: said plainly instead of an answer.
+_Avoid_: No results, unanswerable (that is the evaluation's word for a reference item expected to be not covered)
+
+**Out of scope**:
+A question not about COA's 2020–2024 AARs on the City of Manila: other cities, news, politics, elections or judgements of people. It is refused with a short account of what the AARs cover, never answered; a question the AARs merely don't address is Not covered instead.
+_Avoid_: Off-topic, rejected
+
+**Suggested question**:
+A related question the AARs can answer, offered with a Not covered or Out of scope result so the visitor can keep exploring.
+_Avoid_: Recommendation (COA's word for what it asks Management to do)
+
+**Example question**:
+One of a small fixed set of questions the AARs answer well: shown to a first-time visitor, offered when there is no Suggested question, and answered ahead of time to show when the demo's daily limit is reached.
+_Avoid_: Sample question, demo question
+
+### Conversation
+
+**Conversation**:
+The questions one visitor asks in a sitting and the answers they were shown. It is kept only in the visitor's browser, never by the app.
+_Avoid_: Session, chat history
+
+**Exchange**:
+One question in a Conversation with the answer shown for it. An earlier Exchange is context for a Follow-up question, never a source: it can't be cited.
+_Avoid_: Turn, message (a model's turns and messages are steps inside answering one question)
+
+**Follow-up question**:
+A question that relies on earlier Exchanges for its meaning ("What about 2022?", "Did they fix it?"). It gets its own search and its own Citations.
+_Avoid_: "Follow-up" on its own, which means COA's follow-up of Prior Years' Recommendations across years

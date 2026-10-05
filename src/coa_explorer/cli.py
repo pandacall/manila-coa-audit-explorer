@@ -555,8 +555,8 @@ def serve_step(host: str, port: int, *, demo_limits: bool = True) -> int:
 
 
 def save_examples_step(out: Path) -> int:
-    from coa_explorer.answer import Answer
-    from coa_explorer.demo import EXAMPLE_QUESTIONS, SavedAnswer, save_answers
+    from coa_explorer.answer import EXAMPLE_QUESTIONS, Answer
+    from coa_explorer.demo import SavedAnswer, save_answers
 
     engine = answer_engine(load_settings())
     saved = []

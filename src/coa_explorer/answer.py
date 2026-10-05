@@ -15,11 +15,11 @@ model wrote.
 
 from __future__ import annotations
 
-from collections.abc import Iterator, Mapping
+from collections.abc import Iterator, Mapping, Sequence
 from dataclasses import dataclass
-from typing import Literal
+from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, StringConstraints, field_validator
 
 from coa_explorer.financial import FUNDS, STATEMENT_NAMES
 from coa_explorer.financial_lookup import FinancialChange, FinancialLookup
@@ -33,10 +33,29 @@ MAX_CITY_SAID = 4
 MAX_TIMELINES = 3
 MAX_SEARCH_RESULTS = 25
 MAX_KEY_POINT_CHARS = 500
-MAX_NOT_COVERED_CHARS = 400
+MAX_NOT_COVERED_CHARS = 600  # room for an explanation of what the app covers, in Filipino
+MAX_SUGGESTIONS = 3
+MAX_SUGGESTION_CHARS = 200
 MAX_PIECE_CHARS_TO_MODEL = 2500
+MAX_QUESTION_CHARS = 1000
+MAX_HISTORY_EXCHANGES = 3
+MAX_HISTORY_ANSWER_CHARS = 3000
+NO_EARLIER_ANSWER = "(no answer)"
 NOT_COVERED_DEFAULT = (
     "The Annual Audit Reports I have don't cover that, or I couldn't ground an answer in them."
+)
+OUT_OF_SCOPE_DEFAULT = (
+    "I can only answer questions about COA's Annual Audit Reports on the City of Manila, "
+    "2020–2024: the Audit Observations and Recommendations, whether the City acted on them, and "
+    "the City's financial statements."
+)
+# Questions the reports can answer: shown on the page, suggested when a question is not covered
+# and the model offers none, and answered ahead of time (`coa-explorer save-examples`) to show when
+# the demo's daily cap is reached.
+EXAMPLE_QUESTIONS = (
+    "What did COA observe about cash advances in Manila?",
+    "Did Manila comply with IPSAS 1 in its financial statements? Which years?",
+    "Did Manila act on COA's recommendations about cash advances?",
 )
 
 SYSTEM_PROMPT = """\
@@ -66,6 +85,10 @@ target dates and the Reported Status Management claims; the APMT (part "APMT") i
 validation of it, with COA's own Status of Implementation.
 
 How to work
+- The question may follow earlier exchanges of the same conversation, which come before it. Use \
+them only to work out what a follow-up such as "What about 2022?" or "Did they fix it?" refers to \
+(the topic, the year, the observation), then search again: an earlier answer is not a source, and \
+you may cite only passages and figures returned for this question.
 - Call `search` to find passages. Search again with different words, or a year or observation \
 number filter, if the first results miss. Do not repeat a query that already returned results. \
 You have a limited number of searches: to compare years, search each year with the `years` \
@@ -116,10 +139,20 @@ say so.
 - Answer ONLY from passages `search` and `timeline` returned, and figures `financial_lookup` \
 returned. Never use outside knowledge, never \
 guess, never calculate or infer figures that the passages do not state. If the passages do not \
-address the question, submit with covered=false and say so plainly; suggest what the reports do \
-cover if you can. Questions about other cities, news, politics or people are out of scope: \
-covered=false.
-- Write in plain language, in English. Keep it short: a summary of 1-3 sentences, then at most \
+address the question, submit with covered=false, say so plainly, and give up to three \
+`suggested_questions` on related matters the reports do cover, going by what your searches \
+returned.
+- Questions about anything else are out of scope: other cities, news, politics, elections, \
+or judgements of people. When a question is plainly about one of these, do not search: submit \
+at once with covered=false and out_of_scope=true (if unsure, search first), and in \
+`not_covered_message` explain in a sentence or two that you answer only from COA's 2020-2024 \
+Annual Audit Reports on the City of Manila (its Audit Observations and Recommendations, \
+whether the City acted on them, and its financial statements). Give `suggested_questions` too.
+- Answer in the language of the question: English, Filipino or Taglish (a mix of the two), \
+whichever the visitor used. The reports are in English, so always search in English, in COA's \
+words. Where COA's exact words matter (an opinion, a status, a term, a figure's line item), quote \
+the AAR's English in quotation marks rather than translating it.
+- Write in plain language. Keep it short: a summary of 1-3 sentences, then at most \
 five key points.
 - Every key point must list the `id`s of the passages that support it in `sources`. A key point \
 without sources will be deleted.
@@ -321,6 +354,13 @@ SUBMIT_TOOL = ToolSpec(
                 "type": "boolean",
                 "description": "False if the passages do not address the question.",
             },
+            "out_of_scope": {
+                "type": "boolean",
+                "description": (
+                    "True if the question is not about COA's 2020-2024 AARs on the City of "
+                    "Manila (other cities, news, politics, people)."
+                ),
+            },
             "summary": {"type": "string", "description": "1-3 sentence plain-language summary."},
             "key_points": {
                 "type": "array",
@@ -372,6 +412,14 @@ SUBMIT_TOOL = ToolSpec(
                 "type": "string",
                 "description": "When covered is false: say so plainly.",
             },
+            "suggested_questions": {
+                "type": "array",
+                "items": {"type": "string"},
+                "description": (
+                    "When covered is false: up to three related questions the AARs can answer, "
+                    "in the language of the question."
+                ),
+            },
         },
         "required": ["covered"],
     },
@@ -412,8 +460,21 @@ class Answer(BaseModel):
 
 
 class NotCovered(BaseModel):
+    """No answer: the reports don't cover the question (`not_found`), or it is about something
+    else altogether and was refused (`out_of_scope`)."""
+
     type: Literal["not_covered"] = "not_covered"
+    reason: Literal["not_found", "out_of_scope"] = "not_found"
     message: str
+    # Related questions the reports can answer; the example questions when there are none.
+    suggestions: list[str] = Field(
+        default_factory=list, max_length=MAX_SUGGESTIONS, validate_default=True
+    )
+
+    @field_validator("suggestions")
+    @classmethod
+    def _example_questions_if_none(cls, suggestions: list[str]) -> list[str]:
+        return suggestions or list(EXAMPLE_QUESTIONS)
 
 
 class Status(BaseModel):
@@ -422,6 +483,20 @@ class Status(BaseModel):
 
 
 Event = Status | Answer | NotCovered
+
+
+Question = Annotated[
+    str, StringConstraints(strip_whitespace=True, min_length=1, max_length=MAX_QUESTION_CHARS)
+]
+
+
+class Exchange(BaseModel):
+    """One earlier question and the answer the visitor was shown, as the browser sends it back.
+
+    It is context for a follow-up question only: nothing in it can be cited."""
+
+    question: Question
+    answer: Annotated[str, StringConstraints(max_length=MAX_HISTORY_ANSWER_CHARS)] = ""
 
 
 class AnswerEngine:
@@ -435,13 +510,20 @@ class AnswerEngine:
         question: str,
         usage: Usage | None = None,
         retrieved: dict[str, Piece] | None = None,
+        history: Sequence[Exchange] = (),
     ) -> Iterator[Event]:
         """Yield `Status` updates while working, then exactly one `Answer` or `NotCovered`.
 
         The tokens the model reports using are added to `usage`, if given. Pass a dict as
-        `retrieved` to learn which pieces (by id) the model was shown.
+        `retrieved` to learn which pieces (by id) the model was shown. `history` holds the
+        earlier exchanges of the conversation, oldest first; the model reads them to make sense
+        of a follow-up, but cites only what it retrieves for this question.
         """
-        messages = [Message(role="user", text=question)]
+        messages = []
+        for exchange in history[-MAX_HISTORY_EXCHANGES:]:
+            messages.append(Message(role="user", text=exchange.question))
+            messages.append(Message(role="model", text=exchange.answer or NO_EARLIER_ANSWER))
+        messages.append(Message(role="user", text=question))
         seen = retrieved if retrieved is not None else {}
         figures: dict[str, Source] = {}  # financial figures the model was shown, by id
         timelines: dict[tuple[int, int], Timeline] = {}
@@ -677,7 +759,14 @@ def finalise(
     """Validate the model's submitted answer against what it retrieved."""
     if args.get("covered") is not True:
         message = clip(str(args.get("not_covered_message") or ""), MAX_NOT_COVERED_CHARS)
-        return NotCovered(message=message or NOT_COVERED_DEFAULT)
+        suggestions = suggested_questions(args.get("suggested_questions"))
+        if args.get("out_of_scope") is True:
+            return NotCovered(
+                reason="out_of_scope",
+                message=message or OUT_OF_SCOPE_DEFAULT,
+                suggestions=suggestions,
+            )
+        return NotCovered(message=message or NOT_COVERED_DEFAULT, suggestions=suggestions)
     key_points = cited_points(args.get("key_points"), seen)
     if not key_points:
         return NotCovered(message=NOT_COVERED_DEFAULT)
@@ -688,6 +777,12 @@ def finalise(
         city_said=cited_points(args.get("city_said"), seen)[:MAX_CITY_SAID],
         timelines=chosen_timelines(args.get("timelines"), timelines),
     )
+
+
+def suggested_questions(raw: object) -> list[str]:
+    """The model's suggested questions: non-empty, short, at most a few."""
+    questions = [clip(item, MAX_SUGGESTION_CHARS) for item in as_list(raw)]
+    return [question for question in questions if question][:MAX_SUGGESTIONS]
 
 
 def cited_points(raw_points: object, seen: Mapping[str, Piece | Source]) -> list[KeyPoint]:
