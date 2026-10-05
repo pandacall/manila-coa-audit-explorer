@@ -398,7 +398,7 @@ def cash_answer():
     )
 
 
-def test_a_number_question_citing_the_expected_financial_line_is_correct(tmp_path, index_path):
+def test_a_financial_question_citing_the_expected_figure_is_correct(tmp_path, index_path):
     judge = ScriptedBatchModel(all_true)
 
     code, results, _ = run_eval(tmp_path, index_path, [financial_item()], cash_answer(), judge)
@@ -408,9 +408,7 @@ def test_a_number_question_citing_the_expected_financial_line_is_correct(tmp_pat
     assert results["items"][0]["citation_matches"][0]["cited"] == CASH_2022_CITATION
 
 
-def test_a_financial_line_the_model_looked_up_counts_as_retrieved_even_if_refused(
-    tmp_path, index_path
-):
+def test_a_figure_the_model_looked_up_counts_as_retrieved_even_if_refused(tmp_path, index_path):
     adapter = ScriptedAdapter(financial_lookup("Cash and Cash Equivalents", years=[2022]), REFUSAL)
     judge = ScriptedBatchModel(all_true)
 
@@ -420,7 +418,7 @@ def test_a_financial_line_the_model_looked_up_counts_as_retrieved_even_if_refuse
     assert CASH_2022_CITATION in results["items"][0]["retrieved_citations"]
 
 
-def test_the_judge_sees_the_amounts_and_the_computed_change_a_number_answer_cites(
+def test_the_judge_sees_the_amounts_and_the_computed_change_a_financial_answer_cites(
     tmp_path, index_path
 ):
     adapter = ScriptedAdapter(
@@ -465,3 +463,34 @@ def test_the_summary_says_when_the_run_finished(tmp_path, index_path):
 
     day = results["run"]["finished_at"][:10]
     assert f"run finished {day}" in (out / "summary.md").read_text(encoding="utf-8")
+
+
+def test_page_drift_is_measured_on_a_document_cited_by_its_name_and_pages(tmp_path, index_path):
+    adapter = ScriptedAdapter(
+        search("transmittal letter opinion", years=[2022], parts=["TL"]),
+        submit("s", [point("COA rendered a qualified opinion.", "2022-TL-1-1")]),
+    )
+    expected = "CY 2022 AAR, Transmittal Letter, p. 2"  # the index says pp. 1-2
+    judge = ScriptedBatchModel(all_true)
+
+    _, results, _ = run_eval(
+        tmp_path, index_path, [item(expected_citations=[expected])], adapter, judge
+    )
+
+    [match] = results["items"][0]["citation_matches"]
+    assert match["cited"] == "CY 2022 AAR, Transmittal Letter, pp. 1-2"
+    assert match["page_drift"] == -1
+
+
+def test_looking_up_a_figure_again_keeps_the_change_already_worked_out_for_it(tmp_path, index_path):
+    adapter = ScriptedAdapter(
+        financial_lookup("Cash and Cash Equivalents", years=[2021, 2022]),
+        financial_lookup("Cash and Cash Equivalents", years=[2022]),
+        submit("s", [point("Cash fell by ₱2,539,183,804.07.", CASH_2022)]),
+    )
+    judge = ScriptedBatchModel(all_true)
+
+    run_eval(tmp_path, index_path, [financial_item()], adapter, judge)
+
+    [prompt] = judge.batches[0][1]
+    assert "-₱2,539,183,804.07" in prompt

@@ -278,21 +278,21 @@ breaks Word saved the last time each file was laid out. PDFs (the 2024 Executive
 Notes, the Auditor's Reports from 2022, the scans) use their real pages, and a financial line has
 no page at all: it is cited by statement and line item.
 
-The derived pages are measured, not assumed. Each Part III cites the page where the observation it
-follows up starts in the previous year's Part II, and `coa-explorer links` compares those starting
-pages with the derived ones:
+The derived pages are measured, not assumed. Each later Part III cites the page where the
+observation it follows up starts in Part II, and `coa-explorer links` compares those starting pages
+with the derived ones:
 
-| Part II of | Observations COA cites again | Derived start page exact | Off by |
+| Part II of | Observations COA cites later | Times cited (Part III of) | Derived start page exact |
 | --- | --- | --- | --- |
-| CY 2020 | 5 (in the CY 2021 Part III) | 5 | - |
-| CY 2021 | 10 (CY 2022) | 10 | - |
-| CY 2022 | 13 (CY 2023) | 13 | - |
-| CY 2023 | 7 (CY 2024) | 4 | 1 page (2), 2 pages (1) |
+| CY 2020 | 5 | 12 (CY 2021-2023) | 12 |
+| CY 2021 | 6 | 10 (CY 2022-2024) | 10 |
+| CY 2022 | 6 | 6 (CY 2023) | 6 |
+| CY 2023 | 6 | 6 (CY 2024) | 3; two 1 page early, one 2 pages early |
 
-CY 2024 has no later Part III to check against yet. Management's own AAPSI pages are not used as
-the yardstick: they agree with COA for most of 2024 (22 of 27 exact) but sit 7 to 9 pages after
-COA's 2023 pages. The evaluation measures the drift of the pages the app actually cites (see
-"Results" below).
+CY 2024 has no later Part III to check against yet. Management's AAPSI pages are not used as the
+yardstick: they agree with the derived pages for most of 2024 (22 of 27 exact) but sit 7 to 9
+pages after them for 2023, where COA's own Part III is within 2. The evaluation also measures the
+drift of the pages the app actually cites, reported as `page_drift` with each run.
 
 ## Measuring quality
 

@@ -252,7 +252,7 @@
         "CY 2024 AAR, Executive Summary, Section C, p. ii"
       ],
       "key_facts": [
-        "The City was awarded the Seal of Local Good Governance from the Department of the Interior and Local Government"
+        "The City reported that it was awarded the Seal of Local Good Governance by the Department of the Interior and Local Government"
       ],
       "unanswerable": false,
       "approved": false
@@ -500,7 +500,7 @@
     },
     {
       "id": "accounts-payable-variance-followup-2023",
-      "question": "What did the City do about the P525.234 million gap COA found in its 2023 accounts payable, and did COA accept it?",
+      "question": "What did the City do about the gap COA found in 2023 between its accounts payable and what contractors and suppliers confirmed, and did COA accept it?",
       "language": "en",
       "question_type": "follow_up",
       "expected_citations": [
@@ -508,7 +508,7 @@
         "CY 2023 AAPSI, CY 2023 Observation No. 2, p. 2"
       ],
       "key_facts": [
-        "The 2023 observation was that the P4.577 billion Accounts Payable balance could not be determined due to a net understatement variance of P525.234 million against confirmations with contractors and suppliers",
+        "The 2023 observation was that the P4.577 billion Accounts Payable balance could not be determined due to a net understatement variance against confirmations with contractors and suppliers",
         "Management reported that the variance was recorded through JEV No. 100-24-04-06 dated June 15, 2024, and reported the recommendations as Fully Implemented",
         "COA assessed all four recommendations as Implemented in the APMT"
       ],

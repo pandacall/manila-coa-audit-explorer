@@ -13,7 +13,7 @@ from typing import NamedTuple
 
 CITATION = re.compile(
     r"^(?P<source>CY \d{4} (?:AAR, (?:Part (?:IV|III|II|I)|Executive Summary|Transmittal Letter)"
-    r"|AAPSI|APMT)(?:, .+?)?)"
+    r"|AAPSI|APMT)(?:, (?!pp?\. ).+?)?)"  # an anchor, never the pages themselves
     r"(?:, pp?\. (?P<start>\d+|[ivxlc]+)(?:-(?P<end>\d+|[ivxlc]+))?)?$"
 )
 ROMAN = {"i": 1, "v": 5, "x": 10, "l": 50, "c": 100}

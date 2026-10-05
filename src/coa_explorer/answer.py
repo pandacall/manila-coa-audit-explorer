@@ -428,7 +428,7 @@ SUBMIT_TOOL = ToolSpec(
 
 @dataclass(frozen=True)
 class Source:
-    """What a key point may cite: a piece or a financial figure the model was shown."""
+    """What a key point may cite besides a piece: a Figure the model was shown."""
 
     citation: str
     title: str
@@ -636,12 +636,15 @@ class AnswerEngine:
             fund=fund,
         )
         for figure in result.figures:
-            seen[figure.key] = Source(
-                figure.citation,
-                f"{figure.line_item} ({STATEMENT_NAMES[figure.statement]})",
-                figure_text(figure),
+            seen.setdefault(  # a Figure shown before keeps the changes added to its text
+                figure.key,
+                Source(
+                    figure.citation,
+                    f"{figure.line_item} ({STATEMENT_NAMES[figure.statement]})",
+                    figure_text(figure),
+                ),
             )
-        show_changes(result.changes, seen)
+        add_changes_to_figures(result.changes, seen)
         return financial_content(result)
 
     def _run_financial_change(self, call: ToolCall, seen: dict[str, Piece | Source]) -> dict:
@@ -653,7 +656,7 @@ class AnswerEngine:
             changes = self._index.financial_change(from_id, to_id, call.args.get("column"))
         except ValueError as error:
             raise ToolError(str(error)) from error
-        show_changes(changes, seen)
+        add_changes_to_figures(changes, seen)
         return {"units": FIGURES_UNITS, "changes": [change_content(c) for c in changes]}
 
     def _run_timeline(
@@ -680,7 +683,7 @@ FIGURES_UNITS = (
 
 
 def figure_text(figure: FinancialFigure) -> str:
-    """A figure in words, as the model was shown it: where it is printed and its amounts."""
+    """A Figure in words, as the model was shown it: where it is printed and its amounts."""
     line = " > ".join(part for part in (figure.section, figure.line_item) if part)
     amounts = "; ".join(f"{column}: {shown}" for column, shown in figure.display.items())
     return (
@@ -689,7 +692,7 @@ def figure_text(figure: FinancialFigure) -> str:
     )
 
 
-def show_changes(changes: list[FinancialChange], seen: dict[str, Piece | Source]) -> None:
+def add_changes_to_figures(changes: list[FinancialChange], seen: dict[str, Piece | Source]) -> None:
     """Add each change the model was shown to the text of the later figure it compares."""
     for change in changes:
         later = seen[change.keys[1]]
