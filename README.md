@@ -263,6 +263,37 @@ repeat, grants the deployer account Vertex AI access for the index build, and se
 variables. To switch the answer model without code changes, change the `GEMINI_ANSWER_MODEL`
 variable and re-run the workflow (Actions, "CI/CD", Run workflow, on `main`).
 
+## Citations and page accuracy
+
+Every key point in an answer carries a Citation written the way COA cites itself: the AAR year,
+the Part, the Audit Observation (or Executive Summary section, Note, Part III row, AAPSI or APMT
+row, or financial line) and the page, e.g. "CY 2023 AAR, Part II, Observation No. 5, pp. 84-86".
+An answer can only cite what the model retrieved for that question; the Citation text comes from
+the index, never from the model.
+
+The observation number (or section letter, Note number, statement and line item) is the exact
+anchor. The page is a best-effort pointer, because most of each AAR is in Word files, which have no
+fixed pages, and no faithful renderer was available (ADR-0001). Pages are derived from the page
+breaks Word saved the last time each file was laid out. PDFs (the 2024 Executive Summary and
+Notes, the Auditor's Reports from 2022, the scans) use their real pages, and a financial line has
+no page at all: it is cited by statement and line item.
+
+The derived pages are measured, not assumed. Each Part III cites the page where the observation it
+follows up starts in the previous year's Part II, and `coa-explorer links` compares those starting
+pages with the derived ones:
+
+| Part II of | Observations COA cites again | Derived start page exact | Off by |
+| --- | --- | --- | --- |
+| CY 2020 | 5 (in the CY 2021 Part III) | 5 | - |
+| CY 2021 | 10 (CY 2022) | 10 | - |
+| CY 2022 | 13 (CY 2023) | 13 | - |
+| CY 2023 | 7 (CY 2024) | 4 | 1 page (2), 2 pages (1) |
+
+CY 2024 has no later Part III to check against yet. Management's own AAPSI pages are not used as
+the yardstick: they agree with COA for most of 2024 (22 of 27 exact) but sit 7 to 9 pages after
+COA's 2023 pages. The evaluation measures the drift of the pages the app actually cites (see
+"Results" below).
+
 ## Measuring quality
 
 ```bash
@@ -282,14 +313,15 @@ A reference item in `data/eval/reference.json` has an `id`, the `question`, its 
 `expected_citations` (COA's format) and `key_facts` a good answer states, an `unanswerable` flag
 (then the app must refuse, and the item has neither citations nor facts) and an `approved` flag.
 Agents draft items; the owner checks each against the AAR and sets `"approved": true`. Items
-without it are never scored. The ten Part II items and two unanswerable ones there now are drafts:
-their expected pages are the ones the index derives, so check them against the Word file (or COA's
-own later citation in the next year's Part III) when approving.
+without it are never scored. An expected Citation is copied from the extracted records, so its page
+is the derived one: check it against the Word file (or COA's own later citation in the next year's
+Part III) when approving. A Citation may name any source the app cites: a Part II observation, an
+Executive Summary section, a Note, a Part III, AAPSI or APMT row, or a financial line.
 
 Scores, pooled over items:
 
-- **Retrieval hit rate**: answerable items for which the passages the model was shown include an
-  expected source (same AAR year, Part and observation, any page).
+- **Retrieval hit rate**: answerable items for which the passages or financial figures the model
+  was shown include an expected source (the same Citation apart from its pages).
 - **Citation correctness**: expected Citations the answer cites (same source), out of all expected
   Citations. **Page drift** is reported apart: for sources cited correctly, how many pages the cited
   starting page is from the expected one (ADR-0001 makes pages best-effort, so this is measured, not

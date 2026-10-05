@@ -16,7 +16,15 @@ from coa_explorer.index import build_index
 from coa_explorer.reference import load_reference
 from tests.fake_embedder import FakeEmbedder
 from tests.fixtures import write_fixture_records
-from tests.scripted import ScriptedAdapter, ScriptedBatchModel, point, search, submit, verdict
+from tests.scripted import (
+    ScriptedAdapter,
+    ScriptedBatchModel,
+    financial_lookup,
+    point,
+    search,
+    submit,
+    verdict,
+)
 
 IPSAS_5 = "2023-5-description-1"
 CITATION_5 = "CY 2023 AAR, Part II, Observation No. 5, pp. 71-73"
@@ -336,19 +344,124 @@ def test_duplicate_item_ids_are_rejected(tmp_path, index_path, capsys):
     assert "duplicate" in capsys.readouterr().err
 
 
-def test_the_committed_reference_set_is_valid_and_cites_observations_that_exist():
+def test_the_committed_reference_set_covers_the_question_types_and_cites_real_sources():
     root = Path(__file__).resolve().parents[1]
     items = load_reference(root / "data" / "eval" / "reference.json")
-    real = {
-        observation["citation"]
-        for year in range(2020, 2025)
-        for observation in json.loads(
-            (root / "data" / "extracted" / "part2" / f"{year}.json").read_text(encoding="utf-8")
-        )["observations"]
-    }
+    real: set[str] = set()
 
-    assert len(items) >= 10
-    assert {item.language for item in items} >= {"en", "fil"}
-    assert any(item.unanswerable for item in items)
+    def collect(node):
+        if isinstance(node, dict):
+            for key, value in node.items():
+                if key == "citation" and isinstance(value, str):
+                    real.add(value)
+                else:
+                    collect(value)
+        elif isinstance(node, list):
+            for value in node:
+                collect(value)
+
+    for path in (root / "data" / "extracted").rglob("*.json"):
+        collect(json.loads(path.read_text(encoding="utf-8")))
+
+    assert len(items) >= 45
+    assert {item.question_type for item in items} == {"observation", "follow_up", "financial"}
+    assert sum(item.language in ("fil", "taglish") for item in items) >= 5
+    assert sum(item.unanswerable for item in items) >= 5
     for item in items:
         assert set(item.expected_citations) <= real, item.id
+
+
+CASH_2022 = "2022-FS-PartI-SFPo-10-ALL"
+CASH_2022_CITATION = (
+    "CY 2022 AAR, Part I, Statement of Financial Position, Cash and Cash Equivalents"
+)
+
+
+def financial_item(**overrides) -> dict:
+    return item(
+        id="cash-2022",
+        question="How much cash did Manila have at the end of 2022?",
+        question_type="financial",
+        expected_citations=[CASH_2022_CITATION],
+        key_facts=["Cash and cash equivalents were P8.326 billion"],
+        **overrides,
+    )
+
+
+def cash_answer():
+    return ScriptedAdapter(
+        financial_lookup("Cash and Cash Equivalents", years=[2022]),
+        submit(
+            "Manila had about P8.33 billion in cash.",
+            [point("Cash and cash equivalents were ₱8,325,730,232.46.", CASH_2022)],
+        ),
+    )
+
+
+def test_a_number_question_citing_the_expected_financial_line_is_correct(tmp_path, index_path):
+    judge = ScriptedBatchModel(all_true)
+
+    code, results, _ = run_eval(tmp_path, index_path, [financial_item()], cash_answer(), judge)
+
+    assert code == 0
+    assert results["scores"]["citation_correctness"] == 1.0
+    assert results["items"][0]["citation_matches"][0]["cited"] == CASH_2022_CITATION
+
+
+def test_a_financial_line_the_model_looked_up_counts_as_retrieved_even_if_refused(
+    tmp_path, index_path
+):
+    adapter = ScriptedAdapter(financial_lookup("Cash and Cash Equivalents", years=[2022]), REFUSAL)
+    judge = ScriptedBatchModel(all_true)
+
+    _, results, _ = run_eval(tmp_path, index_path, [financial_item()], adapter, judge)
+
+    assert results["scores"]["retrieval_hit_rate"] == 1.0
+    assert CASH_2022_CITATION in results["items"][0]["retrieved_citations"]
+
+
+def test_the_judge_sees_the_amounts_and_the_computed_change_a_number_answer_cites(
+    tmp_path, index_path
+):
+    adapter = ScriptedAdapter(
+        financial_lookup("Cash and Cash Equivalents", years=[2021, 2022]),
+        submit(
+            "Cash fell by about P2.54 billion.",
+            [point("Cash fell by ₱2,539,183,804.07.", "2021-FS-PartI-SFPo-10-ALL", CASH_2022)],
+        ),
+    )
+    judge = ScriptedBatchModel(all_true)
+
+    run_eval(tmp_path, index_path, [financial_item()], adapter, judge)
+
+    [prompt] = judge.batches[0][1]
+    assert "₱8,325,730,232.46" in prompt
+    assert "₱10,864,914,036.53" in prompt
+    assert "-₱2,539,183,804.07" in prompt  # worked out by the tool, not left to the judge
+
+
+def test_page_drift_is_measured_on_the_executive_summarys_roman_pages(tmp_path, index_path):
+    adapter = ScriptedAdapter(
+        search("auditor's opinion", years=[2022], parts=["ES"]),
+        submit("s", [point("COA gave a qualified opinion.", "2022-ES-E-1")]),
+    )
+    expected = "CY 2022 AAR, Executive Summary, Section E, p. ii"  # the index says pp. iii-iv
+    judge = ScriptedBatchModel(all_true)
+
+    _, results, _ = run_eval(
+        tmp_path, index_path, [item(expected_citations=[expected])], adapter, judge
+    )
+
+    [match] = results["items"][0]["citation_matches"]
+    assert match["cited"] == "CY 2022 AAR, Executive Summary, Section E, pp. iii-iv"
+    assert match["page_drift"] == 1
+    assert results["items"][0]["retrieval_hit"] is True
+
+
+def test_the_summary_says_when_the_run_finished(tmp_path, index_path):
+    _, results, out = run_eval(
+        tmp_path, index_path, [item()], good_answer(), ScriptedBatchModel(all_true)
+    )
+
+    day = results["run"]["finished_at"][:10]
+    assert f"run finished {day}" in (out / "summary.md").read_text(encoding="utf-8")
