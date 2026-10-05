@@ -22,16 +22,19 @@ from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 
 from coa_explorer.config import DEFAULT_REVIEWED
-from coa_explorer.docx_reader import Paragraph, Table, read_blocks
-from coa_explorer.front_matter import (
+from coa_explorer.docx_reader import read_blocks
+from coa_explorer.front_matter import find_file
+from coa_explorer.pdf_reader import PdfPage, read_pages, reviewed_path
+from coa_explorer.text_blocks import (
     CELL_GAP,
-    find_file,
-    join_over_page_break,
-    paragraph_groups,
+    Block,
+    Line,
+    join_lines,
+    pdf_blocks,
     table_cells,
     tidy,
+    word_blocks,
 )
-from coa_explorer.pdf_reader import PdfPage, read_pages, reviewed_path
 from coa_explorer.timeline import clip_title
 
 NOTES = "Notes to Financial Statements"
@@ -40,7 +43,7 @@ MAX_PASSAGE_CHARS = 1800
 
 NOTE_HEADING = re.compile(r"^Note\s+(\d+)\s*[–—-]\s*(\S.*)$", re.DOTALL)
 # A list item in a PDF: "a." "1)" "3.1" "(ee)" or a bullet.
-LIST_ITEM = re.compile(
+NOTE_LIST_ITEM = re.compile(
     r"^(?:(?:[a-z]|\d{1,2})[.)]\s+\S|\d{1,2}\.\d{1,2}\s+\S|\([a-z]{1,2}\)\s+\S|[•●])"
 )
 # An amount as a table cell: 1,234.50 or (1,234.50) or 12.5, or a lone dash for nil.
@@ -49,25 +52,6 @@ AMOUNT_CELL = re.compile(r"^\(?(?:\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+\.\d+)\)?$|^[-
 LABEL_AND_AMOUNT = re.compile(r"^(.*\S)\s+(\(?\d{1,3}(?:,\d{3})+(?:\.\d+)?\)?)$")
 HEADING_LINE = re.compile(r"^\s*Note\s+\d+\s*[–—-]")
 NUMERIC_SHARE = 0.4  # of a table row's cells, at least this share are amounts
-
-
-@dataclass(frozen=True)
-class Line:
-    text: str
-    page: int
-    end_page: int
-
-
-@dataclass(frozen=True)
-class Block:
-    """A paragraph, list item or table. A table also lists its markdown lines, header row and
-    separator first, each with the pages it is on."""
-
-    text: str
-    page: int
-    end_page: int
-    table: bool = False
-    rows: tuple[Line, ...] = ()
 
 
 @dataclass
@@ -105,7 +89,7 @@ def extract_notes(
 ) -> Notes:
     path = find_file(reports_dir, year, "08-*Notes*.*")
     if path.suffix == ".docx":
-        blocks = _word_blocks(read_blocks(path))
+        blocks = word_blocks(read_blocks(path))
         text_source = "Word document"
     else:
         blocks = _pdf_blocks(read_pages(path, reviewed_dir), path)
@@ -238,34 +222,6 @@ def _join(items: Sequence[_Item]) -> str:
 
 
 # ---------------------------------------------------------------------------------------------
-# Word documents into blocks
-
-
-def _word_blocks(blocks: list) -> list[Block]:
-    result = []
-    for block in blocks:
-        if isinstance(block, Table):
-            result.append(_word_table(block))
-        elif isinstance(block, Paragraph):
-            text = f"{block.label} {block.text}" if block.label else block.text
-            result.append(Block(text, block.page, block.end_page))
-    return result
-
-
-def _word_table(table: Table) -> Block:
-    """The table as markdown, each row with the pages it is on. The rows Word saved without any
-    text are not in the markdown, so they are left out here too."""
-    lines = table.markdown.split("\n")
-    kept = [row for row in table.rows if any(row.cells)]
-    if len(kept) == len(lines) - 1:
-        pages = [kept[0], kept[0], *kept[1:]]  # the separator line sits on the header's page
-    else:  # a cell holds a table of its own: the rows can't be told apart, so give them all
-        pages = [table] * len(lines)  # the table's own pages
-    rows = tuple(Line(line, p.page, p.end_page) for line, p in zip(lines, pages, strict=True))
-    return Block(table.markdown, table.page, table.end_page, table=True, rows=rows)
-
-
-# ---------------------------------------------------------------------------------------------
 # PDF pages into blocks
 
 
@@ -282,13 +238,12 @@ def _printed_pages(path: Path, pages: list[PdfPage]) -> dict[int, int]:
 
 def _pdf_blocks(pages: list[PdfPage], path: Path) -> list[Block]:
     printed = _printed_pages(path, pages)
-    blocks: list[Block] = []
-    for page in pages:
-        first_on_page = len(blocks)
-        for group in paragraph_groups(page.lines):
-            blocks.extend(_group_blocks(group, printed[page.number]))
-        join_over_page_break(blocks, first_on_page, lambda text: bool(NOTE_HEADING.match(text)))
-    return blocks
+    return pdf_blocks(
+        pages,
+        _group_blocks,
+        lambda text: bool(NOTE_HEADING.match(text)),
+        lambda page: printed[page.number],
+    )
 
 
 def _group_blocks(lines: list[str], page: int) -> list[Block]:
@@ -298,14 +253,7 @@ def _group_blocks(lines: list[str], page: int) -> list[Block]:
         return [*before, Block(tidy(" ".join(lines[heading:])), page, page)]
     if _is_table(lines):
         return [_pdf_table(lines, page)]
-    blocks: list[str] = []
-    for line in lines:
-        text = tidy(line)
-        if not blocks or LIST_ITEM.match(text):
-            blocks.append(text)
-        else:
-            blocks[-1] = f"{blocks[-1]} {text}"
-    return [Block(text, page, page) for text in blocks]
+    return [Block(text, page, page) for text in join_lines(lines, NOTE_LIST_ITEM)]
 
 
 def _is_table(lines: list[str]) -> bool:

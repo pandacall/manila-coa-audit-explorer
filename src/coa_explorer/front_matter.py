@@ -25,20 +25,25 @@ from __future__ import annotations
 import re
 import string
 from collections.abc import Callable, Sequence
-from dataclasses import asdict, dataclass, field, replace
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
 from coa_explorer.config import DEFAULT_REVIEWED
-from coa_explorer.docx_reader import Block as DocxBlock
 from coa_explorer.docx_reader import (
-    Paragraph,
-    Table,
     embedded_images,
     format_page_number,
     page_number_format,
     read_blocks,
 )
 from coa_explorer.pdf_reader import PdfPage, read_pages, read_transcription, reviewed_path
+from coa_explorer.text_blocks import (
+    AMOUNT,
+    Block,
+    join_lines,
+    pdf_blocks,
+    table_cells,
+    word_blocks,
+)
 
 EXECUTIVE_SUMMARY = "Executive Summary"
 AUDITORS_REPORT = "Auditor's Report"
@@ -56,11 +61,6 @@ SCANNED: dict[str, tuple[int, ...]] = {
     MANAGEMENT_RESPONSIBILITY: (2020, 2021, 2022, 2023, 2024),
 }
 
-# Sentence-ending characters: a block that ends with anything else carries on over a page break.
-TERMINATORS = '.;:?!)"”’'
-LIST_ITEM = re.compile(r"^(?:(?:[a-z]|\d{1,2})[.)]\s+\S|•)")
-AMOUNT = re.compile(r"\(?\d{1,3}(?:,\d{3})+(?:\.\d+)?\)?")
-CELL_GAP = re.compile(r"\s{2,}")
 EXECUTIVE_SUMMARY_HEADING = re.compile(r"^([A-Z])\.\s+(\S.*)$")
 AUDITORS_REPORT_HEADINGS = re.compile(
     r"independent auditor's report"
@@ -73,14 +73,6 @@ AUDITORS_REPORT_HEADINGS = re.compile(
     r"|auditor's responsibilities for the audit of the financial statements"
     r"|report on other legal and regulatory requirements"
 )
-
-
-@dataclass(frozen=True)
-class Block:
-    text: str
-    page: int
-    end_page: int
-    table: bool = False  # keeps its line breaks and is never joined to its neighbours
 
 
 @dataclass
@@ -163,13 +155,13 @@ def _extract(
     starts_block = _starts_block(is_summary)
     if path.suffix == ".docx":
         page_format = page_number_format(path)
-        blocks = _word_blocks(read_blocks(path))
+        blocks = word_blocks(read_blocks(path))
         text_source = "Word document"
     else:
         page_format = pdf_page_format
         pages = read_pages(path, reviewed_dir)
         _check_printed_pages(path, pages, page_format)
-        blocks = _pdf_blocks(pages, starts_block)
+        blocks = pdf_blocks(pages, _group_blocks, starts_block)
         transcription = reviewed_path(path, reviewed_dir)
         text_source = (
             f"reviewed transcription: data/reviewed/{transcription.name}"
@@ -207,7 +199,7 @@ def _extract_short(
     else:
         pages = read_pages(path, reviewed_dir)
         _check_printed_pages(path, pages, "decimal")
-        blocks = _pdf_blocks(pages, _no_headings)
+        blocks = pdf_blocks(pages, _group_blocks, _no_headings)
         text_source = _text_source(transcription, "PDF text layer")
     if not blocks:
         raise ValueError(f"{path.name}: no text found")
@@ -246,7 +238,7 @@ def _word_letter_blocks(path: Path, transcription: Path | None) -> list[Block]:
     """A Word letter. When it is made of pictures (CY 2021's), each picture fills a page and is
     read from the transcription; whatever text Word holds follows on the next page."""
     pictures = len(embedded_images(path))
-    text_blocks = _word_blocks(read_blocks(path))
+    text_blocks = word_blocks(read_blocks(path))
     if not pictures:
         return text_blocks
     assert transcription is not None
@@ -255,7 +247,7 @@ def _word_letter_blocks(path: Path, transcription: Path | None) -> list[Block]:
         raise ValueError(
             f"{transcription.name} has {len(pages)} pages but {path.name} has {pictures} pictures"
         )
-    scanned = _pdf_blocks(pages, _no_headings)
+    scanned = pdf_blocks(pages, _group_blocks, _no_headings)
     after = [Block(b.text, pictures + 1, pictures + 1, b.table) for b in text_blocks]
     return [*scanned, *after]
 
@@ -363,21 +355,6 @@ def _citation(
 
 
 # ---------------------------------------------------------------------------------------------
-# Word documents into blocks
-
-
-def _word_blocks(blocks: list[DocxBlock]) -> list[Block]:
-    result = []
-    for block in blocks:
-        if isinstance(block, Table):
-            result.append(Block(block.markdown, block.page, block.end_page, table=True))
-        elif isinstance(block, Paragraph):
-            text = f"{block.label} {block.text}" if block.label else block.text
-            result.append(Block(text, block.page, block.end_page))
-    return result
-
-
-# ---------------------------------------------------------------------------------------------
 # PDF pages into blocks
 
 
@@ -392,88 +369,8 @@ def _check_printed_pages(path: Path, pages: list[PdfPage], page_format: str) -> 
             )
 
 
-def _pdf_blocks(pages: list[PdfPage], starts_block: Callable[[str], bool]) -> list[Block]:
-    blocks: list[Block] = []
-    for page in pages:
-        first_on_page = len(blocks)
-        for group in paragraph_groups(page.lines):
-            blocks.extend(_group_blocks(group, page.number))
-        join_over_page_break(blocks, first_on_page, starts_block)
-    return blocks
-
-
-def paragraph_groups(lines: Sequence[str]) -> list[list[str]]:
-    groups: list[list[str]] = [[]]
-    for line in lines:
-        if line.strip():
-            groups[-1].append(line)
-        elif groups[-1]:
-            groups.append([])
-    return [g for g in groups if g]
-
-
 def _group_blocks(lines: list[str], page: int) -> list[Block]:
     if sum(len(AMOUNT.findall(line)) >= 2 for line in lines) >= 2:
-        return [Block("\n".join(_table_rows(lines)), page, page, table=True)]
-    blocks: list[str] = []
-    for line in lines:
-        text = tidy(line)
-        if not blocks or LIST_ITEM.match(text):
-            blocks.append(text)
-        else:
-            blocks[-1] = f"{blocks[-1]} {text}"
-    return [Block(text, page, page) for text in blocks]
-
-
-def _table_rows(lines: list[str]) -> list[str]:
-    return [" | ".join(row) for row in table_cells(lines)]
-
-
-def table_cells(
-    lines: list[str], split: Callable[[str], list[str]] | None = None
-) -> list[list[str]]:
-    """The cells of each table line (as `split` cuts them, by default at the gaps between
-    columns); a lone indented label continues the row above."""
-    rows: list[list[str]] = []
-    indents: list[int] = []
-    for line in lines:
-        cells = split(line) if split else [tidy(cell) for cell in CELL_GAP.split(line.strip())]
-        indent = len(line) - len(line.lstrip())
-        if (
-            len(cells) == 1
-            and rows
-            and AMOUNT.search(" ".join(rows[-1][1:]))
-            and indent > indents[-1]
-        ):
-            rows[-1][0] = f"{rows[-1][0]} {cells[0]}"
-            continue
-        rows.append(cells)
-        indents.append(indent)
-    return rows
-
-
-def tidy(text: str) -> str:
-    """Collapse spacing, and close the gap a PDF leaves before a hyphen ("non -maintenance")."""
-    return re.sub(r"(?<=\w) -(?=\w)", "-", re.sub(r"\s+", " ", text)).strip()
-
-
-def join_over_page_break(
-    blocks: list[Block], first_on_page: int, starts_block: Callable[[str], bool]
-) -> None:
-    """Rejoin a paragraph that runs over a page break: the earlier page's last block has not
-    ended its sentence and the new page opens with plain text, not a heading, item or table."""
-    if first_on_page == 0 or first_on_page >= len(blocks):
-        return
-    before, after = blocks[first_on_page - 1], blocks[first_on_page]
-    if (
-        before.table
-        or after.table
-        or before.text.endswith(tuple(TERMINATORS))
-        or LIST_ITEM.match(after.text)
-        or starts_block(after.text)
-        or starts_block(before.text)
-    ):
-        return
-    blocks[first_on_page - 1 : first_on_page + 1] = [
-        replace(before, text=f"{before.text} {after.text}", end_page=after.end_page)
-    ]
+        rows = [" | ".join(row) for row in table_cells(lines)]
+        return [Block("\n".join(rows), page, page, table=True)]
+    return [Block(text, page, page) for text in join_lines(lines)]
